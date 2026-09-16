@@ -10,7 +10,7 @@
             theme: { 
                 extend: { 
                     colors: { 
-                        "base-bg": "#f8fafc",
+                        "base-bg": "#ffffff",
                         "card-bg": "#ffffff",
                         "primary-text": "#0f172a",
                         "muted-text": "#64748b",
@@ -20,12 +20,12 @@
                         "warning": "#facc15",
                         "dark-badge": "#1e293b"
                     },
-                    fontFamily: { "sans": ["Inter", "Noto Sans Thai", "sans-serif"] }
+                    fontFamily: { "sans": ["Sarabun", "Inter", "sans-serif"] }
                 } 
             } 
         };
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <style>
         .nav-link {
@@ -59,245 +59,259 @@
         }
     </style>
 </head>
-<body class="font-sans text-primary-text bg-base-bg antialiased min-h-screen flex flex-col">
+<body class="font-sans text-primary-text bg-white antialiased min-h-screen flex flex-col">
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
-    <main class="w-full pt-10 pb-20 flex-1">
-        <div class="max-w-[800px] mx-auto px-4">
+    <main class="w-full pt-8 pb-20 bg-white flex-1">
+        <!-- Main Form Container -->
+        <div id="form-wrapper" class="max-w-2xl mx-auto px-4">
             
-            <div class="text-center mb-8">
-                <h1 class="text-[32px] md:text-[36px] font-bold text-primary-text mb-2">แจ้งมิจฉาชีพ</h1>
-                <p class="text-muted-text text-[15px]">รายงานเพื่อเตือนคนอื่น ทุกรายงานผ่านการกลั่นกรองก่อนเผยแพร่</p>
+            <!-- Page Title Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 flex items-center justify-center gap-2">
+                    <span>🚨</span> แจ้งมิจฉาชีพ
+                </h1>
+                <p class="text-slate-500 mt-2 text-sm sm:text-base">
+                    รายงานเพื่อเตือนคนอื่น ทุกรายงานผ่านการกลั่นกรองก่อนเผยแพร่
+                </p>
             </div>
 
-            <!-- กล่องแจ้งเตือนความสำเร็จ / ข้อผิดพลาด -->
-            <div id="alert-box" class="hidden mb-6 p-5 rounded-2xl flex items-start gap-3 shadow-sm"></div>
+            <!-- 4-Step Progress Indicator -->
+            <div class="flex items-center justify-between mb-8 max-w-md mx-auto">
+                <!-- Step 1 Indicator -->
+                <div class="flex items-center flex-1">
+                    <div class="flex flex-col items-center">
+                        <div id="step-badge-1" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-slate-900 text-white">
+                            1
+                        </div>
+                        <span id="step-text-1" class="text-xs mt-1 hidden sm:block text-slate-700 font-medium">ประเภทการโกง</span>
+                    </div>
+                    <div id="step-line-1" class="flex-1 h-0.5 mx-2 bg-slate-200"></div>
+                </div>
 
-            <!-- Progress Bar -->
-            <div class="flex items-center justify-between mb-8 relative">
-                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-10"></div>
-                <div id="progress-line" class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-primary-text transition-all duration-300 -z-10" style="width: 0%;"></div>
-                
-                <div class="step-indicator flex flex-col items-center gap-2" data-step="1">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[14px] bg-primary-text text-white border-[3px] border-white transition-colors duration-300">1</div>
-                    <span class="text-[12px] font-medium text-primary-text">ประเภทการโกง</span>
+                <!-- Step 2 Indicator -->
+                <div class="flex items-center flex-1">
+                    <div class="flex flex-col items-center">
+                        <div id="step-badge-2" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-slate-100 text-slate-400">
+                            2
+                        </div>
+                        <span id="step-text-2" class="text-xs mt-1 hidden sm:block text-slate-400 font-medium">ข้อมูลผู้ติดต่อ</span>
+                    </div>
+                    <div id="step-line-2" class="flex-1 h-0.5 mx-2 bg-slate-200"></div>
                 </div>
-                <div class="step-indicator flex flex-col items-center gap-2 opacity-50" data-step="2">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[14px] bg-gray-200 text-gray-500 border-[3px] border-white transition-colors duration-300">2</div>
-                    <span class="text-[12px] font-medium text-gray-500">ข้อมูลผู้ติดต่อ</span>
+
+                <!-- Step 3 Indicator -->
+                <div class="flex items-center flex-1">
+                    <div class="flex flex-col items-center">
+                        <div id="step-badge-3" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-slate-100 text-slate-400">
+                            3
+                        </div>
+                        <span id="step-text-3" class="text-xs mt-1 hidden sm:block text-slate-400 font-medium">รายละเอียด</span>
+                    </div>
+                    <div id="step-line-3" class="flex-1 h-0.5 mx-2 bg-slate-200"></div>
                 </div>
-                <div class="step-indicator flex flex-col items-center gap-2 opacity-50" data-step="3">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[14px] bg-gray-200 text-gray-500 border-[3px] border-white transition-colors duration-300">3</div>
-                    <span class="text-[12px] font-medium text-gray-500">รายละเอียด</span>
-                </div>
-                <div class="step-indicator flex flex-col items-center gap-2 opacity-50" data-step="4">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[14px] bg-gray-200 text-gray-500 border-[3px] border-white transition-colors duration-300">4</div>
-                    <span class="text-[12px] font-medium text-gray-500">ยืนยัน</span>
+
+                <!-- Step 4 Indicator -->
+                <div class="flex items-center">
+                    <div class="flex flex-col items-center">
+                        <div id="step-badge-4" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-slate-100 text-slate-400">
+                            4
+                        </div>
+                        <span id="step-text-4" class="text-xs mt-1 hidden sm:block text-slate-400 font-medium">ยืนยัน</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-3xl p-6 md:p-10 shadow-sm">
+            <!-- Form Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
                 <form id="reportForm" onsubmit="submitReport(event)">
                     
-                    <!-- Step 1: ประเภทการโกง พร้อมอิโมจิ -->
-                    <div id="step-1" class="form-step block">
-                        <h2 class="text-[18px] font-bold text-primary-text mb-4">เลือกประเภทการโกง</h2>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Investment Scam" class="peer hidden" checked>
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">📈</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Investment Scam</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Online Shopping Scam" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">🛍️</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Online Shopping Scam</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Loan Scam" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">💸</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Loan Scam</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Romance Scam" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">💔</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Romance Scam</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Job Scam" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">💼</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Job Scam</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Phishing" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">🎣</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Phishing</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Fake Bank/Website" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">🏦</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Fake Bank/Website</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Crypto Scam" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">💰</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Crypto Scam</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer h-full">
-                                <input type="radio" name="scam_type" value="Call Center Scam" class="peer hidden">
-                                <div class="h-full px-2 py-5 rounded-2xl border border-gray-200 transition-all peer-checked:bg-primary-text peer-checked:border-primary-text hover:bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                    <span class="text-[28px] md:text-[32px] leading-none mb-1">📞</span>
-                                    <span class="text-[13px] font-semibold text-muted-text peer-checked:text-white text-center leading-tight">Call Center Scam</span>
-                                </div>
-                            </label>
+                    <!-- STEP 1: เลือกประเภทการโกง -->
+                    <div id="step-content-1">
+                        <h2 class="font-bold text-slate-900 mb-4 text-base sm:text-lg">เลือกประเภทการโกง</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3" id="scam-types-grid">
+                            <!-- Populated by JS -->
                         </div>
                     </div>
 
-                    <!-- Step 2: ข้อมูลผู้ติดต่อ -->
-                    <div id="step-2" class="form-step hidden space-y-5">
-                        <h2 class="text-[18px] font-bold text-primary-text mb-4">ข้อมูลผู้ติดต่อ / ผู้รับเงิน</h2>
+                    <!-- STEP 2: ข้อมูลผู้ติดต่อ / ผู้รับเงิน -->
+                    <div id="step-content-2" class="hidden space-y-4">
+                        <h2 class="font-bold text-slate-900 text-base sm:text-lg">ข้อมูลผู้ติดต่อ / ผู้รับเงิน</h2>
                         <div>
-                            <label class="block text-[13px] font-semibold text-primary-text mb-1.5">ช่องทางที่ติดต่อ</label>
-                            <input type="text" id="contact_channel" class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text" placeholder="LINE, Facebook, SMS, โทรศัพท์...">
+                            <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">ช่องทางที่ติดต่อ</label>
+                            <input type="text" id="contact_channel" placeholder="LINE, Facebook, SMS, โทรศัพท์..." 
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none transition-colors">
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[13px] font-semibold text-primary-text mb-1.5">เบอร์โทร</label>
-                                <input type="text" id="scammer_phone" class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text" placeholder="08x-xxx-xxxx">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">เบอร์โทรศัพท์ (ถ้ามี)</label>
+                                <input type="text" id="scammer_phone" placeholder="08x-xxx-xxxx" 
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none transition-colors">
                             </div>
                             <div>
-                                <label class="block text-[13px] font-semibold text-primary-text mb-1.5">เลขบัญชี/พร้อมเพย์ <span class="text-danger">*</span></label>
-                                <input type="text" id="bank_account" required class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text" placeholder="XXX-X-XXXXX-X">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">ชื่อผู้รับเงิน / คนร้าย <span class="text-red-500">*</span></label>
+                                <input type="text" id="scammer_name" required placeholder="นาย XXXXX" 
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none transition-colors">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[13px] font-semibold text-primary-text mb-1.5">ชื่อผู้รับเงิน <span class="text-danger">*</span></label>
-                                <input type="text" id="scammer_name" required class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text" placeholder="นาย XXXXX">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">เลขบัญชี / พร้อมเพย์ <span class="text-red-500">*</span></label>
+                                <input type="text" id="bank_account" required placeholder="xxx-x-xxxxx-x" 
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none transition-colors">
                             </div>
                             <div>
-                                <label class="block text-[13px] font-semibold text-primary-text mb-1.5">ธนาคาร <span class="text-danger">*</span></label>
-                                <select id="bank_name" required class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text bg-white">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">ธนาคาร <span class="text-red-500">*</span></label>
+                                <select id="bank_name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none bg-white transition-colors">
                                     <option value="">เลือกธนาคาร...</option>
-                                    <option value="กสิกรไทย">กสิกรไทย</option>
-                                    <option value="ไทยพาณิชย์">ไทยพาณิชย์</option>
-                                    <option value="กรุงไทย">กรุงไทย</option>
-                                    <option value="กรุงเทพ">กรุงเทพ</option>
-                                    <option value="พร้อมเพย์">พร้อมเพย์</option>
+                                    <option value="กสิกรไทย">กสิกรไทย (KBANK)</option>
+                                    <option value="ไทยพาณิชย์">ไทยพาณิชย์ (SCB)</option>
+                                    <option value="กรุงไทย">กรุงไทย (KTB)</option>
+                                    <option value="กรุงเทพ">กรุงเทพ (BBL)</option>
+                                    <option value="กรุงศรี">กรุงศรีอยุธยา (BAY)</option>
+                                    <option value="ทหารไทยธนชาต">ทหารไทยธนชาต (ttb)</option>
+                                    <option value="ออมสิน">ออมสิน (GSB)</option>
+                                    <option value="ธ.ก.ส.">ธ.ก.ส. (BAAC)</option>
+                                    <option value="พร้อมเพย์">พร้อมเพย์ (PromptPay)</option>
+                                    <option value="ทรูมันนี่">ทรูมันนี่ (TrueMoney Wallet)</option>
                                     <option value="อื่นๆ">อื่นๆ</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Step 3: รายละเอียดเหตุการณ์ -->
-                    <div id="step-3" class="form-step hidden space-y-5">
-                        <h2 class="text-[18px] font-bold text-primary-text mb-4">รายละเอียดเหตุการณ์</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- STEP 3: รายละเอียดเหตุการณ์ -->
+                    <div id="step-content-3" class="hidden space-y-4">
+                        <h2 class="font-bold text-slate-900 text-base sm:text-lg">รายละเอียดเหตุการณ์</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[13px] font-semibold text-primary-text mb-1.5">จำนวนเงินที่เสียหาย (บาท) <span class="text-danger">*</span></label>
-                                <input type="number" id="claim_amount" required min="1" class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text" placeholder="0">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">จำนวนเงินที่เสียหาย (บาท) <span class="text-red-500">*</span></label>
+                                <input type="number" id="claim_amount" required min="0" placeholder="0" 
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none transition-colors">
                             </div>
                             <div>
-                                <label class="block text-[13px] font-semibold text-primary-text mb-1.5">วันที่เกิดเหตุ <span class="text-danger">*</span></label>
-                                <input type="date" id="incident_date" required class="w-full h-[48px] px-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">วันที่เกิดเหตุ <span class="text-red-500">*</span></label>
+                                <input type="date" id="incident_date" required 
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none transition-colors">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[13px] font-semibold text-primary-text mb-1.5">รายละเอียดเหตุการณ์ <span class="text-danger">*</span></label>
-                            <textarea id="incident_details" required rows="4" minlength="10" class="w-full p-4 border border-gray-200 rounded-xl text-[14px] focus:border-primary-text focus:ring-1 focus:ring-primary-text" placeholder="เล่าเหตุการณ์ที่เกิดขึ้น เช่น ถูกชวนลงทุน, ถูกขอโอนเงิน... (อย่างน้อย 10 ตัวอักษร)"></textarea>
+                            <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">รายละเอียดเหตุการณ์ (อย่างน้อย 10 ตัวอักษร) <span class="text-red-500">*</span></label>
+                            <textarea id="incident_details" required rows="4" minlength="10" 
+                                      placeholder="เล่าเหตุการณ์ที่เกิดขึ้น เช่น ถูกชวนลงทุน, ถูกขอโอนเงิน, ลักษณะการพูดคุย..."
+                                      class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none resize-none transition-colors"></textarea>
                         </div>
                         <div>
-                            <label class="block text-[13px] font-semibold text-primary-text mb-1.5">แนบหลักฐาน (Screenshot/สลิป)</label>
-                            
-                            <div id="upload-box" class="border-2 border-dashed border-gray-300 bg-gray-50 rounded-2xl p-6 text-center hover:border-primary-text transition-colors relative cursor-pointer" onclick="document.getElementById('evidence_file').click()">
+                            <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">แนบหลักฐาน (สลิปโอนเงิน / Screenshot แชต)</label>
+                            <div id="upload-box" onclick="document.getElementById('evidence_file').click()" 
+                                 class="border-2 border-dashed border-slate-300 hover:border-slate-900 bg-slate-50/50 hover:bg-slate-50 rounded-2xl p-6 text-center transition-colors cursor-pointer">
                                 <input type="file" id="evidence_file" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleFileSelect(event)">
-                                <div class="flex flex-col items-center justify-center gap-2">
-                                    <div class="w-12 h-12 rounded-full bg-white shadow-xs flex items-center justify-center border border-gray-100 text-gray-500">
-                                        <span class="material-symbols-outlined text-[28px]">add_photo_alternate</span>
+                                <div class="flex flex-col items-center justify-center gap-1.5">
+                                    <div class="w-10 h-10 rounded-full bg-white shadow-xs flex items-center justify-center border border-slate-200 text-slate-600">
+                                        <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
                                     </div>
-                                    <p class="text-[13px] font-bold text-gray-700">คลิกเพื่อเลือกรูปภาพ หรือ ลากไฟล์มาวางที่นี่</p>
-                                    <p class="text-[11px] text-muted-text">รองรับ JPG, PNG, WEBP (ระบบจะปรับขนาดภาพให้อัตโนมัติ)</p>
+                                    <p class="text-xs sm:text-sm font-bold text-slate-700">คลิกเพื่อเลือกรูปภาพหลักฐาน</p>
+                                    <p class="text-[11px] text-slate-400">รองรับ JPG, PNG (ระบบจะบีบอัดภาพให้อัตโนมัติ)</p>
                                 </div>
                             </div>
-
-                            <!-- Live Image Preview Card -->
-                            <div id="image-preview-card" class="hidden mt-3 p-3.5 bg-gray-50 border border-gray-200 rounded-2xl flex items-center justify-between gap-3 shadow-xs">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-14 h-14 rounded-xl overflow-hidden bg-white border border-gray-200 shrink-0 shadow-xs">
-                                        <img id="preview-img" src="" alt="หลักฐาน" class="w-full h-full object-cover">
-                                    </div>
+                            <!-- Preview Card -->
+                            <div id="image-preview-card" class="hidden mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <img id="preview-img" src="" alt="Preview" class="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0">
                                     <div class="min-w-0">
-                                        <p id="preview-filename" class="text-[13px] font-bold text-primary-text truncate">image.jpg</p>
-                                        <p id="preview-filesize" class="text-[11px] text-muted-text">250 KB</p>
-                                        <span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded mt-0.5">
-                                            <span class="material-symbols-outlined text-[12px]">check</span> บีบอัดพร้อมส่ง
-                                        </span>
+                                        <p id="preview-filename" class="text-xs font-bold text-slate-800 truncate">image.jpg</p>
+                                        <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">พร้อมส่ง</span>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-1 shrink-0">
-                                    <button type="button" onclick="document.getElementById('evidence_file').click()" class="px-2.5 py-1.5 text-xs text-primary-text hover:bg-gray-200 rounded-lg transition-colors font-medium">เปลี่ยนรูป</button>
-                                    <button type="button" onclick="removeSelectedImage()" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="ลบรูป">
-                                        <span class="material-symbols-outlined text-[18px]">delete</span>
-                                    </button>
-                                </div>
+                                <button type="button" onclick="removeSelectedImage()" class="text-xs text-red-500 hover:text-red-700 font-bold px-2 py-1">ลบรูป</button>
                             </div>
-
-                            <p class="text-[12px] text-success mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">info</span> มีหลักฐานแนบ (รายงานที่มีหลักฐานจะมีน้ำหนักและได้รับการอนุมัติเร็วกว่า)</p>
                         </div>
                     </div>
 
-                    <!-- Step 4: ยืนยัน -->
-                    <div id="step-4" class="form-step hidden space-y-5 text-center">
-                        <span class="material-symbols-outlined text-[64px] text-primary-text mb-2">policy</span>
-                        <h2 class="text-[20px] font-bold text-primary-text">ยืนยันการส่งข้อมูล</h2>
-                        <p class="text-[14px] text-muted-text max-w-md mx-auto">ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง การจงใจให้ข้อมูลเท็จเพื่อใส่ร้ายผู้อื่นอาจมีความผิดตามกฎหมาย และยินยอมให้ระบบนำข้อมูลไปประมวลผลเพื่อเตือนภัยสาธารณะ</p>
-                        
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-6 text-left max-w-md mx-auto text-[13px] text-muted-text space-y-2">
-                            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-success">lock</span> ข้อมูลส่วนตัวของคุณจะถูกปกปิด</div>
-                            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-success">verified</span> ข้อมูลมิจฉาชีพจะถูกตรวจสอบโดย AI และทีมงานก่อน</div>
+                    <!-- STEP 4: ยืนยันข้อมูล -->
+                    <div id="step-content-4" class="hidden space-y-4">
+                        <h2 class="font-bold text-slate-900 text-base sm:text-lg">ตรวจสอบและยืนยันข้อมูล</h2>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm space-y-2.5">
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">ประเภทการโกง:</span>
+                                <span id="summary-type" class="font-bold text-slate-900">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">ชื่อคนร้าย:</span>
+                                <span id="summary-name" class="font-bold text-slate-900">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">เลขบัญชี/พร้อมเพย์:</span>
+                                <span id="summary-acc" class="font-bold text-slate-900 font-mono">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">ธนาคาร:</span>
+                                <span id="summary-bank" class="font-bold text-slate-900">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">ยอดเงินที่เสียหาย:</span>
+                                <span id="summary-amount" class="font-bold text-red-600">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">วันที่เกิดเหตุ:</span>
+                                <span id="summary-date" class="font-bold text-slate-900">-</span>
+                            </div>
+                            <div class="py-1">
+                                <span class="text-slate-500 block mb-1">รายละเอียดเหตุการณ์:</span>
+                                <p id="summary-details" class="text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200 leading-relaxed text-xs sm:text-sm">-</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 flex items-start gap-2">
+                            <span class="material-symbols-outlined text-[18px] text-amber-600 shrink-0 mt-0.5">policy</span>
+                            <span>ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ระบบนำข้อมูลไปประมวลผลเพื่อเตือนภัยสาธารณะ</span>
                         </div>
                     </div>
 
-                    <!-- Navigation Buttons -->
-                    <div class="flex items-center justify-between mt-10 pt-6 border-t border-gray-100">
-                        <button type="button" id="prevBtn" class="hidden h-[48px] px-6 bg-gray-100 text-muted-text font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[18px]">chevron_left</span> ย้อนกลับ
+                    <!-- Navigation Footer Buttons -->
+                    <div class="flex items-center justify-between mt-8 pt-5 border-t border-slate-100">
+                        <button type="button" id="prevBtn" onclick="prevStep()" class="hidden text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
+                            ย้อนกลับ
                         </button>
-                        <div id="spacer" class="flex-1"></div> 
-                        
-                        <button type="button" id="nextBtn" class="h-[48px] px-8 bg-primary-text text-white font-bold rounded-xl hover:bg-gray-800 transition-colors flex items-center gap-1">
-                            ต่อไป <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        <div class="flex-1"></div>
+                        <button type="button" id="nextBtn" onclick="nextStep()" class="text-xs sm:text-sm font-bold px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-all shadow-xs">
+                            ถัดไป →
                         </button>
-                        
-                        <button type="submit" id="submitBtn" class="hidden h-[48px] px-8 bg-danger text-white font-bold rounded-xl hover:bg-danger-hover transition-colors flex items-center gap-2">
-                            ส่งข้อมูลรายงาน <span class="material-symbols-outlined text-[18px]">send</span>
+                        <button type="submit" id="submitBtn" class="hidden text-xs sm:text-sm font-bold px-7 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all shadow-xs flex items-center gap-1.5">
+                            <span>ส่งข้อมูลรายงาน</span>
+                            <span class="material-symbols-outlined text-[16px]">send</span>
                         </button>
                     </div>
                 </form>
             </div>
+        </div>
 
+        <!-- Success View (Hidden initially) -->
+        <div id="success-wrapper" class="hidden max-w-lg mx-auto px-4 py-16 text-center">
+            <div class="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-[40px] text-emerald-600">check_circle</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">ส่งรายงานเรียบร้อย ✅</h1>
+            <p class="text-slate-500 mb-4 text-sm sm:text-base">ขอบคุณที่รายงานมิจฉาชีพ เพื่อเตือนคนอื่นไม่ให้โดนต่อ</p>
+            
+            <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs sm:text-sm text-amber-800 mb-8 max-w-md mx-auto text-left">
+                <span class="text-base">⏳</span>
+                <span>รายงานของคุณอยู่ในคิวตรวจสอบ จะแสดงบนหน้าเตือนภัยสาธารณะหลังผ่านการกลั่นกรอง</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="index.html" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm">
+                    ไปหน้าเช็กประวัติ
+                </a>
+                <button type="button" onclick="resetReportForm()" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold px-6 py-3 rounded-xl transition-colors text-sm">
+                    รายงานเพิ่มอีกเคส
+                </button>
+            </div>
         </div>
     </main>
 
-    <footer class="w-full pb-8 pt-4 border-t border-gray-200 mt-auto">
+    <footer class="w-full pb-8 pt-4 border-t border-gray-200 mt-auto bg-white">
         <div class="max-w-[1000px] mx-auto px-4 text-center">
             <div class="flex items-center justify-center gap-1 mb-2">
                 <span class="material-symbols-outlined text-[16px] text-primary-text">verified_user</span>
@@ -311,152 +325,162 @@
     <script src="js/auth.js"></script>
     <script src="js/header.js"></script>
     <script>
-        // บังคับล็อกอิน: หากยังไม่ได้เข้าสู่ระบบให้พาไป login.html
-        if (!Auth.isLoggedIn()) {
-            alert('กรุณาเข้าสู่ระบบก่อนทำการแจ้งมิจฉาชีพ เพื่อความน่าเชื่อถือของข้อมูล');
-            window.location.href = 'login.html';
-        }
+        Auth.requireAuth();
+
+        const SCAM_TYPES = [
+            { name: "Investment Scam", emoji: "📈", desc: "หลอกลงทุน" },
+            { name: "Online Shopping Scam", emoji: "🛒", desc: "ซื้อของออนไลน์" },
+            { name: "Loan Scam", emoji: "💰", desc: "เงินกู้ปลอม" },
+            { name: "Romance Scam", emoji: "💔", desc: "หลอกให้รัก" },
+            { name: "Job Scam", emoji: "💼", desc: "งานออนไลน์ปลอม" },
+            { name: "Phishing", emoji: "🎣", desc: "ขโมยรหัส/OTP" },
+            { name: "Fake Bank/Website", emoji: "🏦", desc: "เว็บ/ธนาคารปลอม" },
+            { name: "Crypto Scam", emoji: "🪙", desc: "หลอกเหรียญคริปโต" },
+            { name: "Call Center Scam", emoji: "📞", desc: "แก๊งคอลเซ็นเตอร์" }
+        ];
 
         let currentStep = 1;
-        const totalSteps = 4;
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const spacer = document.getElementById('spacer');
-        const progressLine = document.getElementById('progress-line');
+        let selectedScamType = "";
+        let compressedEvidenceBase64 = null;
 
-        function updateUI() {
-            for(let i=1; i<=totalSteps; i++) {
-                document.getElementById('step-'+i).classList.add('hidden');
-                const indicator = document.querySelector(`.step-indicator[data-step="${i}"]`);
-                const circle = indicator.querySelector('div');
-                const text = indicator.querySelector('span');
-                
-                if(i <= currentStep) {
-                    indicator.classList.remove('opacity-50');
-                    circle.classList.replace('bg-gray-200', 'bg-primary-text');
-                    circle.classList.replace('text-gray-500', 'text-white');
-                    text.classList.replace('text-gray-500', 'text-primary-text');
+        // Render Scam Types Grid
+        function renderScamTypes() {
+            const container = document.getElementById('scam-types-grid');
+            container.innerHTML = SCAM_TYPES.map(t => {
+                const isSelected = selectedScamType === t.name;
+                const borderClass = isSelected ? "border-slate-900 bg-slate-50 shadow-xs" : "border-slate-200 hover:border-slate-300 bg-white";
+
+                return `
+                    <button type="button" onclick="selectScamType('${t.name}')" 
+                            class="flex flex-col items-center gap-1.5 p-3 sm:p-3.5 rounded-xl border-2 transition-all text-center ${borderClass}">
+                        <span class="text-2xl sm:text-3xl">${t.emoji}</span>
+                        <span class="text-xs font-bold text-slate-900 leading-tight">${t.name}</span>
+                        <span class="text-[10px] text-slate-400">${t.desc}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectScamType(name) {
+            selectedScamType = name;
+            renderScamTypes();
+        }
+
+        function updateStepUI() {
+            // Content views
+            document.getElementById('step-content-1').classList.toggle('hidden', currentStep !== 1);
+            document.getElementById('step-content-2').classList.toggle('hidden', currentStep !== 2);
+            document.getElementById('step-content-3').classList.toggle('hidden', currentStep !== 3);
+            document.getElementById('step-content-4').classList.toggle('hidden', currentStep !== 4);
+
+            // Nav buttons
+            document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
+            document.getElementById('nextBtn').classList.toggle('hidden', currentStep === 4);
+            document.getElementById('submitBtn').classList.toggle('hidden', currentStep !== 4);
+
+            // Step Badges
+            for (let i = 1; i <= 4; i++) {
+                const badge = document.getElementById('step-badge-' + i);
+                const text = document.getElementById('step-text-' + i);
+                const line = document.getElementById('step-line-' + i);
+
+                if (i < currentStep) {
+                    badge.className = "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-green-500 text-white";
+                    badge.innerHTML = "✓";
+                    if (text) text.className = "text-xs mt-1 hidden sm:block text-slate-700 font-medium";
+                    if (line) line.className = "flex-1 h-0.5 mx-2 bg-green-500";
+                } else if (i === currentStep) {
+                    badge.className = "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-slate-900 text-white";
+                    badge.innerHTML = i;
+                    if (text) text.className = "text-xs mt-1 hidden sm:block text-slate-900 font-bold";
+                    if (line) line.className = "flex-1 h-0.5 mx-2 bg-slate-200";
                 } else {
-                    indicator.classList.add('opacity-50');
-                    circle.classList.replace('bg-primary-text', 'bg-gray-200');
-                    circle.classList.replace('text-white', 'text-gray-500');
-                    text.classList.replace('text-primary-text', 'text-gray-500');
+                    badge.className = "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors bg-slate-100 text-slate-400";
+                    badge.innerHTML = i;
+                    if (text) text.className = "text-xs mt-1 hidden sm:block text-slate-400 font-medium";
+                    if (line) line.className = "flex-1 h-0.5 mx-2 bg-slate-200";
                 }
-            }
-            document.getElementById('step-'+currentStep).classList.remove('hidden');
-            
-            progressLine.style.width = ((currentStep - 1) / (totalSteps - 1)) * 100 + '%';
-
-            if(currentStep === 1) {
-                prevBtn.classList.add('hidden');
-                spacer.classList.remove('hidden');
-            } else {
-                prevBtn.classList.remove('hidden');
-                spacer.classList.add('hidden');
-            }
-
-            if(currentStep === totalSteps) {
-                nextBtn.classList.add('hidden');
-                submitBtn.classList.remove('hidden');
-            } else {
-                nextBtn.classList.remove('hidden');
-                submitBtn.classList.add('hidden');
             }
         }
 
-        function validateStep(step) {
-            if (step === 2) {
-                const bankAccount = document.getElementById('bank_account').value.trim();
-                const scammerName = document.getElementById('scammer_name').value.trim();
-                const bankName = document.getElementById('bank_name').value;
-                if (!bankAccount || !scammerName || !bankName) {
-                    alert('กรุณากรอกข้อมูลผู้ติดต่อและบัญชีที่มีเครื่องหมาย * ให้ครบถ้วน');
-                    return false;
+        function nextStep() {
+            if (currentStep === 1) {
+                if (!selectedScamType) {
+                    alert('กรุณาเลือกประเภทการโกงอย่างน้อย 1 ประเภท');
+                    return;
                 }
-            } else if (step === 3) {
+            } else if (currentStep === 2) {
+                const name = document.getElementById('scammer_name').value.trim();
+                const acc = document.getElementById('bank_account').value.trim();
+                const bank = document.getElementById('bank_name').value;
+                if (!name || !acc || !bank) {
+                    alert('กรุณากรอกชื่อผู้รับเงิน เลขบัญชี และเลือกธนาคารให้ครบถ้วน');
+                    return;
+                }
+            } else if (currentStep === 3) {
                 const amount = document.getElementById('claim_amount').value;
                 const date = document.getElementById('incident_date').value;
                 const details = document.getElementById('incident_details').value.trim();
-                if (!amount || !date || !details) {
-                    alert('กรุณากรอกรายละเอียดเหตุการณ์และจำนวนเงินให้ครบถ้วน');
-                    return false;
+                if (!amount || !date || details.length < 10) {
+                    alert('กรุณาระบุจำนวนเงิน วันที่ และรายละเอียดเหตุการณ์อย่างน้อย 10 ตัวอักษร');
+                    return;
                 }
-                if (details.length < 10) {
-                    alert('กรุณากรอกรายละเอียดเหตุการณ์อย่างน้อย 10 ตัวอักษร');
-                    return false;
-                }
+
+                // Populate Summary for Step 4
+                document.getElementById('summary-type').textContent = selectedScamType;
+                document.getElementById('summary-name').textContent = document.getElementById('scammer_name').value.trim();
+                document.getElementById('summary-acc').textContent = document.getElementById('bank_account').value.trim();
+                document.getElementById('summary-bank').textContent = document.getElementById('bank_name').value;
+                document.getElementById('summary-amount').textContent = '฿' + Number(amount).toLocaleString('th-TH') + ' บาท';
+                document.getElementById('summary-date').textContent = date;
+                document.getElementById('summary-details').textContent = details;
             }
-            return true;
+
+            if (currentStep < 4) {
+                currentStep++;
+                updateStepUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
-        nextBtn.addEventListener('click', () => {
-            if (validateStep(currentStep)) {
-                if(currentStep < totalSteps) {
-                    currentStep++;
-                    updateUI();
-                }
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if(currentStep > 1) {
+        function prevStep() {
+            if (currentStep > 1) {
                 currentStep--;
-                updateUI();
+                updateStepUI();
             }
-        });
+        }
 
-        async function submitReport(e) {
-            e.preventDefault();
-            const user = Auth.getUser();
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `กำลังส่งข้อมูล... <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>`;
-
-        let compressedEvidenceBase64 = null;
-
-        async function handleFileSelect(e) {
+        // Image Handling with Canvas Compression
+        function handleFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            if (file.size > 15 * 1024 * 1024) {
-                alert('ขนาดไฟล์ต้นฉบับต้องไม่เกิน 15MB');
-                e.target.value = '';
-                return;
-            }
-
-            try {
-                // บีบอัดภาพอัตโนมัติให้ได้ขนาดพอดี คมชัด แต่ส่งเร็ว
-                compressedEvidenceBase64 = await compressImage(file);
-                
-                document.getElementById('preview-img').src = compressedEvidenceBase64;
+            compressImage(file).then(base64 => {
+                compressedEvidenceBase64 = base64;
+                document.getElementById('preview-img').src = base64;
                 document.getElementById('preview-filename').textContent = file.name;
-                
-                const approxSizeKb = Math.round((compressedEvidenceBase64.length * 3 / 4) / 1024);
-                document.getElementById('preview-filesize').textContent = `${approxSizeKb} KB`;
-                
-                document.getElementById('image-preview-card').classList.remove('hidden');
                 document.getElementById('upload-box').classList.add('hidden');
-            } catch (err) {
-                alert('ไม่สามารถประมวลผลรูปภาพได้ กรุณาลองใหม่อีกครั้ง');
-            }
+                document.getElementById('image-preview-card').classList.remove('hidden');
+            }).catch(err => {
+                console.error(err);
+                alert('ไม่สามารถประมวลผลไฟล์รูปภาพได้');
+            });
         }
 
         function removeSelectedImage() {
             compressedEvidenceBase64 = null;
-            const fileInput = document.getElementById('evidence_file');
-            if (fileInput) fileInput.value = '';
-            document.getElementById('preview-img').src = '';
-            document.getElementById('image-preview-card').classList.add('hidden');
+            document.getElementById('evidence_file').value = '';
             document.getElementById('upload-box').classList.remove('hidden');
+            document.getElementById('image-preview-card').classList.add('hidden');
         }
 
         function compressImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = (event) => {
+                reader.onload = (e) => {
                     const img = new Image();
-                    img.src = event.target.result;
+                    img.src = e.target.result;
                     img.onload = () => {
                         const maxWidth = 1200;
                         const maxHeight = 1200;
@@ -480,8 +504,6 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-
-                        // บันทึกเป็น JPEG คุณภาพ 82% เพื่อให้ตัวหนังสือบนสลิป/แชตคมชัดอ่านง่าย
                         resolve(canvas.toDataURL('image/jpeg', 0.82));
                     };
                     img.onerror = reject;
@@ -490,16 +512,17 @@
             });
         }
 
+        // Submit Form
         async function submitReport(e) {
             e.preventDefault();
             const user = Auth.getUser();
+            const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `กำลังส่งข้อมูล... <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>`;
+            submitBtn.innerHTML = `กำลังส่งข้อมูล... <span class="material-symbols-outlined animate-spin text-[16px]">sync</span>`;
 
-            const scamType = document.querySelector('input[name="scam_type"]:checked')?.value || 'General Scam';
             const payload = {
                 userId: user ? user.id : null,
-                scamType: scamType,
+                scamType: selectedScamType,
                 scammerName: document.getElementById('scammer_name').value.trim(),
                 bankAccount: document.getElementById('bank_account').value.trim(),
                 bankName: document.getElementById('bank_name').value,
@@ -518,36 +541,38 @@
                 });
                 const data = await res.json();
 
-                const alertBox = document.getElementById('alert-box');
-                alertBox.classList.remove('hidden');
-
                 if (res.ok && data.success) {
-                    alertBox.className = 'mb-6 p-5 bg-[#ecfdf5] border border-[#10b981] text-[#059669] rounded-2xl flex items-start gap-3 shadow-sm';
-                    alertBox.innerHTML = `
-                        <span class="material-symbols-outlined text-[24px]">check_circle</span>
-                        <div class="text-[15px] font-medium leading-relaxed pt-0.5">${escapeHtml(data.message)}</div>
-                    `;
-                    document.getElementById('reportForm').reset();
-                    removeSelectedImage();
-                    currentStep = 1;
-                    updateUI();
+                    document.getElementById('form-wrapper').classList.add('hidden');
+                    document.getElementById('success-wrapper').classList.remove('hidden');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                    alertBox.className = 'mb-6 p-5 bg-[#fef2f2] border border-[#ef4444] text-[#dc2626] rounded-2xl flex items-start gap-3 shadow-sm';
-                    alertBox.innerHTML = `
-                        <span class="material-symbols-outlined text-[24px]">error</span>
-                        <div class="text-[15px] font-medium leading-relaxed pt-0.5">${escapeHtml(data.message || 'เกิดข้อผิดพลาดในการบันทึก')}</div>
-                    `;
+                    alert(data.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
                 }
             } catch (err) {
                 alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `ส่งข้อมูลรายงาน <span class="material-symbols-outlined text-[18px]">send</span>`;
+                submitBtn.innerHTML = `<span>ส่งข้อมูลรายงาน</span> <span class="material-symbols-outlined text-[16px]">send</span>`;
             }
         }
 
-        // Auto-fill target parameter from URL if coming from search results
+        function resetReportForm() {
+            document.getElementById('reportForm').reset();
+            selectedScamType = "";
+            currentStep = 1;
+            removeSelectedImage();
+            renderScamTypes();
+            updateStepUI();
+            document.getElementById('success-wrapper').classList.add('hidden');
+            document.getElementById('form-wrapper').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initial setup
+        renderScamTypes();
+        updateStepUI();
+
+        // Check URL parameter 'target' from search result button
         const urlParams = new URLSearchParams(window.location.search);
         const targetVal = urlParams.get('target');
         if (targetVal) {
@@ -565,8 +590,6 @@
                 if (nameInput) nameInput.value = clean;
             }
         }
-
-        updateUI();
     </script>
 </body>
 </html>

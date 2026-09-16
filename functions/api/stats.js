@@ -56,10 +56,28 @@ export async function onRequestGet(context) {
       });
     }
 
-    // 4. แนวโน้ม 6 เดือนล่าสุดจริง
+    // 4. แนวโน้ม 6 เดือนล่าสุดจริงจาก Database
     const { results: monthlyRows } = await db.prepare(
-      "SELECT strftime('%Y-%m', created_at) as month_label, COUNT(*) as count FROM reports WHERE status != 'rejected' GROUP BY month_label ORDER BY month_label DESC LIMIT 6"
+      "SELECT strftime('%Y-%m', created_at) as month_label, COUNT(*) as count FROM reports WHERE status != 'rejected' GROUP BY month_label ORDER BY month_label ASC LIMIT 6"
     ).all();
+
+    // 5. สถิติเปรียบเทียบเดือนนี้ vs เดือนก่อน
+    const { results: monthCompare } = await db.prepare(
+      `SELECT 
+         SUM(CASE WHEN strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) as this_month,
+         SUM(CASE WHEN strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now', '-1 month') THEN 1 ELSE 0 END) as last_month
+       FROM reports WHERE status != 'rejected'`
+    ).all();
+
+    const thisMonth = (monthCompare && monthCompare[0] && monthCompare[0].this_month) ? Number(monthCompare[0].this_month) : 0;
+    const lastMonth = (monthCompare && monthCompare[0] && monthCompare[0].last_month) ? Number(monthCompare[0].last_month) : 0;
+    
+    let momChange = 0;
+    if (lastMonth > 0) {
+      momChange = Math.round(((thisMonth - lastMonth) / lastMonth) * 100);
+    } else if (thisMonth > 0) {
+      momChange = 100;
+    }
 
     return new Response(JSON.stringify({
       success: true,
@@ -70,6 +88,9 @@ export async function onRequestGet(context) {
         total_damage: totals.total_damage || 0,
         total_searches: totalSearches,
         categories: categoriesMap,
+        this_month_reports: thisMonth,
+        last_month_reports: lastMonth,
+        month_change_percent: momChange,
         monthly_trend: monthlyRows || []
       }
     }), {
