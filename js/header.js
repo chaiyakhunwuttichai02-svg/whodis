@@ -207,20 +207,22 @@ function renderSosWidget() {
   const container = document.createElement('div');
   container.id = 'whodis-sos-widget';
   container.innerHTML = `
-    <!-- Floating SOS Trigger Button -->
+    <!-- Floating SOS Trigger Button (Sticky Viewport Fixed & Responsive Mobile FAB) -->
     <button id="sos-trigger-btn" onclick="toggleSosModal(true)" 
-            class="group fixed bottom-6 right-6 z-40 flex items-center gap-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold py-3 px-4.5 sm:px-5 rounded-full shadow-[0_8px_25px_rgba(225,29,72,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 border border-white/30 cursor-pointer"
+            class="group fixed z-[99999] flex items-center justify-center bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-800 text-white font-bold rounded-full shadow-[0_8px_30px_rgba(225,29,72,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/40 cursor-pointer w-13 h-13 sm:w-auto sm:h-auto sm:py-3 sm:px-5 gap-2.5"
+            style="bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)); right: max(1.25rem, env(safe-area-inset-right, 1.25rem));"
             title="สายด่วนโทรอายัดบัญชีด่วนทุกธนาคาร 24 ชม.">
-      <span class="relative flex h-2.5 w-2.5">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-300"></span>
+      <!-- Pulsing Beacon Indicator -->
+      <span class="absolute -top-1 -right-1 sm:relative sm:top-auto sm:right-auto flex h-3.5 w-3.5 sm:h-2.5 sm:w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-80"></span>
+        <span class="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-2.5 sm:w-2.5 bg-amber-300 border-2 border-red-600 sm:border-0"></span>
       </span>
-      <span class="material-symbols-outlined text-[20px]">e911_emergency</span>
-      <span class="text-[13.5px] tracking-wide">สายด่วนอายัดบัญชี</span>
+      <span class="material-symbols-outlined text-[24px] sm:text-[20px] text-white">e911_emergency</span>
+      <span class="text-[13.5px] tracking-wide whitespace-nowrap hidden sm:inline">สายด่วนอายัดบัญชี</span>
     </button>
 
     <!-- SOS Modal Backdrop & Dialog -->
-    <div id="sos-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-xs transition-opacity duration-200">
+    <div id="sos-modal" class="hidden fixed inset-0 z-[100000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200">
       <div class="relative w-full sm:max-w-[480px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
         
         <!-- Header -->
@@ -436,9 +438,62 @@ function initKnockoutButtonEffect() {
         overflow: hidden !important;
         isolation: isolate;
         -webkit-mask-image: -webkit-radial-gradient(white, black);
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.2s ease !important;
       }
 
-      /* Micro-Spring Tactile Press */
+      /* Subtle Cyber Silver Glow & Micro-Lift on Hover (Monochrome - No Green) */
+      .btn-knockout:hover,
+      .btn-green-solid:hover,
+      button[type="submit"]:hover,
+      #search-form button:hover,
+      #sos-trigger-btn:hover,
+      a.btn-green-solid:hover,
+      .whodis-ripple-target:hover,
+      a[href^="tel:"]:hover {
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22), inset 0 0 0 1.5px rgba(255, 255, 255, 0.45) !important;
+        filter: brightness(1.06);
+      }
+
+      /* Knockout Sweep Beam on Hover (Clean Silver Sheen - No Green) */
+      .btn-knockout::before,
+      .btn-green-solid::before,
+      button[type="submit"]::before,
+      #search-form button::before,
+      #sos-trigger-btn::before,
+      a.btn-green-solid::before,
+      .whodis-ripple-target::before,
+      a[href^="tel:"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -130%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.24) 50%,
+          transparent 100%
+        );
+        transform: skewX(-20deg);
+        pointer-events: none;
+        z-index: 10;
+        transition: left 0s ease;
+      }
+
+      .btn-knockout:hover::before,
+      .btn-green-solid:hover::before,
+      button[type="submit"]:hover::before,
+      #search-form button:hover::before,
+      #sos-trigger-btn:hover::before,
+      a.btn-green-solid:hover::before,
+      .whodis-ripple-target:hover::before,
+      a[href^="tel:"]:hover::before {
+        left: 170%;
+        transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Micro-Spring Tactile Press on Click */
       .btn-knockout:active,
       .btn-green-solid:active,
       button[type="submit"]:active,
