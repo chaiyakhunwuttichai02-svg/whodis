@@ -547,6 +547,25 @@
             }
         }
 
+        // Auto-fill target parameter from URL if coming from search results
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetVal = urlParams.get('target');
+        if (targetVal) {
+            const clean = targetVal.trim();
+            const isAllDigits = /^[\d\-]+$/.test(clean);
+            if (isAllDigits) {
+                if (clean.replace(/\-/g, '').length === 10 && clean.startsWith('0')) {
+                    const phoneInput = document.getElementById('scammer_phone');
+                    if (phoneInput) phoneInput.value = clean;
+                }
+                const accInput = document.getElementById('bank_account');
+                if (accInput) accInput.value = clean;
+            } else {
+                const nameInput = document.getElementById('scammer_name');
+                if (nameInput) nameInput.value = clean;
+            }
+        }
+
         updateUI();
     </script>
 </body>

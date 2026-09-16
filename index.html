@@ -10,7 +10,7 @@
             theme: { 
                 extend: { 
                     colors: { 
-                        "base-bg": "#f8fafc",
+                        "base-bg": "#ffffff",
                         "card-bg": "#ffffff",
                         "primary-text": "#0f172a",
                         "muted-text": "#64748b",
@@ -19,12 +19,12 @@
                         "warning": "#facc15",
                         "dark-badge": "#1e293b"
                     },
-                    fontFamily: { "sans": ["Inter", "Noto Sans Thai", "sans-serif"] }
+                    fontFamily: { "sans": ["Sarabun", "Inter", "sans-serif"] }
                 } 
             } 
         };
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <style>
         .nav-link {
@@ -56,46 +56,6 @@
         .btn-green-solid:hover {
             background-color: #059669;
         }
-        @keyframes ambientFloat1 {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(45px, -22px) scale(1.14); }
-        }
-        @keyframes ambientFloat2 {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(-40px, 22px) scale(1.10); }
-        }
-        .ambient-orb-1 {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            margin-left: -380px;
-            width: 540px;
-            height: 440px;
-            border-radius: 9999px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 75%);
-            filter: blur(65px);
-            animation: ambientFloat1 14s ease-in-out infinite;
-        }
-        .ambient-orb-2 {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            margin-left: 40px;
-            width: 520px;
-            height: 420px;
-            border-radius: 9999px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.16) 0%, rgba(99, 102, 241, 0.08) 50%, transparent 75%);
-            filter: blur(65px);
-            animation: ambientFloat2 17s ease-in-out infinite;
-        }
-        .ambient-grid {
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(15, 23, 42, 0.065) 1.2px, transparent 1.2px);
-            background-size: 26px 26px;
-            mask-image: radial-gradient(ellipse 75% 65% at 50% 35%, #000 25%, transparent 80%);
-            -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 35%, #000 25%, transparent 80%);
-        }
         @keyframes marquee {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
@@ -115,7 +75,7 @@
         }
     </style>
 </head>
-<body class="font-sans text-primary-text bg-base-bg antialiased">
+<body class="font-sans text-primary-text bg-white antialiased">
     <!-- Marquee Warning Banner -->
     <div class="w-full bg-red-600 text-white overflow-hidden text-[12px] py-2 font-medium flex items-center shadow-inner select-none relative z-50">
         <div class="bg-red-700 px-3 py-1 font-bold shrink-0 flex items-center gap-1.5 shadow-sm text-[11px] uppercase tracking-wider ml-1 rounded">
@@ -153,14 +113,7 @@
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
-    <main class="w-full pt-10 pb-12 relative overflow-hidden">
-        <!-- Ambient Glowing Security Orbs & Cyber Dot Grid (Subtle Background) -->
-        <div class="pointer-events-none absolute inset-0 -z-10 select-none overflow-hidden" aria-hidden="true">
-            <canvas id="canvas-particles" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
-            <div class="ambient-orb-1"></div>
-            <div class="ambient-orb-2"></div>
-            <div class="ambient-grid"></div>
-        </div>
+    <main class="w-full pt-10 pb-12 relative bg-white">
 
         <div class="max-w-[1000px] mx-auto px-4">
             
@@ -461,6 +414,15 @@
                         </span>`;
                     }
 
+                    const claimVal = Number(r.claim_amount || 0);
+                    const amountBadge = claimVal > 0 
+                        ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
+                            <span class="material-symbols-outlined text-[13px] text-amber-600">payments</span> ยอดเงินที่โกง: ฿${claimVal.toLocaleString('th-TH')} บาท
+                           </span>`
+                        : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-gray-50 text-gray-500 border border-gray-200">
+                            <span class="material-symbols-outlined text-[13px]">payments</span> ไม่ระบุยอดเงิน
+                           </span>`;
+
                     const shareQuery = encodeURIComponent(r.bank_account || r.phone_number || r.scammer_name);
                     const shareUrl = `${window.location.origin}/index.html?search=${shareQuery}`;
                     const shareText = `⚠️ เตือนภัยมิจฉาชีพ: ${r.scammer_name} บัญชี ${r.bank_account} ตรวจพบใน Whodis`;
@@ -479,10 +441,13 @@
                                         ${escapeHtml(r.category || 'มิจฉาชีพ')}
                                     </span>
                                 </div>
-                                <p class="text-xs font-mono text-muted-text mb-2 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">credit_card</span>
-                                    ${escapeHtml(r.bank_account || r.phone_number || '-')}
-                                </p>
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <p class="text-xs font-mono text-muted-text flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">credit_card</span>
+                                        ${escapeHtml(r.bank_account || r.phone_number || '-')}
+                                    </p>
+                                    ${amountBadge}
+                                </div>
                                 <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed bg-gray-50/80 p-2.5 rounded-xl border border-gray-100">
                                     ${escapeHtml(r.incident_details || 'มีพฤติกรรมหลอกลวงประชาชน')}
                                 </p>
@@ -556,11 +521,27 @@
 
                 const results = data.results || [];
                 if (results.length > 0) {
+                    let totalStolen = 0;
+                    let maxReportCount = 0;
+                    let uniqueMules = new Set();
+
+                    results.forEach(row => {
+                        const amt = Number(row.claim_amount || 0);
+                        if (!isNaN(amt) && amt > 0) totalStolen += amt;
+                        const rCount = Number(row.report_count || 1);
+                        if (rCount > maxReportCount) maxReportCount = rCount;
+                        if (row.bank_account) uniqueMules.add(row.bank_account);
+                    });
+
+                    const totalReports = results.length;
+                    const totalMules = Math.max(uniqueMules.size, results[0]?.multi_account_count || 1);
+
                     let itemsHtml = results.map(row => {
                         const dateStr = row.incident_date || row.created_at || '';
                         const formattedDate = dateStr ? new Date(dateStr).toLocaleDateString('th-TH') : '';
                         const reportCount = row.report_count || 1;
                         const multiAccCount = row.multi_account_count || 1;
+                        const claimAmountVal = Number(row.claim_amount || 0);
 
                         // 1 ครั้งสีเหลือง, มากกว่า 1 ครั้งสีแดง
                         let countBadge = '';
@@ -590,6 +571,14 @@
                             `;
                         }
 
+                        let amountBadge = claimAmountVal > 0
+                            ? `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300">
+                                <span class="material-symbols-outlined text-[15px] text-amber-600">payments</span> ยอดเงินที่โกง: ฿${claimAmountVal.toLocaleString('th-TH')} บาท
+                               </span>`
+                            : `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-gray-50 text-gray-500 border border-gray-200">
+                                <span class="material-symbols-outlined text-[15px]">payments</span> ไม่ระบุยอดเงิน
+                               </span>`;
+
                         const shareQuery = encodeURIComponent(row.bank_account || row.phone_number || row.scammer_name);
                         const shareUrl = `${window.location.origin}/index.html?search=${shareQuery}`;
                         const shareText = `⚠️ เตือนภัยมิจฉาชีพ: ${row.scammer_name} บัญชี ${row.bank_account} ถูกรายงานในระบบ Whodis ตรวจสอบประวัติ: ${shareUrl}`;
@@ -598,11 +587,12 @@
                             <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                                 <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
                                     <div>
-                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                        <div class="flex flex-wrap items-center gap-2 mb-2">
                                             <span class="w-3 h-3 rounded-full ${dotClass} shrink-0 inline-block"></span>
                                             <h3 class="font-bold text-[18px] text-primary-text">${escapeHtml(row.scammer_name)}</h3>
                                             ${countBadge}
                                             ${multiAccBadge}
+                                            ${amountBadge}
                                         </div>
                                         <p class="text-[14px] font-mono text-muted-text flex flex-wrap items-center gap-2">
                                             <span><strong>บัญชี:</strong> ${escapeHtml(row.bank_account)} ${row.bank_name ? '(' + escapeHtml(row.bank_name) + ')' : ''}</span>
@@ -639,23 +629,120 @@
                     }).join('');
 
                     content.innerHTML = `
-                        <div class="p-6 bg-red-50 border border-red-200 rounded-2xl mb-6 text-center shadow-sm">
-                            <span class="material-symbols-outlined text-danger text-[48px] mb-2">warning</span>
-                            <h2 class="text-[24px] font-bold text-danger mb-1">High Risk - พบประวัติความเสี่ยง!</h2>
-                            <p class="text-danger/80">พบข้อมูล "${escapeHtml(term)}" ในฐานข้อมูลรายงานมิจฉาชีพ โปรดระงับการโอนเงินทันที</p>
+                        <!-- กล่องแจ้งเตือนความเสี่ยงระดับสูง Redesigned High Risk Incident Card -->
+                        <div class="bg-red-50 border-2 border-red-300 rounded-2xl p-6 sm:p-8 mb-8 shadow-sm">
+                            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left mb-6">
+                                <div class="w-16 h-16 rounded-2xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                                    <span class="material-symbols-outlined text-[36px] animate-pulse">crisis_alert</span>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-200/80 text-red-900 mb-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-600 animate-ping"></span>
+                                        เตือนภัยขั้นสูงสุด (High Risk)
+                                    </div>
+                                    <h2 class="text-2xl sm:text-3xl font-extrabold text-red-950 tracking-tight">พบประวัติความเสี่ยงในระบบ!</h2>
+                                    <p class="text-red-800 text-sm sm:text-base mt-1 leading-relaxed">
+                                        คำค้นหา <span class="font-bold underline">"${escapeHtml(term)}"</span> ตรงกับฐานข้อมูลมิจฉาชีพที่มีการแจ้งความและตรวจสอบแล้ว <strong>โปรดระงับการโอนเงินทันที!</strong>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Quick Summary Stats Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                                <div class="bg-white/95 border border-red-200 rounded-xl p-4 text-center shadow-xs">
+                                    <span class="text-xs font-medium text-gray-500 block mb-1">ยอดเงินที่โกงรวม</span>
+                                    <span class="text-lg sm:text-xl font-black ${totalStolen > 0 ? 'text-red-600' : 'text-gray-700'}">
+                                        ${totalStolen > 0 ? '฿' + totalStolen.toLocaleString('th-TH') + ' บาท' : 'ไม่ระบุยอด'}
+                                    </span>
+                                </div>
+                                <div class="bg-white/95 border border-red-200 rounded-xl p-4 text-center shadow-xs">
+                                    <span class="text-xs font-medium text-gray-500 block mb-1">จำนวนรายงานทั้งหมด</span>
+                                    <span class="text-lg sm:text-xl font-black text-red-600">
+                                        ${totalReports} รายงาน
+                                    </span>
+                                </div>
+                                <div class="bg-white/95 border border-red-200 rounded-xl p-4 text-center shadow-xs">
+                                    <span class="text-xs font-medium text-gray-500 block mb-1">บัญชีม้าที่เกี่ยวข้อง</span>
+                                    <span class="text-lg sm:text-xl font-black text-purple-700">
+                                        ${totalMules} บัญชี
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Emergency Action Row -->
+                            <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-red-200/80">
+                                <div class="text-xs text-red-900 flex items-center gap-1.5 font-medium">
+                                    <span class="material-symbols-outlined text-[18px] text-red-600">shield_with_heart</span>
+                                    <span>หากโอนเงินไปแล้ว ให้ติดต่อศูนย์ AOC สายด่วน 1441 ทันทีตลอด 24 ชม.</span>
+                                </div>
+                                <a href="tel:1441" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-xl shadow transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">call</span>
+                                    โทรอายัดบัญชี AOC 1441 ด่วน
+                                </a>
+                            </div>
                         </div>
+
                         <div class="space-y-4">
                             ${itemsHtml}
                         </div>
                     `;
                 } else {
                     content.innerHTML = `
-                        <div class="p-10 bg-white border border-gray-200 rounded-2xl text-center shadow-sm">
-                            <span class="material-symbols-outlined text-success text-[48px] mb-2">check_circle</span>
-                            <h2 class="text-[20px] font-bold text-primary-text mb-2">ยังไม่พบประวัติในระบบ</h2>
-                            <p class="text-muted-text text-[14px] max-w-md mx-auto">
-                                การไม่พบประวัติ ไม่ได้การันตีว่าปลอดภัย 100% โปรดตรวจสอบความน่าเชื่อถือของร้านค้าอีกครั้งก่อนโอนเงิน
-                            </p>
+                        <!-- กล่องผลลัพธ์ไม่พบประวัติ Redesigned No Record Security Shield Card -->
+                        <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-10 shadow-sm text-center max-w-2xl mx-auto">
+                            <div class="w-20 h-20 mx-auto rounded-3xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mb-5 shadow-xs">
+                                <span class="material-symbols-outlined text-[44px]">verified_user</span>
+                            </div>
+                            
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                สถานะการตรวจสอบ
+                            </div>
+                            
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3">ยังไม่พบประวัติในระบบ Whodis</h2>
+                            
+                            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left mb-6">
+                                <div class="flex items-start gap-3">
+                                    <span class="material-symbols-outlined text-amber-600 text-[22px] shrink-0 mt-0.5">info</span>
+                                    <div class="text-xs sm:text-sm text-amber-900 space-y-1">
+                                        <p class="font-bold">⚠️ ข้อควรระวังก่อนโอนเงิน:</p>
+                                        <p>การไม่พบประวัติ <strong>ไม่ได้การันตีว่าปลอดภัย 100%</strong> เนื่องจากอาจเป็นบัญชีม้าเปิดใหม่ หรือยังไม่มีผู้เสียหายแจ้งข้อมูลเข้าระบบ</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3 Smart Tips -->
+                            <div class="text-left bg-gray-50 rounded-2xl p-5 border border-gray-100 mb-6 space-y-3">
+                                <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[16px] text-gray-500">checklist</span>
+                                    3 วิธีเช็กความปลอดภัยก่อนโอน:
+                                </h4>
+                                <div class="space-y-2.5 text-xs sm:text-sm text-gray-600">
+                                    <div class="flex items-start gap-2.5">
+                                        <span class="w-5 h-5 rounded-full bg-white border border-gray-300 text-gray-700 font-bold flex items-center justify-center shrink-0 text-[11px] mt-0.5">1</span>
+                                        <span>ตรวจสอบชื่อบัญชีปลายทางว่าตรงกับชื่อผู้ขาย และชื่อบนบัตรประชาชนจริงหรือไม่</span>
+                                    </div>
+                                    <div class="flex items-start gap-2.5">
+                                        <span class="w-5 h-5 rounded-full bg-white border border-gray-300 text-gray-700 font-bold flex items-center justify-center shrink-0 text-[11px] mt-0.5">2</span>
+                                        <span>นำชื่อ เบอร์โทร และเลขบัญชีไปค้นหาใน Google หรือกลุ่มโซเชียลเตือนภัยเพิ่มเติม</span>
+                                    </div>
+                                    <div class="flex items-start gap-2.5">
+                                        <span class="w-5 h-5 rounded-full bg-white border border-gray-300 text-gray-700 font-bold flex items-center justify-center shrink-0 text-[11px] mt-0.5">3</span>
+                                        <span>หลีกเลี่ยงการโอนผ่านบัญชีบุคคลธรรมดา หากสั่งซื้อสินค้าจากร้านค้าบริษัทหรือเพจทางการ</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                                <a href="report.html?target=${encodeURIComponent(term)}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-sm shadow transition-colors">
+                                    <span class="material-symbols-outlined text-[18px] text-amber-400">report</span>
+                                    เคยถูกโกงจากข้อมูลนี้? แจ้งเบาะแสเลย
+                                </a>
+                                <button onclick="resetSearch()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">search</span>
+                                    ค้นหาข้อมูลอื่น
+                                </button>
+                            </div>
                         </div>
                     `;
                 }
@@ -673,241 +760,6 @@
             document.getElementById('results-view').classList.add('hidden');
             history.pushState(null, '', 'index.html');
         }
-
-        // =========================================================================
-        // Animated Canvas Particle Background (Bubbles & Spinning Lines)
-        // =========================================================================
-        (function initParticleCanvas() {
-            const canvas = document.getElementById('canvas-particles');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-
-            let width = 0;
-            let height = 0;
-            let dpr = window.devicePixelRatio || 1;
-            let animationFrameId = null;
-            let particles = [];
-            let mouse = { x: null, y: null, radius: 100 };
-
-            function resizeCanvas() {
-                const parent = canvas.parentElement || canvas.closest('main') || document.body;
-                const rect = parent.getBoundingClientRect();
-                width = rect.width;
-                height = rect.height;
-                dpr = window.devicePixelRatio || 1;
-
-                canvas.width = width * dpr;
-                canvas.height = height * dpr;
-                canvas.style.width = width + 'px';
-                canvas.style.height = height + 'px';
-                ctx.scale(dpr, dpr);
-            }
-
-            class Bubble {
-                constructor() {
-                    this.type = 'bubble';
-                    this.init(true);
-                }
-
-                init(randomY = false) {
-                    this.x = Math.random() * width;
-                    this.y = randomY ? Math.random() * height : (Math.random() < 0.5 ? -15 : height + 15);
-                    this.radius = 2.5 + Math.random() * 5.5;
-                    const speed = 0.25 + Math.random() * 0.65;
-                    const angle = Math.random() * Math.PI * 2;
-                    this.vx = Math.cos(angle) * speed;
-                    this.vy = Math.sin(angle) * speed;
-                    // Clean slate/graphite monochrome palette (No Green)
-                    this.baseAlpha = 0.08 + Math.random() * 0.16;
-                    this.alpha = this.baseAlpha;
-                    this.pulseSpeed = 0.015 + Math.random() * 0.02;
-                    this.pulsePhase = Math.random() * Math.PI * 2;
-                }
-
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    this.pulsePhase += this.pulseSpeed;
-                    this.alpha = this.baseAlpha + Math.sin(this.pulsePhase) * 0.04;
-
-                    if (mouse.x !== null && mouse.y !== null) {
-                        const dx = this.x - mouse.x;
-                        const dy = this.y - mouse.y;
-                        const dist = Math.hypot(dx, dy);
-                        if (dist < mouse.radius) {
-                            const force = (mouse.radius - dist) / mouse.radius;
-                            this.x += (dx / dist) * force * 1.5;
-                            this.y += (dy / dist) * force * 1.5;
-                        }
-                    }
-
-                    const buffer = 30;
-                    if (this.x < -buffer || this.x > width + buffer || this.y < -buffer || this.y > height + buffer) {
-                        this.init(false);
-                    }
-                }
-
-                draw() {
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(15, 23, 42, ${Math.max(0.03, this.alpha)})`;
-                    ctx.fill();
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = `rgba(100, 116, 139, ${Math.max(0.04, this.alpha * 1.2)})`;
-                    ctx.stroke();
-                    ctx.restore();
-                }
-            }
-
-            class Line {
-                constructor() {
-                    this.type = 'line';
-                    this.init(true);
-                }
-
-                init(randomY = false) {
-                    this.x = Math.random() * width;
-                    this.y = randomY ? Math.random() * height : (Math.random() < 0.5 ? -25 : height + 25);
-                    this.length = 16 + Math.random() * 26;
-                    this.angle = Math.random() * Math.PI * 2;
-                    // "Lines spin at random speeds and in both directions"
-                    const dir = Math.random() < 0.5 ? -1 : 1;
-                    this.spinSpeed = dir * (0.008 + Math.random() * 0.022);
-                    const speed = 0.2 + Math.random() * 0.55;
-                    const moveAngle = Math.random() * Math.PI * 2;
-                    this.vx = Math.cos(moveAngle) * speed;
-                    this.vy = Math.sin(moveAngle) * speed;
-                    // Clean monochrome slate/graphite
-                    this.alpha = 0.07 + Math.random() * 0.15;
-                    this.lineWidth = 1.2 + Math.random() * 0.8;
-                }
-
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    this.angle += this.spinSpeed;
-
-                    if (mouse.x !== null && mouse.y !== null) {
-                        const dx = this.x - mouse.x;
-                        const dy = this.y - mouse.y;
-                        const dist = Math.hypot(dx, dy);
-                        if (dist < mouse.radius) {
-                            const force = (mouse.radius - dist) / mouse.radius;
-                            this.x += (dx / dist) * force * 1.2;
-                            this.y += (dy / dist) * force * 1.2;
-                        }
-                    }
-
-                    const buffer = 40;
-                    if (this.x < -buffer || this.x > width + buffer || this.y < -buffer || this.y > height + buffer) {
-                        this.init(false);
-                    }
-                }
-
-                draw() {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.angle);
-                    ctx.beginPath();
-                    ctx.moveTo(-this.length / 2, 0);
-                    ctx.lineTo(this.length / 2, 0);
-                    ctx.lineWidth = this.lineWidth;
-                    ctx.strokeStyle = `rgba(15, 23, 42, ${this.alpha})`;
-                    ctx.lineCap = 'round';
-                    ctx.stroke();
-
-                    // Subtle dot at tips for futuristic cyber look
-                    ctx.fillStyle = `rgba(71, 85, 105, ${this.alpha * 1.3})`;
-                    ctx.beginPath();
-                    ctx.arc(-this.length / 2, 0, 1.5, 0, Math.PI * 2);
-                    ctx.arc(this.length / 2, 0, 1.5, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    ctx.restore();
-                }
-            }
-
-            function createParticles() {
-                particles = [];
-                const count = Math.min(65, Math.max(30, Math.floor((width * height) / 16000)));
-                const bubbleCount = Math.floor(count * 0.55);
-                const lineCount = count - bubbleCount;
-
-                for (let i = 0; i < bubbleCount; i++) {
-                    particles.push(new Bubble());
-                }
-                for (let i = 0; i < lineCount; i++) {
-                    particles.push(new Line());
-                }
-            }
-
-            function loop() {
-                ctx.clearRect(0, 0, width, height);
-
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].update();
-                    particles[i].draw();
-                }
-
-                animationFrameId = requestAnimationFrame(loop);
-            }
-
-            // Mouse tracking
-            const heroMain = canvas.closest('main') || document.body;
-            heroMain.addEventListener('pointermove', (e) => {
-                const rect = canvas.getBoundingClientRect();
-                mouse.x = e.clientX - rect.left;
-                mouse.y = e.clientY - rect.top;
-            }, { passive: true });
-
-            heroMain.addEventListener('pointerleave', () => {
-                mouse.x = null;
-                mouse.y = null;
-            }, { passive: true });
-
-            // Init
-            resizeCanvas();
-            createParticles();
-            loop();
-
-            // Resize listener
-            let resizeTimer = null;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    resizeCanvas();
-                    createParticles();
-                }, 150);
-            }, { passive: true });
-
-            // Visibility pause
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    cancelAnimationFrame(animationFrameId);
-                } else {
-                    animationFrameId = requestAnimationFrame(loop);
-                }
-            });
-
-            // Global helper methods
-            window.reloadParticles = function(e) {
-                if (e) e.preventDefault();
-                createParticles();
-                console.log('[Whodis Particles] Reloaded with ' + particles.length + ' particles.');
-            };
-
-            window.logParticles = function(e, type) {
-                if (e) e.preventDefault();
-                if (type) {
-                    const filtered = particles.filter(p => p.type === type);
-                    console.log(`[Whodis Particles] ${type} (${filtered.length}):`, filtered);
-                } else {
-                    console.log(`[Whodis Particles] Total (${particles.length}):`, particles);
-                }
-            };
-        })();
     </script>
 </body>
 </html>

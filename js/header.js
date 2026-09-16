@@ -13,11 +13,22 @@ function renderHeader() {
   const placeholder = document.getElementById('header-placeholder');
   if (!placeholder) return;
 
-  // ฝังสไตล์ Global สำหรับแถบเมนู: Hover เป็นวงสีดำอ่อน และ Active เป็นสีดำสนิท
+  // ฝังสไตล์ Global: ฟอนต์ไทยมีหัว (Sarabun), พื้นหลังขาวล้วน (#ffffff), แถบเมนู Hover/Active
   if (!document.getElementById('whodis-nav-custom-style')) {
     const styleEl = document.createElement('style');
     styleEl.id = 'whodis-nav-custom-style';
     styleEl.textContent = `
+      @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+      html, body {
+        background-color: #ffffff !important;
+        font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      }
+
+      .bg-base-bg {
+        background-color: #ffffff !important;
+      }
+
       .nav-link {
         padding: 0.45rem 1.15rem !important;
         font-size: 13.5px !important;
@@ -430,11 +441,22 @@ function initKnockoutButtonEffect() {
       .btn-green-solid,
       button[type="submit"],
       #search-form button,
-      #sos-trigger-btn,
       a.btn-green-solid,
       .whodis-ripple-target,
       a[href^="tel:"] {
         position: relative !important;
+        overflow: hidden !important;
+        isolation: isolate;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.2s ease !important;
+      }
+
+      /* Dedicated Viewport Fixed Position for SOS Trigger Button */
+      #sos-trigger-btn {
+        position: fixed !important;
+        bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)) !important;
+        right: max(1.25rem, env(safe-area-inset-right, 1.25rem)) !important;
+        z-index: 999999 !important;
         overflow: hidden !important;
         isolation: isolate;
         -webkit-mask-image: -webkit-radial-gradient(white, black);
