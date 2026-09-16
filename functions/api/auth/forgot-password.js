@@ -2,8 +2,19 @@
 // Cloudflare Pages Function: ขอรหัส OTP สำหรับรีเซ็ตรหัสผ่าน
 
 async function sendEmailOtp(toEmail, otp, env) {
+  const hasBrevo = Boolean(env && env.BREVO_API_KEY);
+  const hasResend = Boolean(env && env.RESEND_API_KEY);
+
+  if (!hasBrevo && !hasResend) {
+    return {
+      success: false,
+      needApiKey: true,
+      message: 'ยังไม่ได้ตั้งค่า Email API Key (Brevo หรือ Resend) ในระบบ จึงไม่สามารถส่งอีเมลได้จริง กรุณาใส่ API Key ใน Cloudflare Dashboard หรือแจ้งแอดมิน'
+    };
+  }
+
   // 1. ลองส่งผ่าน Brevo API หากมีการตั้งค่า BREVO_API_KEY
-  if (env && env.BREVO_API_KEY) {
+  if (hasBrevo) {
     try {
       const payload = {
         sender: { name: "Whodis Security", email: "adminwhodis@gmail.com" },
@@ -41,7 +52,7 @@ async function sendEmailOtp(toEmail, otp, env) {
   }
 
   // 2. ลองส่งผ่าน Resend API หากมีการตั้งค่า RESEND_API_KEY
-  if (env && env.RESEND_API_KEY) {
+  if (hasResend) {
     try {
       const payload = {
         from: "Whodis Security <onboarding@resend.dev>",
@@ -70,14 +81,32 @@ async function sendEmailOtp(toEmail, otp, env) {
         body: JSON.stringify(payload)
       });
       if (res.ok) return { success: true, provider: 'Resend' };
+
       const errTxt = await res.text();
       console.error("Resend API error:", errTxt);
+
+      if (errTxt.includes('You can only send testing emails to your own email address')) {
+        return {
+          success: false,
+          isResendRestriction: true,
+          message: 'บัญชี Resend แบบทดสอบฟรี กำหนดให้ส่ง OTP ไปยังอีเมลของเจ้าของบัญชี Resend (chaiyakhunwuttichai02@gmail.com) เท่านั้นครับ (หากต้องการส่งหาทุกอีเมล สามารถใช้ Brevo API Key แทนได้ครับ)'
+        };
+      }
+
+      return {
+        success: false,
+        message: `ผู้ให้บริการอีเมล Resend แจ้งเตือน: ${errTxt}`
+      };
     } catch (e) {
       console.error("Resend error:", e);
+      return {
+        success: false,
+        message: `เกิดข้อผิดพลาดในการเชื่อมต่อ Resend: ${e.message}`
+      };
     }
   }
 
-  return { success: false, needApiKey: true };
+  return { success: false, message: 'ไม่สามารถส่งอีเมลได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง' };
 }
 
 export async function onRequestPost(context) {
@@ -136,10 +165,11 @@ export async function onRequestPost(context) {
     if (!sendResult.success) {
       return new Response(JSON.stringify({
         success: false,
-        needApiKey: true,
-        message: 'ยังไม่ได้ตั้งค่า Email API Key (Brevo หรือ Resend) ในระบบ จึงไม่สามารถส่งอีเมลได้จริง กรุณาใส่ API Key ใน Cloudflare Dashboard หรือแจ้งแอดมิน'
+        needApiKey: sendResult.needApiKey || false,
+        isResendRestriction: sendResult.isResendRestriction || false,
+        message: sendResult.message || 'ไม่สามารถส่งอีเมลได้ในขณะนี้'
       }), {
-        status: 500,
+        status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
