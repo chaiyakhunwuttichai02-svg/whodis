@@ -2,7 +2,12 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader();
+  initKnockoutButtonEffect();
 });
+
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  initKnockoutButtonEffect();
+}
 
 function renderHeader() {
   const placeholder = document.getElementById('header-placeholder');
@@ -372,4 +377,168 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+// =========================================================================
+// Whodis Knockout Inverted Ripple Effect (Jhey Tompkins SVG Stencil Inspired)
+// =========================================================================
+function initKnockoutButtonEffect() {
+  if (window.__whodisKnockoutInitialized) return;
+  window.__whodisKnockoutInitialized = true;
+
+  // 1. Inject SVG Filters into DOM (knockout-black & knockout-white)
+  if (!document.getElementById('whodis-knockout-filters')) {
+    const svgWrapper = document.createElement('div');
+    svgWrapper.id = 'whodis-knockout-filters';
+    svgWrapper.innerHTML = `
+      <svg class="sr-only" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;">
+        <defs>
+          <filter id="knockout-black" color-interpolation-filters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                      -1 -1 -1 0 1"
+            />
+            <feComposite in="SourceGraphic" operator="out" />
+          </filter>
+          <filter id="knockout-white" color-interpolation-filters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                      1 1 1 0 0"
+            />
+            <feComposite in="SourceGraphic" operator="out" />
+          </filter>
+        </defs>
+      </svg>
+    `;
+    document.body.appendChild(svgWrapper);
+  }
+
+  // 2. Inject Styles for Knockout Ripple & Shockwave
+  if (!document.getElementById('whodis-knockout-styles')) {
+    const styleEl = document.createElement('style');
+    styleEl.id = 'whodis-knockout-styles';
+    styleEl.textContent = `
+      /* Knockout Host Preparation */
+      .btn-knockout,
+      .btn-green-solid,
+      button[type="submit"],
+      #search-form button,
+      #sos-trigger-btn,
+      a.btn-green-solid,
+      .whodis-ripple-target,
+      a[href^="tel:"] {
+        position: relative !important;
+        overflow: hidden !important;
+        isolation: isolate;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+      }
+
+      /* Micro-Spring Tactile Press */
+      .btn-knockout:active,
+      .btn-green-solid:active,
+      button[type="submit"]:active,
+      #search-form button:active,
+      #sos-trigger-btn:active,
+      a[href^="tel:"]:active {
+        transform: scale(0.96) !important;
+        transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      }
+
+      /* The Inverted Cutout Stencil Ripple */
+      .whodis-knockout-ripple {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        background-color: #ffffff;
+        mix-blend-mode: difference;
+        transform: scale(0);
+        animation: whodisKnockoutAnim 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 80;
+        will-change: transform, opacity;
+      }
+
+      /* Glowing Shockwave Ring */
+      .whodis-knockout-shockwave {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        border: 2px solid rgba(255, 255, 255, 0.95);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.7), inset 0 0 6px rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: whodisShockwaveAnim 0.72s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        z-index: 85;
+        will-change: transform, opacity;
+      }
+
+      @keyframes whodisKnockoutAnim {
+        0% {
+          transform: scale(0);
+          opacity: 1;
+        }
+        55% {
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2.8);
+          opacity: 0;
+        }
+      }
+
+      @keyframes whodisShockwaveAnim {
+        0% {
+          transform: scale(0.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2.5);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(styleEl);
+  }
+
+  // 3. Pointerdown listener with delegation
+  document.addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest(
+      '.btn-knockout, .btn-green-solid, button[type="submit"], #search-form button, #sos-trigger-btn, a.btn-green-solid, .whodis-ripple-target, a[href^="tel:"]'
+    );
+    if (!btn) return;
+
+    const rect = btn.getBoundingClientRect();
+    const x = (e.clientX && e.clientX > 0) ? (e.clientX - rect.left) : (rect.width / 2);
+    const y = (e.clientY && e.clientY > 0) ? (e.clientY - rect.top) : (rect.height / 2);
+
+    const maxDim = Math.max(rect.width, rect.height);
+    const diameter = maxDim * 2.6;
+
+    const ripple = document.createElement('span');
+    ripple.className = 'whodis-knockout-ripple';
+    ripple.style.width = diameter + 'px';
+    ripple.style.height = diameter + 'px';
+    ripple.style.left = (x - diameter / 2) + 'px';
+    ripple.style.top = (y - diameter / 2) + 'px';
+
+    const shockwave = document.createElement('span');
+    shockwave.className = 'whodis-knockout-shockwave';
+    shockwave.style.width = diameter + 'px';
+    shockwave.style.height = diameter + 'px';
+    shockwave.style.left = (x - diameter / 2) + 'px';
+    shockwave.style.top = (y - diameter / 2) + 'px';
+
+    btn.appendChild(ripple);
+    btn.appendChild(shockwave);
+
+    setTimeout(() => {
+      ripple.remove();
+      shockwave.remove();
+    }, 750);
+  }, { passive: true });
+}
+
 
