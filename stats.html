@@ -110,55 +110,31 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-sm">
-                    <h3 class="text-[18px] font-bold text-primary-text mb-6">สัดส่วนประเภท Scam (เดือนนี้)</h3>
+                    <h3 class="text-[18px] font-bold text-primary-text mb-6">สัดส่วนประเภท Scam (จากฐานข้อมูลจริง)</h3>
                     <div class="relative h-[250px] w-full flex justify-center mb-6">
                         <canvas id="doughnutChart"></canvas>
                         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                             <span class="text-[12px] text-muted-text">อันดับ 1</span>
-                            <span class="text-[20px] font-bold text-primary-text leading-tight mt-1">Investment</span>
-                            <span class="text-[24px] font-bold text-[#3b82f6] leading-tight">32%</span>
+                            <span id="top-cat-name" class="text-[15px] md:text-[16px] font-bold text-primary-text leading-tight mt-1 text-center px-2 truncate max-w-[170px]">...</span>
+                            <span id="top-cat-percent" class="text-[24px] font-bold text-[#3b82f6] leading-tight">...</span>
                         </div>
                     </div>
                     
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#3b82f6]"></span> <span class="font-medium text-primary-text">Investment Scam</span></div>
-                            <span class="font-bold">32%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#10b981]"></span> <span class="text-muted-text">Online Shopping Scam</span></div>
-                            <span class="font-medium">24%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#f59e0b]"></span> <span class="text-muted-text">Loan Scam</span></div>
-                            <span class="font-medium">18%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#ef4444]"></span> <span class="text-muted-text">Romance Scam</span></div>
-                            <span class="font-medium">10%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8b5cf6]"></span> <span class="text-muted-text">Crypto Scam</span></div>
-                            <span class="font-medium">8%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#64748b]"></span> <span class="text-muted-text">Call Center Scam</span></div>
-                            <span class="font-medium">5%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[14px]">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#e2e8f0]"></span> <span class="text-muted-text">อื่นๆ</span></div>
-                            <span class="font-medium">3%</span>
-                        </div>
+                    <div class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1" id="categories-list">
+                        <div class="text-center py-6 text-muted-text text-sm">กำลังคำนวณสัดส่วนจากฐานข้อมูล...</div>
                     </div>
                 </div>
 
                 <div class="bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col">
                     <div class="flex items-start justify-between mb-6">
-                        <h3 class="text-[18px] font-bold text-primary-text">เปรียบเทียบแนวโน้ม vs เดือนก่อน</h3>
+                        <div>
+                            <h3 class="text-[18px] font-bold text-primary-text">เปรียบเทียบประเภทกลโกง</h3>
+                            <p class="text-[12px] text-muted-text mt-0.5">จำนวนครั้งที่ประชาชนรายงานเข้ามาจริง</p>
+                        </div>
                         <div class="text-right">
-                            <span class="text-[12px] text-muted-text block mb-1">Investment vs เดือนก่อน</span>
-                            <span class="inline-flex items-center text-[14px] font-bold text-danger bg-red-50 px-2 py-0.5 rounded">
-                                <span class="material-symbols-outlined text-[16px]">trending_up</span> 35%
+                            <span class="text-[11px] text-muted-text block mb-1">กลโกงที่พบบ่อยสุด</span>
+                            <span id="top-scam-badge" class="inline-flex items-center text-[13px] font-bold text-danger bg-red-50 px-2.5 py-1 rounded-full">
+                                <span class="material-symbols-outlined text-[15px] mr-1">warning</span> <span id="top-scam-badge-text">...</span>
                             </span>
                         </div>
                     </div>
@@ -168,8 +144,7 @@
                     </div>
 
                     <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl text-[13px] text-muted-text flex items-center justify-center gap-4">
-                        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-danger"></span> สีแดง = เพิ่มขึ้น (อันตราย)</div>
-                        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-success"></span> สีเขียว = ลดลง (ดีขึ้น)</div>
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#3b82f6]"></span> ข้อมูลสถิติอัปเดตแบบเรียลไทม์ตามฐานข้อมูล Whodis</div>
                     </div>
                 </div>
             </div>
@@ -203,6 +178,34 @@
         Chart.defaults.font.family = "'Inter', 'Noto Sans Thai', sans-serif";
         Chart.defaults.color = '#64748b';
         
+        let doughnutChartInstance = null;
+        let barChartInstance = null;
+        let lineChartInstance = null;
+
+        const PALETTE = [
+            '#3b82f6', // blue
+            '#10b981', // green
+            '#f59e0b', // amber
+            '#ef4444', // red
+            '#8b5cf6', // purple
+            '#ec4899', // pink
+            '#06b6d4', // cyan
+            '#f97316', // orange
+            '#64748b'  // slate
+        ];
+
+        const THAI_MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         async function loadLiveStats() {
             try {
                 const res = await fetch('/api/stats');
@@ -215,27 +218,57 @@
                 document.getElementById('stat-damage').textContent = '฿' + (data.total_damage || 0).toLocaleString();
                 document.getElementById('stat-searches').textContent = (data.total_searches || 0).toLocaleString();
 
-                const cats = data.categories || {
-                    'Online Shopping': 0,
-                    'Investment': 0,
-                    'Loan': 0,
-                    'Romance': 0,
-                    'Crypto': 0,
-                    'Call Center': 0,
-                    'อื่นๆ': 0
-                };
+                const cats = data.categories || {};
+                const catEntries = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+                const totalCases = catEntries.reduce((sum, item) => sum + item[1], 0);
 
-                const labels = Object.keys(cats);
-                let counts = Object.values(cats);
-                const sum = counts.reduce((a, b) => a + b, 0);
+                const listContainer = document.getElementById('categories-list');
+                listContainer.innerHTML = '';
 
-                // หากยังไม่มีข้อมูลจริงในระบบ ให้แสดงข้อมูลอ้างอิงเริ่มต้น
-                if (sum === 0) {
-                    counts = [24, 32, 18, 10, 8, 5, 3];
+                if (catEntries.length === 0 || totalCases === 0) {
+                    document.getElementById('top-cat-name').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('top-cat-percent').textContent = '0%';
+                    document.getElementById('top-scam-badge-text').textContent = 'ไม่มีรายงาน';
+                    listContainer.innerHTML = '<div class="text-center py-6 text-muted-text text-sm">ยังไม่มีรายงานเคสกลโกงในระบบ</div>';
+                    renderDoughnut(['ไม่มีข้อมูล'], [1], ['#e2e8f0']);
+                    renderBar(['ไม่มีข้อมูล'], [0], ['#cbd5e1']);
+                    renderLine(data.monthly_trend || []);
+                    return;
                 }
 
-                renderDoughnut(labels, counts);
-                renderBar(labels, counts);
+                // Top 1 Category
+                const topCat = catEntries[0];
+                const topPercent = Math.round((topCat[1] / totalCases) * 100);
+                document.getElementById('top-cat-name').textContent = topCat[0];
+                document.getElementById('top-cat-percent').textContent = topPercent + '%';
+                document.getElementById('top-scam-badge-text').textContent = `${topCat[0]} (${topPercent}%)`;
+
+                // Render List
+                catEntries.forEach(([name, count], index) => {
+                    const color = PALETTE[index % PALETTE.length];
+                    const percent = Math.round((count / totalCases) * 100);
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-between text-[14px] py-1.5 border-b border-gray-100 last:border-0';
+                    row.innerHTML = `
+                        <div class="flex items-center gap-2 overflow-hidden pr-2">
+                            <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${color}"></span>
+                            <span class="font-medium text-primary-text truncate text-[13px] md:text-[14px]" title="${escapeHtml(name)}">${escapeHtml(name)}</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0 ml-auto">
+                            <span class="text-xs text-muted-text">(${count.toLocaleString()} เคส)</span>
+                            <span class="font-bold text-primary-text min-w-[36px] text-right">${percent}%</span>
+                        </div>
+                    `;
+                    listContainer.appendChild(row);
+                });
+
+                // Doughnut and Bar Chart
+                const labels = catEntries.map(e => e[0]);
+                const counts = catEntries.map(e => e[1]);
+                const colors = catEntries.map((_, i) => PALETTE[i % PALETTE.length]);
+
+                renderDoughnut(labels, counts, colors);
+                renderBar(labels, counts, colors);
                 renderLine(data.monthly_trend || []);
 
             } catch (err) {
@@ -243,49 +276,84 @@
             }
         }
 
-        function renderDoughnut(labels, data) {
+        function renderDoughnut(labels, data, colors) {
             const ctx = document.getElementById('doughnutChart').getContext('2d');
-            new Chart(ctx, {
+            if (doughnutChartInstance) doughnutChartInstance.destroy();
+
+            doughnutChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#64748b', '#e2e8f0'],
-                        borderWidth: 0,
-                        hoverOffset: 4
+                        backgroundColor: colors || PALETTE,
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 6
                     }]
                 },
                 options: {
-                    cutout: '75%',
+                    cutout: '72%',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const val = context.raw || 0;
+                                    const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                    return ` ${context.label}: ${val} เคส (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
                 }
             });
         }
 
-        function renderBar(labels, data) {
+        function renderBar(labels, data, colors) {
             const ctx = document.getElementById('barChart').getContext('2d');
-            new Chart(ctx, {
+            if (barChartInstance) barChartInstance.destroy();
+
+            barChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'จำนวนเคส',
                         data: data,
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 4
+                        backgroundColor: colors || '#3b82f6',
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` จำนวน: ${context.raw} เคส`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        x: { grid: { color: '#f1f5f9' }, beginAtZero: true },
-                        y: { grid: { display: false } }
+                        x: {
+                            grid: { color: '#f1f5f9' },
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 12 }
+                            }
+                        }
                     }
                 }
             });
@@ -293,40 +361,76 @@
 
         function renderLine(monthlyTrend) {
             const ctx = document.getElementById('lineChart').getContext('2d');
-            let labels = ['เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.'];
-            let counts = [12, 18, 25, 30, 42, 50];
+            if (lineChartInstance) lineChartInstance.destroy();
+
+            let labels = [];
+            let counts = [];
 
             if (monthlyTrend && monthlyTrend.length > 0) {
-                labels = monthlyTrend.map(m => m.month_label).reverse();
-                counts = monthlyTrend.map(m => m.count).reverse();
+                // ข้อมูลจาก DESC เรียงกลับเป็น ASC เพื่อดูกราฟจากอดีตมาปัจจุบัน
+                const sorted = [...monthlyTrend].reverse();
+                labels = sorted.map(m => {
+                    if (!m.month_label) return '';
+                    const parts = m.month_label.split('-');
+                    if (parts.length === 2) {
+                        const mIndex = parseInt(parts[1], 10) - 1;
+                        const thaiM = THAI_MONTHS[mIndex] || parts[1];
+                        const yearShort = (parseInt(parts[0], 10) + 543).toString().slice(-2);
+                        return `${thaiM} ${yearShort}`;
+                    }
+                    return m.month_label;
+                });
+                counts = sorted.map(m => m.count || 0);
+            } else {
+                // หากยังไม่มีข้อมูลสถิติรายเดือน
+                const now = new Date();
+                const currM = THAI_MONTHS[now.getMonth()];
+                const currY = (now.getFullYear() + 543).toString().slice(-2);
+                labels = [`${currM} ${currY}`];
+                counts = [0];
             }
 
-            new Chart(ctx, {
+            lineChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'จำนวนรายงานจริง',
+                        label: 'จำนวนรายงานที่แจ้งเข้ามา',
                         data: counts,
                         borderColor: '#1e293b',
-                        backgroundColor: 'rgba(30, 41, 59, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
+                        backgroundColor: 'rgba(30, 41, 59, 0.08)',
+                        borderWidth: 2.5,
+                        tension: 0.35,
                         fill: true,
                         pointBackgroundColor: '#ffffff',
                         pointBorderColor: '#1e293b',
                         pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` รายงาน: ${context.raw} เคส`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-                        x: { grid: { display: false } }
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { precision: 0 }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
                     }
                 }
             });

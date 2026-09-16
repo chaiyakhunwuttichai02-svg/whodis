@@ -295,13 +295,13 @@
                     list.innerHTML = data.news.map(item => `
                         <a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" 
                            class="group flex items-start gap-3.5 py-3 first:pt-1 hover:bg-slate-50 rounded-2xl px-2.5 transition-all duration-150 border border-transparent hover:border-gray-100">
-                            <!-- ช่องรูปภาพเล็กๆ ด้านข้าง -->
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 bg-gray-100 border border-gray-200 mt-0.5 shadow-2xs">
-                                <img src="${escapeHtml(item.image || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=200&auto=format&fit=crop&q=80')}" 
-                                     alt="" 
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                            <!-- ช่องรูปภาพเล็กๆ ด้านข้าง (โลโก้สำนักข่าวจริง) -->
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 bg-white border border-gray-200 mt-0.5 shadow-2xs flex items-center justify-center p-2">
+                                <img src="${escapeHtml(item.image || 'https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://news.google.com&size=128')}" 
+                                     alt="${escapeHtml(item.source)}" 
+                                     class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-200"
                                      loading="lazy"
-                                     onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=200&auto=format&fit=crop&q=80'">
+                                     onerror="this.src='https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://news.google.com&size=128'">
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between gap-2 mb-1">

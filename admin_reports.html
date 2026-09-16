@@ -17,37 +17,45 @@
 </head>
 <body class="flex h-screen overflow-hidden text-gray-800">
 
+    <!-- Mobile Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-black/60 z-40 hidden transition-opacity md:hidden"></div>
+
     <!-- Sidebar ด้านซ้าย -->
-    <aside class="sidebar w-64 h-full flex-shrink-0 flex flex-col text-gray-300 transition-all duration-300">
-        <div class="h-16 flex items-center px-6 border-b border-gray-700">
-            <span class="material-symbols-outlined text-[28px] mr-2 text-white">security</span>
-            <span class="text-white font-bold text-lg tracking-wider">Whodis Admin</span>
+    <aside id="admin-sidebar" class="sidebar fixed md:static inset-y-0 left-0 z-50 w-64 h-full flex-shrink-0 flex flex-col text-gray-300 transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-2xl md:shadow-none">
+        <div class="h-16 flex items-center justify-between px-6 border-b border-gray-700">
+            <div class="flex items-center">
+                <span class="material-symbols-outlined text-[28px] mr-2 text-white">security</span>
+                <span class="text-white font-bold text-lg tracking-wider">Whodis Admin</span>
+            </div>
+            <button onclick="toggleMobileSidebar(false)" class="md:hidden text-gray-400 hover:text-white p-1 rounded-lg">
+                <span class="material-symbols-outlined text-[24px]">close</span>
+            </button>
         </div>
         
         <div class="flex-1 overflow-y-auto py-4">
             <nav class="space-y-1 px-3">
-                <button onclick="setView('reports', 'all')" id="nav-dashboard" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-left">
+                <button onclick="setView('reports', 'all'); toggleMobileSidebar(false);" id="nav-dashboard" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-left">
                     <span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>
                     Dashboard
                 </button>
-                <button onclick="setView('reports', 'pending')" id="nav-pending" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-orange-400 text-left">
+                <button onclick="setView('reports', 'pending'); toggleMobileSidebar(false);" id="nav-pending" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-orange-400 text-left">
                     <span class="material-symbols-outlined mr-3 text-[20px]">hourglass_empty</span>
                     Pending Reports
                 </button>
-                <button onclick="setView('reports', 'approved')" id="nav-approved" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-emerald-400 text-left">
+                <button onclick="setView('reports', 'approved'); toggleMobileSidebar(false);" id="nav-approved" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-emerald-400 text-left">
                     <span class="material-symbols-outlined mr-3 text-[20px]">check_circle</span>
                     Approved
                 </button>
-                <button onclick="setView('reports', 'rejected')" id="nav-rejected" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-red-400 text-left">
+                <button onclick="setView('reports', 'rejected'); toggleMobileSidebar(false);" id="nav-rejected" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-red-400 text-left">
                     <span class="material-symbols-outlined mr-3 text-[20px]">cancel</span>
                     Rejected
                 </button>
                 <hr class="border-gray-700 my-4 mx-4">
-                <button onclick="setView('users')" id="nav-users" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-left">
+                <button onclick="setView('users'); toggleMobileSidebar(false);" id="nav-users" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-left">
                     <span class="material-symbols-outlined mr-3 text-[20px]">group</span>
                     Users
                 </button>
-                <button onclick="setView('settings')" id="nav-settings" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-left">
+                <button onclick="setView('settings'); toggleMobileSidebar(false);" id="nav-settings" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-left">
                     <span class="material-symbols-outlined mr-3 text-[20px]">settings</span>
                     Settings
                 </button>
@@ -55,7 +63,7 @@
         </div>
         
         <div class="p-4 border-t border-gray-700">
-            <button onclick="Auth.logout()" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+            <button onclick="Auth.logout()" class="flex items-center justify-center w-full px-4 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition shadow-sm">
                 <span class="material-symbols-outlined mr-2 text-[18px]">logout</span>
                 Logout
             </button>
@@ -63,24 +71,29 @@
     </aside>
 
     <!-- พื้นที่เนื้อหาด้านขวา -->
-    <div class="flex-1 flex flex-col h-full overflow-hidden">
+    <div class="flex-1 flex flex-col h-full overflow-hidden w-full">
         
         <!-- Top Navbar -->
-        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0 z-10">
-            <div id="page-title" class="text-xl font-bold text-gray-800">Dashboard Overview</div>
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-3 sm:px-6 flex-shrink-0 z-10">
+            <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+                <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex-shrink-0" aria-label="Toggle menu">
+                    <span class="material-symbols-outlined text-[24px]">menu</span>
+                </button>
+                <div id="page-title" class="text-base sm:text-xl font-bold text-gray-800 truncate">Dashboard Overview</div>
+            </div>
             
-            <div class="flex items-center gap-4">
-                <a href="index.html" class="text-sm font-semibold text-gray-600 hover:text-gray-900 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[18px]">home</span> หน้าบ้าน
+            <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                <a href="index.html" class="text-xs sm:text-sm font-semibold text-gray-600 hover:text-gray-900 flex items-center gap-1 py-1.5 px-2 rounded-lg hover:bg-gray-100">
+                    <span class="material-symbols-outlined text-[18px]">home</span> <span class="hidden sm:inline">หน้าบ้าน</span>
                 </a>
-                <a href="report.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">add</span> Add Report
+                <a href="report.html" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1 transition-colors shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">add</span> <span class="hidden sm:inline">Add Report</span>
                 </a>
                 
                 <!-- โปรไฟล์แอดมิน -->
-                <div class="flex items-center gap-3 border-l pl-4 border-gray-200">
-                    <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm border border-blue-100">
-                        <span class="material-symbols-outlined text-[22px]">person</span>
+                <div class="flex items-center gap-2 sm:gap-3 border-l pl-2 sm:pl-4 border-gray-200">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm border border-blue-100 flex-shrink-0">
+                        <span class="material-symbols-outlined text-[20px] sm:text-[22px]">person</span>
                     </div>
                     <div class="hidden md:block text-sm">
                         <div id="admin-name" class="font-bold text-gray-700 leading-tight">Admin</div>
@@ -91,59 +104,66 @@
         </header>
 
         <!-- Main Content (Scrollable) -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-3 sm:p-6">
             
             <div id="admin-alert" class="hidden mb-4 p-4 rounded-xl text-[14px]"></div>
 
             <!-- View 1: Reports View -->
             <div id="view-reports">
                 <!-- 4 กล่องสถิติ -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div onclick="setView('reports', 'pending')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-orange-400 flex justify-between items-center hover:shadow-md transition">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 md:mb-8">
+                    <div onclick="setView('reports', 'pending')" class="cursor-pointer bg-white rounded-xl p-3.5 sm:p-5 shadow-sm border-l-4 border-l-orange-400 flex justify-between items-center hover:shadow-md transition">
                         <div>
-                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">PENDING REVIEW</div>
-                            <div id="stat-pending" class="text-3xl font-bold text-gray-800">0</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-gray-500 tracking-wider mb-0.5 sm:mb-1">PENDING REVIEW</div>
+                            <div id="stat-pending" class="text-2xl sm:text-3xl font-bold text-gray-800">0</div>
                         </div>
-                        <span class="material-symbols-outlined text-orange-400 text-[32px]">hourglass_top</span>
+                        <span class="material-symbols-outlined text-orange-400 text-[26px] sm:text-[32px]">hourglass_top</span>
                     </div>
-                    <div onclick="setView('reports', 'approved')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-emerald-500 flex justify-between items-center hover:shadow-md transition">
+                    <div onclick="setView('reports', 'approved')" class="cursor-pointer bg-white rounded-xl p-3.5 sm:p-5 shadow-sm border-l-4 border-l-emerald-500 flex justify-between items-center hover:shadow-md transition">
                         <div>
-                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">APPROVED</div>
-                            <div id="stat-approved" class="text-3xl font-bold text-gray-800">0</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-gray-500 tracking-wider mb-0.5 sm:mb-1">APPROVED</div>
+                            <div id="stat-approved" class="text-2xl sm:text-3xl font-bold text-gray-800">0</div>
                         </div>
-                        <span class="material-symbols-outlined text-emerald-500 text-[32px]">check_box</span>
+                        <span class="material-symbols-outlined text-emerald-500 text-[26px] sm:text-[32px]">check_box</span>
                     </div>
-                    <div onclick="setView('reports', 'rejected')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-red-500 flex justify-between items-center hover:shadow-md transition">
+                    <div onclick="setView('reports', 'rejected')" class="cursor-pointer bg-white rounded-xl p-3.5 sm:p-5 shadow-sm border-l-4 border-l-red-500 flex justify-between items-center hover:shadow-md transition">
                         <div>
-                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">REJECTED</div>
-                            <div id="stat-rejected" class="text-3xl font-bold text-gray-800">0</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-gray-500 tracking-wider mb-0.5 sm:mb-1">REJECTED</div>
+                            <div id="stat-rejected" class="text-2xl sm:text-3xl font-bold text-gray-800">0</div>
                         </div>
-                        <span class="material-symbols-outlined text-red-500 text-[32px]">cancel_presentation</span>
+                        <span class="material-symbols-outlined text-red-500 text-[26px] sm:text-[32px]">cancel_presentation</span>
                     </div>
-                    <div onclick="setView('reports', 'all')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-gray-800 flex justify-between items-center hover:shadow-md transition">
+                    <div onclick="setView('reports', 'all')" class="cursor-pointer bg-white rounded-xl p-3.5 sm:p-5 shadow-sm border-l-4 border-l-gray-800 flex justify-between items-center hover:shadow-md transition">
                         <div>
-                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">TOTAL REPORTS</div>
-                            <div id="stat-total" class="text-3xl font-bold text-gray-800">0</div>
+                            <div class="text-[10px] sm:text-[11px] font-bold text-gray-500 tracking-wider mb-0.5 sm:mb-1">TOTAL REPORTS</div>
+                            <div id="stat-total" class="text-2xl sm:text-3xl font-bold text-gray-800">0</div>
                         </div>
-                        <span class="material-symbols-outlined text-gray-800 text-[32px]">bar_chart</span>
+                        <span class="material-symbols-outlined text-gray-800 text-[26px] sm:text-[32px]">bar_chart</span>
                     </div>
                 </div>
 
-                <!-- ตารางรายงาน -->
+                <!-- ตารางรายงาน & การ์ดสำหรับมือถือ -->
                 <div class="mb-6">
-                    <div class="bg-white p-4 rounded-t-xl border-b border-gray-100 flex flex-col sm:flex-row justify-between gap-4">
+                    <div class="bg-white p-3.5 sm:p-4 rounded-t-xl border-b border-gray-100 flex flex-col sm:flex-row justify-between gap-3 sm:gap-4">
                         <div class="relative w-full sm:w-80">
                             <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[20px]">search</span>
-                            <input type="text" id="searchInput" placeholder="Search reports..." onkeyup="filterReportsTable()" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500">
+                            <input type="text" id="searchInput" placeholder="ค้นหารายงาน, ชื่อคนโกง, เลขบัญชี..." onkeyup="filterReportsTable()" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500">
                         </div>
-                        <select id="filterSelect" onchange="setView('reports', this.value)" class="border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-blue-500 cursor-pointer">
-                            <option value="all">All Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
+                        <select id="filterSelect" onchange="setView('reports', this.value)" class="w-full sm:w-auto border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-blue-500 cursor-pointer bg-white">
+                            <option value="all">All Status (สถานะทั้งหมด)</option>
+                            <option value="pending">Pending (รอตรวจสอบ)</option>
+                            <option value="approved">Approved (อนุมัติแล้ว)</option>
+                            <option value="rejected">Rejected (ปฏิเสธ)</option>
                         </select>
                     </div>
-                    <div class="bg-white rounded-b-xl shadow-sm overflow-x-auto">
+
+                    <!-- Mobile Cards Container (สำหรับหน้าจอมือถือ) -->
+                    <div id="reportsMobileCards" class="block md:hidden bg-gray-100 space-y-3 p-3 rounded-b-xl">
+                        <div class="text-center py-8 text-gray-400 text-sm">กำลังโหลดข้อมูล...</div>
+                    </div>
+
+                    <!-- Desktop Table Container (สำหรับหน้าจอคอมพิวเตอร์) -->
+                    <div class="hidden md:block bg-white rounded-b-xl shadow-sm overflow-x-auto">
                         <table class="w-full text-left border-collapse" id="reportsTable">
                             <thead>
                                 <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 tracking-wider border-b border-gray-100">
@@ -166,13 +186,20 @@
             <!-- View 2: Users View -->
             <div id="view-users" class="hidden">
                 <div class="mb-6">
-                    <div class="bg-white p-4 rounded-t-xl border-b border-gray-100 flex justify-between items-center">
+                    <div class="bg-white p-3.5 sm:p-4 rounded-t-xl border-b border-gray-100 flex justify-between items-center">
                         <div class="relative w-full sm:w-80">
                             <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[20px]">search</span>
-                            <input type="text" id="searchUserInput" placeholder="Search users by name or email..." onkeyup="filterUsersTable()" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500">
+                            <input type="text" id="searchUserInput" placeholder="ค้นหาผู้ใช้จากชื่อ หรืออีเมล..." onkeyup="filterUsersTable()" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500">
                         </div>
                     </div>
-                    <div class="bg-white rounded-b-xl shadow-sm overflow-x-auto">
+
+                    <!-- Mobile Cards for Users -->
+                    <div id="usersMobileCards" class="block md:hidden bg-gray-100 space-y-3 p-3 rounded-b-xl">
+                        <div class="text-center py-8 text-gray-400 text-sm">กำลังโหลดรายชื่อผู้ใช้...</div>
+                    </div>
+
+                    <!-- Desktop Table for Users -->
+                    <div class="hidden md:block bg-white rounded-b-xl shadow-sm overflow-x-auto">
                         <table class="w-full text-left border-collapse" id="usersTable">
                             <thead>
                                 <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 tracking-wider border-b border-gray-100">
@@ -252,6 +279,23 @@
         let currentView = 'reports';
         let currentFilter = 'all';
 
+        function toggleMobileSidebar(forceState) {
+            const sidebar = document.getElementById('admin-sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            if (!sidebar || !backdrop) return;
+
+            const isCurrentlyOpen = !sidebar.classList.contains('-translate-x-full');
+            const shouldOpen = typeof forceState === 'boolean' ? forceState : !isCurrentlyOpen;
+
+            if (shouldOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const viewParam = urlParams.get('view') || 'reports';
@@ -303,7 +347,10 @@
 
         async function loadReports(filter) {
             const tbody = document.getElementById('reportsTableBody');
+            const mobileCards = document.getElementById('reportsMobileCards');
+            
             tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">กำลังดึงข้อมูลรายงาน...</td></tr>`;
+            if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">กำลังดึงข้อมูลรายงาน...</div>`;
 
             try {
                 const res = await fetch(`/api/admin?view=reports&filter=${filter}`);
@@ -311,24 +358,28 @@
 
                 if (!res.ok || !data.success) {
                     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
+                    if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-red-500 text-sm">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>`;
                     return;
                 }
 
                 // สถิติ
                 if (data.stats) {
-                    document.getElementById('stat-pending').textContent = data.stats.pending || 0;
-                    document.getElementById('stat-approved').textContent = data.stats.approved || 0;
-                    document.getElementById('stat-rejected').textContent = data.stats.rejected || 0;
-                    document.getElementById('stat-total').textContent = data.stats.total || 0;
+                    document.getElementById('stat-pending').textContent = (data.stats.pending || 0).toLocaleString();
+                    document.getElementById('stat-approved').textContent = (data.stats.approved || 0).toLocaleString();
+                    document.getElementById('stat-rejected').textContent = (data.stats.rejected || 0).toLocaleString();
+                    document.getElementById('stat-total').textContent = (data.stats.total || 0).toLocaleString();
                 }
 
                 const reports = data.reports || [];
                 if (reports.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">ไม่มีข้อมูลรายงานในขณะนี้</td></tr>`;
+                    if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">ไม่มีข้อมูลรายงานในขณะนี้</div>`;
                     return;
                 }
 
-                let html = '';
+                let tableHtml = '';
+                let mobileHtml = '';
+
                 reports.forEach((row, idx) => {
                     const st = (row.status || '').toLowerCase();
                     let badgeClass = 'bg-orange-100 text-orange-800';
@@ -344,6 +395,7 @@
                     const dateStr = row.created_at ? new Date(row.created_at).toLocaleDateString('th-TH') : '-';
                     const evidence = row.evidence_file || '';
 
+                    // 1. Desktop Table Row
                     let viewImageBtn = '';
                     if (evidence) {
                         viewImageBtn = `
@@ -353,7 +405,7 @@
                         `;
                     }
 
-                    html += `
+                    tableHtml += `
                         <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors search-item">
                             <td class="px-6 py-4 text-gray-500">${idx + 1}</td>
                             <td class="px-6 py-4">
@@ -385,17 +437,68 @@
                             </td>
                         </tr>
                     `;
+
+                    // 2. Mobile Responsive Card
+                    mobileHtml += `
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 search-item">
+                            <div class="flex items-start justify-between gap-2 mb-2">
+                                <div>
+                                    <div class="font-bold text-gray-900 text-[15px] search-txt">${escapeHtml(row.scammer_name || 'ไม่ระบุชื่อคนโกง')}</div>
+                                    <div class="text-xs text-gray-500 font-mono mt-0.5 search-txt">
+                                        ${escapeHtml(row.bank_account || '-')} ${row.bank_name ? '(' + escapeHtml(row.bank_name) + ')' : ''}
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${badgeClass}">${badgeText}</span>
+                            </div>
+                            
+                            <div class="text-xs text-gray-600 bg-gray-50 p-2.5 rounded-lg my-2.5 search-txt line-clamp-3 leading-relaxed">
+                                ${escapeHtml(row.incident_details || 'ไม่มีรายละเอียดเพิ่มเติม')}
+                            </div>
+                            
+                            <div class="flex items-center justify-between text-xs text-gray-400 mb-3 pt-1 border-t border-gray-100">
+                                <span>วันที่: ${dateStr}</span>
+                                ${row.claim_amount ? `<span class="text-red-600 font-bold">฿${Number(row.claim_amount).toLocaleString()}</span>` : ''}
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+                                ${evidence ? `
+                                    <button onclick="openImageModal('${escapeHtml(evidence)}')" class="col-span-2 flex items-center justify-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 active:bg-blue-100 py-2.5 rounded-lg transition">
+                                        <span class="material-symbols-outlined text-[16px]">visibility</span> ดูหลักฐาน / สลิป
+                                    </button>
+                                ` : ''}
+                                ${st !== 'approved' ? `
+                                    <button onclick="handleReportAction(${row.id}, 'approve')" class="flex items-center justify-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 active:bg-emerald-100 py-2.5 rounded-lg transition">
+                                        <span class="material-symbols-outlined text-[16px]">check</span> อนุมัติ
+                                    </button>
+                                ` : ''}
+                                ${st !== 'rejected' ? `
+                                    <button onclick="handleReportAction(${row.id}, 'reject')" class="flex items-center justify-center gap-1 text-xs font-semibold text-orange-700 bg-orange-50 active:bg-orange-100 py-2.5 rounded-lg transition">
+                                        <span class="material-symbols-outlined text-[16px]">close</span> ปฏิเสธ
+                                    </button>
+                                ` : ''}
+                                <button onclick="handleReportAction(${row.id}, 'delete')" class="flex items-center justify-center gap-1 text-xs font-semibold text-red-700 bg-red-50 active:bg-red-100 py-2.5 rounded-lg transition ${st === 'approved' || st === 'rejected' ? 'col-span-2' : ''}">
+                                    <span class="material-symbols-outlined text-[16px]">delete</span> ลบรายงาน
+                                </button>
+                            </div>
+                        </div>
+                    `;
                 });
-                tbody.innerHTML = html;
+
+                tbody.innerHTML = tableHtml;
+                if (mobileCards) mobileCards.innerHTML = mobileHtml;
 
             } catch (err) {
                 tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-red-500">ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้</td></tr>`;
+                if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-red-500 text-sm">ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้</div>`;
             }
         }
 
         async function loadUsers() {
             const tbody = document.getElementById('usersTableBody');
+            const mobileCards = document.getElementById('usersMobileCards');
+            
             tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">กำลังโหลดรายชื่อผู้ใช้...</td></tr>`;
+            if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">กำลังโหลดรายชื่อผู้ใช้...</div>`;
 
             try {
                 const res = await fetch('/api/admin?view=users');
@@ -403,16 +506,20 @@
 
                 if (!res.ok || !data.success) {
                     tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูลผู้ใช้</td></tr>`;
+                    if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-red-500 text-sm">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>`;
                     return;
                 }
 
                 const users = data.users || [];
                 if (users.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">ไม่มีข้อมูลผู้ใช้งาน</td></tr>`;
+                    if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">ไม่มีข้อมูลผู้ใช้งาน</div>`;
                     return;
                 }
 
-                let html = '';
+                let tableHtml = '';
+                let mobileHtml = '';
+
                 users.forEach(u => {
                     const urole = (u.role || 'user').toLowerCase();
                     const isAdm = urole === 'admin';
@@ -421,7 +528,7 @@
                         : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">User</span>`;
                     const dateStr = u.created_at ? new Date(u.created_at).toLocaleDateString('th-TH') : '-';
 
-                    html += `
+                    tableHtml += `
                         <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors search-item">
                             <td class="px-6 py-4 font-medium text-gray-500">#${u.id}</td>
                             <td class="px-6 py-4 font-bold text-gray-800 search-txt">${escapeHtml(u.username)}</td>
@@ -430,11 +537,28 @@
                             <td class="px-6 py-4 text-gray-500">${dateStr}</td>
                         </tr>
                     `;
+
+                    mobileHtml += `
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 search-item">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-gray-400">#${u.id}</span>
+                                ${roleBadge}
+                            </div>
+                            <div class="font-bold text-gray-900 search-txt">${escapeHtml(u.username)}</div>
+                            <div class="text-xs text-gray-500 mt-0.5 search-txt">${escapeHtml(u.email)}</div>
+                            <div class="text-[11px] text-gray-400 mt-2 pt-2 border-t border-gray-100">
+                                วันที่ลงทะเบียน: ${dateStr}
+                            </div>
+                        </div>
+                    `;
                 });
-                tbody.innerHTML = html;
+
+                tbody.innerHTML = tableHtml;
+                if (mobileCards) mobileCards.innerHTML = mobileHtml;
 
             } catch (err) {
                 tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-red-500">ไม่สามารถโหลดข้อมูลได้</td></tr>`;
+                if (mobileCards) mobileCards.innerHTML = `<div class="text-center py-8 text-red-500 text-sm">ไม่สามารถโหลดข้อมูลได้</div>`;
             }
         }
 
@@ -470,7 +594,7 @@
 
         function filterReportsTable() {
             const input = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.querySelectorAll("#reportsTable .search-item");
+            const rows = document.querySelectorAll("#view-reports .search-item");
             rows.forEach(row => {
                 const texts = row.querySelectorAll(".search-txt");
                 let found = false;
@@ -483,7 +607,7 @@
 
         function filterUsersTable() {
             const input = document.getElementById('searchUserInput').value.toLowerCase();
-            const rows = document.querySelectorAll("#usersTable .search-item");
+            const rows = document.querySelectorAll("#view-users .search-item");
             rows.forEach(row => {
                 const texts = row.querySelectorAll(".search-txt");
                 let found = false;

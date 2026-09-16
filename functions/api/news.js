@@ -2,24 +2,64 @@
 // Cloudflare Pages Function: ดึงข่าวสารเตือนภัยมิจฉาชีพอัปเดตสดแบบเรียลไทม์ พร้อมรูปภาพปกข่าว
 
 export async function onRequestGet(context) {
-  function getThematicImage(title) {
-    const t = (title || '').toLowerCase();
-    if (t.includes('คอลเซ็นเตอร์') || t.includes('โทร') || t.includes('แอปดูด') || t.includes('สาย')) {
-      return 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=240&auto=format&fit=crop&q=80';
+  function getPublisherImage(sourceName, sourceUrl) {
+    const s = (sourceName || '').toLowerCase();
+    const u = (sourceUrl || '').toLowerCase();
+
+    // กรมประชาสัมพันธ์
+    if (s.includes('กรมประชาสัมพันธ์') || u.includes('prd.go.th')) {
+      return 'https://www.prd.go.th/images/logo/logo_prd.png';
     }
-    if (t.includes('บัญชีม้า') || t.includes('โอนเงิน') || t.includes('สลิป') || t.includes('ธนาคาร') || t.includes('เส้นเงิน')) {
-      return 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=240&auto=format&fit=crop&q=80';
+    // ศูนย์ต่อต้านข่าวปลอม
+    if (s.includes('ข่าวปลอม') || u.includes('antifakenewscenter')) {
+      return 'https://www.antifakenewscenter.com/wp-content/uploads/2021/08/logo-antifake.png';
     }
-    if (t.includes('ลงทุน') || t.includes('dropship') || t.includes('หุ้น') || t.includes('คริปโต') || t.includes('งานออนไลน์')) {
-      return 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=240&auto=format&fit=crop&q=80';
+    // สวพ.FM91
+    if (s.includes('fm91') || u.includes('fm91bkk.com')) {
+      return 'https://fm91bkk.com/assets/images/logo_fm91.png';
     }
-    if (t.includes('sms') || t.includes('ลิงก์') || t.includes('ใบสั่ง') || t.includes('เว็บปลอม') || t.includes('หลอกคลิก')) {
-      return 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=240&auto=format&fit=crop&q=80';
+    // ตำรวจไซเบอร์ / PCT Police
+    if (s.includes('ตำรวจ') || s.includes('ไซเบอร์') || u.includes('police.go.th')) {
+      return 'https://pct.police.go.th/images/logo-pct.png';
     }
-    if (t.includes('ศิลปะ') || t.includes('ซื้อขาย') || t.includes('ของ') || t.includes('พัสดุ') || t.includes('สินค้า')) {
-      return 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=240&auto=format&fit=crop&q=80';
+    // ไทยรัฐ
+    if (s.includes('ไทยรัฐ') || u.includes('thairath.co.th')) {
+      return 'https://static.thairath.co.th/media/4DQpjUtzLUwmJZZSClI6uWjL0v035WzO8p.png';
     }
-    return 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=240&auto=format&fit=crop&q=80';
+    // เดลินิวส์
+    if (s.includes('เดลินิวส์') || u.includes('dailynews.co.th')) {
+      return 'https://www.dailynews.co.th/wp-content/themes/dailynews/assets/images/logo.png';
+    }
+    // มติชน
+    if (s.includes('มติชน') || u.includes('matichon.co.th')) {
+      return 'https://www.matichon.co.th/wp-content/uploads/2023/06/matichon-logo-white-bg.png';
+    }
+    // ข่าวสด
+    if (s.includes('ข่าวสด') || u.includes('khaosod.co.th')) {
+      return 'https://www.khaosod.co.th/wp-content/uploads/2021/04/khaosod-logo.png';
+    }
+    // ช่อง 7HD
+    if (s.includes('ช่อง 7') || s.includes('ch7') || u.includes('ch7.com')) {
+      return 'https://static.ch7.com/images/ch7hd_logo.png';
+    }
+    // PPTV HD 36
+    if (s.includes('pptv') || u.includes('pptvhd36.com')) {
+      return 'https://img.pptvhd36.com/images/default/pptv_logo_color.png';
+    }
+    // TNN
+    if (s.includes('tnn') || u.includes('tnnthailand.com')) {
+      return 'https://images.tnnthailand.com/assets/images/logo_tnn.png';
+    }
+
+    // Google High-Resolution Favicon / Logo by Website URL
+    if (sourceUrl) {
+      try {
+        const domain = new URL(sourceUrl).hostname.replace(/^www\./, '');
+        return `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=128`;
+      } catch (_) {}
+    }
+
+    return 'https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://news.google.com&size=128';
   }
 
   function decodeHtml(html) {
@@ -80,7 +120,10 @@ export async function onRequestGet(context) {
       let rawTitle = (/<title>(.*?)<\/title>/.exec(itemContent) || [])[1] || '';
       const link = (/<link>(.*?)<\/link>/.exec(itemContent) || [])[1] || '';
       const pubDate = (/<pubDate>(.*?)<\/pubDate>/.exec(itemContent) || [])[1] || '';
-      const source = (/<source[^>]*>(.*?)<\/source>/.exec(itemContent) || [])[1] || 'ข่าวสารเตือนภัย';
+      
+      const sourceMatch = /<source\s+url="([^"]+)"[^>]*>(.*?)<\/source>/.exec(itemContent);
+      const sourceUrl = sourceMatch ? sourceMatch[1] : '';
+      const source = sourceMatch ? sourceMatch[2] : ((/<source[^>]*>(.*?)<\/source>/.exec(itemContent) || [])[1] || 'ข่าวสารเตือนภัย');
 
       const decodedSource = decodeHtml(source);
       if (decodedSource.toLowerCase().includes('facebook') || decodedSource.toLowerCase().includes('twitter') || decodedSource.toLowerCase().includes('tiktok')) {
@@ -102,7 +145,8 @@ export async function onRequestGet(context) {
         pubDate,
         timeAgo: formatTimeAgo(pubDate),
         source: decodedSource,
-        image: getThematicImage(title)
+        sourceUrl,
+        image: getPublisherImage(decodedSource, sourceUrl)
       });
     }
 
@@ -125,45 +169,51 @@ export async function onRequestGet(context) {
     const fallbackNews = [
       {
         title: "รัฐบาลเร่งตั้ง 4 ระบบกลางสกัดเงินมิจฉาชีพ เชื่อมข้อมูลทุกหน่วยงาน “แจ้งครั้งเดียว–ตามเงินทัน–อายัดเร็ว”",
-        link: "https://www.thaigov.go.th",
+        link: "https://www.prd.go.th",
         source: "กรมประชาสัมพันธ์",
+        sourceUrl: "https://www.prd.go.th",
         timeAgo: "วันนี้",
-        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=240&auto=format&fit=crop&q=80"
+        image: "https://www.prd.go.th/images/logo/logo_prd.png"
       },
       {
         title: "เตือนภัย SMS แนบลิงก์แอบอ้าง “ใบสั่งจราจรค้างชำระ” หลอกกดลิงก์กรอกข้อมูลบัตรและดูดเงิน",
         link: "https://www.antifakenewscenter.com",
         source: "ศูนย์ต่อต้านข่าวปลอม",
+        sourceUrl: "https://www.antifakenewscenter.com",
         timeAgo: "วันนี้",
-        image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=240&auto=format&fit=crop&q=80"
+        image: "https://www.antifakenewscenter.com/wp-content/uploads/2021/08/logo-antifake.png"
       },
       {
         title: "รวบบัญชีม้า แก๊งหลอกเหยื่อลงทุนธุรกิจออนไลน์แบบ Dropship สูญเงินกว่าครึ่งล้าน",
         link: "https://www.fm91bkk.com",
         source: "สวพ.FM91",
+        sourceUrl: "https://www.fm91bkk.com",
         timeAgo: "วันนี้",
-        image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=240&auto=format&fit=crop&q=80"
+        image: "https://fm91bkk.com/assets/images/logo_fm91.png"
       },
       {
         title: "เตือนภัย! มิจฉาชีพหลอกรับซื้องานศิลปะ หลอกลงทุนผ่านแพลตฟอร์มปลอมสูญเงินแสน",
         link: "https://www.antifakenewscenter.com",
         source: "ศูนย์ต่อต้านข่าวปลอม",
+        sourceUrl: "https://www.antifakenewscenter.com",
         timeAgo: "เมื่อวาน",
-        image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=240&auto=format&fit=crop&q=80"
+        image: "https://www.antifakenewscenter.com/wp-content/uploads/2021/08/logo-antifake.png"
       },
       {
         title: "สกัดเส้นเงินมิจฉาชีพ! ตำรวจไซเบอร์ผนึกกำลังทลายรังแก๊งคอลเซ็นเตอร์ข้ามชาติ",
         link: "https://pct.police.go.th",
         source: "ศูนย์ปราบปรามอาชญากรรมทางเทคโนโลยี",
+        sourceUrl: "https://pct.police.go.th",
         timeAgo: "เมื่อวาน",
-        image: "https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=240&auto=format&fit=crop&q=80"
+        image: "https://pct.police.go.th/images/logo-pct.png"
       },
       {
         title: "ระวังแก๊งอ้างเป็นเจ้าหน้าที่รัฐ โทรสั่งให้โอนเงินในบัญชีไปตรวจสอบ มิจฉาชีพ 100%",
         link: "https://pct.police.go.th",
         source: "ตำรวจไซเบอร์",
+        sourceUrl: "https://pct.police.go.th",
         timeAgo: "เมื่อวาน",
-        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=240&auto=format&fit=crop&q=80"
+        image: "https://pct.police.go.th/images/logo-pct.png"
       }
     ];
 

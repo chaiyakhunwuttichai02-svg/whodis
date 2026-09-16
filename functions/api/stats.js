@@ -13,52 +13,52 @@ export async function onRequestGet(context) {
       });
     }
 
-    // 1. นับจำนวนรายงานแยกตามสถานะ และยอดความเสียหายรวม
+    // 1. นับจำนวนรายงานแยกตามสถานะ และยอดความเสียหายรวมจริง
     const { results: reportStats } = await db.prepare(
       "SELECT " +
       "COUNT(*) as total_reports, " +
       "SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_reports, " +
       "SUM(CASE WHEN status != 'approved' AND status != 'rejected' THEN 1 ELSE 0 END) as pending_reports, " +
-      "SUM(CASE WHEN status = 'approved' THEN COALESCE(claim_amount, 0) ELSE 0 END) as total_damage " +
+      "SUM(COALESCE(claim_amount, 0)) as total_damage " +
       "FROM reports"
     ).all();
 
     const totals = (reportStats && reportStats[0]) ? reportStats[0] : { total_reports: 0, approved_reports: 0, pending_reports: 0, total_damage: 0 };
 
-    // 2. จำนวนการค้นหาทั้งหมดใน search_logs
+    // 2. จำนวนการค้นหาทั้งหมดใน search_logs จริง
     let totalSearches = 0;
     try {
       const { results: searchStats } = await db.prepare('SELECT COUNT(*) as total_searches FROM search_logs').all();
       totalSearches = (searchStats && searchStats[0]) ? searchStats[0].total_searches : 0;
     } catch (_) {}
 
-    // 3. สถิติแยกตามประเภทกลโกง
+    // 3. สถิติแยกตามประเภทกลโกงจริงจากตาราง reports
+    // ดึงทั้งจากคอลัมน์ category หรือดึงจาก [ประเภทกลโกง] ใน incident_details
     const { results: categoryRows } = await db.prepare(
-      "SELECT COALESCE(category, 'อื่นๆ') as category, COUNT(*) as count FROM reports WHERE status = 'approved' GROUP BY category ORDER BY count DESC"
+      `SELECT 
+         CASE 
+           WHEN category IS NOT NULL AND category != '' AND category != 'General Scam' THEN category
+           WHEN incident_details LIKE '[%]%' THEN SUBSTR(incident_details, 2, INSTR(incident_details, ']') - 2)
+           ELSE 'ทั่วไป / อื่นๆ'
+         END as cat_name,
+         COUNT(*) as count
+       FROM reports 
+       WHERE status != 'rejected'
+       GROUP BY cat_name
+       ORDER BY count DESC`
     ).all();
 
-    const standardCategories = {
-      'Online Shopping': 0,
-      'Investment': 0,
-      'Loan': 0,
-      'Romance': 0,
-      'Crypto': 0,
-      'Call Center': 0,
-      'อื่นๆ': 0
-    };
+    const categoriesMap = {};
+    if (categoryRows && categoryRows.length > 0) {
+      categoryRows.forEach(row => {
+        const name = (row.cat_name || 'ทั่วไป / อื่นๆ').trim();
+        categoriesMap[name] = (categoriesMap[name] || 0) + row.count;
+      });
+    }
 
-    (categoryRows || []).forEach(row => {
-      const cat = row.category || 'อื่นๆ';
-      if (Object.prototype.hasOwnProperty.call(standardCategories, cat)) {
-        standardCategories[cat] += row.count;
-      } else {
-        standardCategories['อื่นๆ'] += row.count;
-      }
-    });
-
-    // 4. แนวโน้ม 6 เดือนล่าสุด
+    // 4. แนวโน้ม 6 เดือนล่าสุดจริง
     const { results: monthlyRows } = await db.prepare(
-      "SELECT strftime('%Y-%m', created_at) as month_label, COUNT(*) as count FROM reports GROUP BY month_label ORDER BY month_label DESC LIMIT 6"
+      "SELECT strftime('%Y-%m', created_at) as month_label, COUNT(*) as count FROM reports WHERE status != 'rejected' GROUP BY month_label ORDER BY month_label DESC LIMIT 6"
     ).all();
 
     return new Response(JSON.stringify({
@@ -69,14 +69,13 @@ export async function onRequestGet(context) {
         pending_reports: totals.pending_reports || 0,
         total_damage: totals.total_damage || 0,
         total_searches: totalSearches,
-        categories: standardCategories,
+        categories: categoriesMap,
         monthly_trend: monthlyRows || []
       }
     }), {
-      status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=60'
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
 
