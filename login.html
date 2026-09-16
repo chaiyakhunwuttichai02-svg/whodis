@@ -113,56 +113,99 @@
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
-    <main class="w-full pt-12 pb-24 flex-1 flex items-center justify-center">
-        <div class="max-w-[420px] w-full mx-auto px-4">
-            
-            <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
-                <div class="text-center mb-6">
-                    <a href="index.html" class="inline-flex items-center gap-2 mb-3">
-                        <div class="w-10 h-10 bg-primary-text text-white rounded-full flex items-center justify-center">
-                            <span class="material-symbols-outlined text-[22px]">verified_user</span>
+    <main class="w-full py-10 md:py-14 flex-1 flex items-center justify-center">
+        <div class="max-w-[1100px] w-full mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column (Login Card) -->
+                <div class="w-full lg:col-span-5 order-1">
+                    <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+                        <div class="text-center mb-6">
+                            <a href="index.html" class="inline-flex items-center gap-2 mb-3">
+                                <div class="w-10 h-10 bg-primary-text text-white rounded-full flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined text-[22px]">verified_user</span>
+                                </div>
+                            </a>
+                            <h2 class="text-[24px] font-bold text-primary-text">เข้าสู่ระบบ</h2>
+                            <p class="text-muted-text text-[14px]">ยินดีต้อนรับกลับสู่ Whodis</p>
                         </div>
-                    </a>
-                    <h2 class="text-[24px] font-bold text-primary-text">เข้าสู่ระบบ</h2>
-                    <p class="text-muted-text text-[14px]">ยินดีต้อนรับกลับสู่ Whodis</p>
-                </div>
 
-                <!-- Alert Error Message -->
-                <div id="error-alert" class="hidden mb-4 p-3.5 bg-red-50 border border-red-200 text-danger rounded-xl text-[14px] flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[20px]">error</span>
-                    <span id="error-text"></span>
-                </div>
-
-                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-[13px] font-bold text-primary-text mb-1.5">อีเมล</label>
-                        <input id="email" type="email" required class="w-full h-[48px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="name@example.com">
-                    </div>
-
-                    <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label class="block text-[13px] font-bold text-primary-text">รหัสผ่าน</label>
-                            <a href="forgot_password.html" class="text-[12px] text-blue-600 hover:underline">ลืมรหัสผ่าน?</a>
+                        <!-- Alert Error Message -->
+                        <div id="error-alert" class="hidden mb-4 p-3.5 bg-red-50 border border-red-200 text-danger rounded-xl text-[14px] flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">error</span>
+                            <span id="error-text"></span>
                         </div>
-                        <input id="password" type="password" required class="w-full h-[48px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="••••••••">
+
+                        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-[13px] font-bold text-primary-text mb-1.5">อีเมล</label>
+                                <input id="email" type="email" required class="w-full h-[48px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="name@example.com">
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <label class="block text-[13px] font-bold text-primary-text">รหัสผ่าน</label>
+                                    <a href="forgot_password.html" class="text-[12px] text-blue-600 hover:underline">ลืมรหัสผ่าน?</a>
+                                </div>
+                                <input id="password" type="password" required class="w-full h-[48px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="••••••••">
+                            </div>
+
+                            <button id="loginBtn" type="submit" class="w-full h-[48px] bg-primary-text hover:bg-gray-800 text-white font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 mt-2">
+                                เข้าสู่ระบบ
+                            </button>
+                        </form>
+
+                        <div class="relative my-6">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                            <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-3 text-muted-text">หรือ</span></div>
+                        </div>
+
+                        <p class="text-center text-[14px] text-muted-text">
+                            ยังไม่มีบัญชีผู้ใช้? 
+                            <a href="register.html" class="font-bold text-primary-text hover:underline ml-1">สมัครสมาชิก</a>
+                        </p>
                     </div>
-
-                    <button id="loginBtn" type="submit" class="w-full h-[48px] bg-primary-text hover:bg-gray-800 text-white font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 mt-2">
-                        เข้าสู่ระบบ
-                    </button>
-                </form>
-
-                <div class="relative my-6">
-                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-3 text-muted-text">หรือ</span></div>
                 </div>
 
-                <p class="text-center text-[14px] text-muted-text">
-                    ยังไม่มีบัญชีผู้ใช้? 
-                    <a href="register.html" class="font-bold text-primary-text hover:underline ml-1">สมัครสมาชิก</a>
-                </p>
+                <!-- Right Column (Live Scam News Feed) -->
+                <div class="w-full lg:col-span-7 order-2">
+                    <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-7 shadow-sm">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between pb-4 mb-3 border-b border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center shrink-0 border border-red-100">
+                                    <span class="material-symbols-outlined text-[22px]">newspaper</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-[16px] text-primary-text flex items-center gap-2">
+                                        ข่าวเตือนภัย & คดีโกงล่าสุด
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700 animate-pulse">
+                                            LIVE
+                                        </span>
+                                    </h3>
+                                    <p class="text-[12px] text-muted-text">อัปเดตสดจากสำนักข่าวและศูนย์ปราบปรามอาชญากรรมไซเบอร์</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Loading State -->
+                        <div id="news-loading" class="py-12 text-center text-muted-text text-sm">
+                            <span class="material-symbols-outlined animate-spin text-[30px] mb-2 text-red-500">progress_activity</span>
+                            <p class="text-[13px]">กำลังดึงข้อมูลข่าวเตือนภัยแบบเรียลไทม์...</p>
+                        </div>
+
+                        <!-- News List Container -->
+                        <div id="news-list" class="divide-y divide-gray-100 hidden"></div>
+
+                        <!-- News Error State -->
+                        <div id="news-error" class="hidden py-10 text-center text-muted-text text-sm">
+                            <span class="material-symbols-outlined text-gray-400 text-[32px] mb-1">error_outline</span>
+                            <p class="text-[13px]">ไม่สามารถโหลดข่าวเตือนภัยได้ในขณะนี้</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
         </div>
     </main>
 
@@ -230,6 +273,60 @@
                 btn.innerHTML = 'เข้าสู่ระบบ';
             }
         }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        async function loadNews() {
+            const loading = document.getElementById('news-loading');
+            const list = document.getElementById('news-list');
+            const error = document.getElementById('news-error');
+
+            try {
+                const res = await fetch('/api/news');
+                const data = await res.json();
+
+                if (res.ok && data.success && data.news && data.news.length > 0) {
+                    loading.classList.add('hidden');
+                    list.innerHTML = data.news.map(item => `
+                        <a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" 
+                           class="group block py-3 first:pt-1 hover:bg-slate-50 rounded-xl px-2.5 transition-all duration-150">
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md group-hover:bg-red-50 group-hover:text-red-700 transition-colors">
+                                    <span class="material-symbols-outlined text-[13px] text-red-500">campaign</span>
+                                    ${escapeHtml(item.source)}
+                                </span>
+                                <span class="text-[11px] text-muted-text flex items-center gap-1 shrink-0">
+                                    <span class="material-symbols-outlined text-[13px]">schedule</span>
+                                    ${escapeHtml(item.timeAgo)}
+                                </span>
+                            </div>
+                            <h4 class="text-[13.5px] font-medium text-primary-text group-hover:text-red-600 transition-colors leading-snug line-clamp-2">
+                                ${escapeHtml(item.title)}
+                            </h4>
+                            <div class="flex items-center justify-end gap-1 mt-1.5 text-[11px] font-semibold text-muted-text group-hover:text-red-600 transition-colors">
+                                <span>อ่านข่าวเต็ม</span>
+                                <span class="material-symbols-outlined text-[13px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                            </div>
+                        </a>
+                    `).join('');
+                    list.classList.remove('hidden');
+                } else {
+                    loading.classList.add('hidden');
+                    error.classList.remove('hidden');
+                }
+            } catch (err) {
+                loading.classList.add('hidden');
+                error.classList.remove('hidden');
+            }
+        }
+
+        // โหลดข่าวเตือนภัยทันทีเมื่อเปิดหน้า
+        loadNews();
     </script>
 </body>
 </html>
