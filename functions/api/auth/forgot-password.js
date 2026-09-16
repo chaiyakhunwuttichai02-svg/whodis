@@ -17,7 +17,7 @@ async function sendEmailOtp(toEmail, otp, env) {
   if (hasBrevo) {
     try {
       const payload = {
-        sender: { name: "Whodis Security", email: "adminwhodis@gmail.com" },
+        sender: { name: "Whodis Security", email: "chaiyakhunwuttichai02@gmail.com" },
         to: [{ email: toEmail }],
         subject: `🔐 รหัส OTP สำหรับรีเซ็ตรหัสผ่าน Whodis: ${otp}`,
         htmlContent: `
