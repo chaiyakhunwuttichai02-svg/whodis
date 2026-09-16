@@ -1,41 +1,83 @@
 // functions/api/auth/forgot-password.js
 // Cloudflare Pages Function: ขอรหัส OTP สำหรับรีเซ็ตรหัสผ่าน
 
-async function sendMailChannelsEmail(toEmail, otp) {
-  try {
-    const payload = {
-      personalizations: [{ to: [{ email: toEmail }] }],
-      from: { email: "no-reply@whodis.pages.dev", name: "Whodis Security" },
-      subject: "รหัส OTP สำหรับรีเซ็ตรหัสผ่าน Whodis",
-      content: [
-        {
-          type: "text/html",
-          value: `
-            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
-              <h2 style="color: #0f172a; text-align: center; margin-bottom: 8px;">🔐 รีเซ็ตรหัสผ่าน Whodis</h2>
-              <p style="color: #64748b; font-size: 14px; line-height: 1.6; text-align: center;">คุณได้ทำการขอรหัสผ่านใหม่สำหรับบัญชี Whodis กรุณานำรหัส OTP 6 หลักด้านล่างนี้ไปกรอกในหน้าเว็บ:</p>
-              <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; padding: 18px; text-align: center; border-radius: 12px; margin: 24px 0;">
-                <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #0f172a;">${otp}</span>
-              </div>
-              <p style="color: #ef4444; font-size: 13px; text-align: center;">⏱️ รหัสนี้มีอายุการใช้งาน 10 นาที</p>
-              <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;" />
-              <p style="color: #94a3b8; font-size: 12px; text-align: center;">หากคุณไม่ได้เป็นผู้ขอรีเซ็ตรหัสผ่าน โปรดเพิกเฉยต่ออีเมลนี้</p>
+async function sendEmailOtp(toEmail, otp, env) {
+  // 1. ลองส่งผ่าน Brevo API หากมีการตั้งค่า BREVO_API_KEY
+  if (env && env.BREVO_API_KEY) {
+    try {
+      const payload = {
+        sender: { name: "Whodis Security", email: "adminwhodis@gmail.com" },
+        to: [{ email: toEmail }],
+        subject: `🔐 รหัส OTP สำหรับรีเซ็ตรหัสผ่าน Whodis: ${otp}`,
+        htmlContent: `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
+            <h2 style="color: #0f172a; text-align: center; margin-bottom: 8px;">🔐 รีเซ็ตรหัสผ่าน Whodis</h2>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.6; text-align: center;">คุณได้ทำการขอรหัสผ่านใหม่สำหรับบัญชี Whodis กรุณานำรหัส OTP 6 หลักด้านล่างนี้ไปกรอกในหน้าเว็บ:</p>
+            <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; padding: 18px; text-align: center; border-radius: 12px; margin: 24px 0;">
+              <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #ef4444;">${otp}</span>
             </div>
-          `
-        }
-      ]
-    };
+            <p style="color: #ef4444; font-size: 13px; text-align: center;">⏱️ รหัสนี้มีอายุการใช้งาน 10 นาที</p>
+            <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;" />
+            <p style="color: #94a3b8; font-size: 12px; text-align: center;">หากคุณไม่ได้เป็นผู้ขอรีเซ็ตรหัสผ่าน โปรดเพิกเฉยต่ออีเมลนี้</p>
+          </div>
+        `
+      };
 
-    const res = await fetch("https://api.mailchannels.net/tx/v1/send", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    return res.ok;
-  } catch (e) {
-    console.error("MailChannels error:", e);
-    return false;
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "accept": "application/json",
+          "api-key": env.BREVO_API_KEY,
+          "content-type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) return { success: true, provider: 'Brevo' };
+      const errTxt = await res.text();
+      console.error("Brevo API error:", errTxt);
+    } catch (e) {
+      console.error("Brevo error:", e);
+    }
   }
+
+  // 2. ลองส่งผ่าน Resend API หากมีการตั้งค่า RESEND_API_KEY
+  if (env && env.RESEND_API_KEY) {
+    try {
+      const payload = {
+        from: "Whodis Security <onboarding@resend.dev>",
+        to: [toEmail],
+        subject: `🔐 รหัส OTP สำหรับรีเซ็ตรหัสผ่าน Whodis: ${otp}`,
+        html: `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
+            <h2 style="color: #0f172a; text-align: center; margin-bottom: 8px;">🔐 รีเซ็ตรหัสผ่าน Whodis</h2>
+            <p style="color: #64748b; font-size: 14px; line-height: 1.6; text-align: center;">คุณได้ทำการขอรหัสผ่านใหม่สำหรับบัญชี Whodis กรุณานำรหัส OTP 6 หลักด้านล่างนี้ไปกรอกในหน้าเว็บ:</p>
+            <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; padding: 18px; text-align: center; border-radius: 12px; margin: 24px 0;">
+              <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #ef4444;">${otp}</span>
+            </div>
+            <p style="color: #ef4444; font-size: 13px; text-align: center;">⏱️ รหัสนี้มีอายุการใช้งาน 10 นาที</p>
+            <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;" />
+            <p style="color: #94a3b8; font-size: 12px; text-align: center;">หากคุณไม่ได้เป็นผู้ขอรีเซ็ตรหัสผ่าน โปรดเพิกเฉยต่ออีเมลนี้</p>
+          </div>
+        `
+      };
+
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) return { success: true, provider: 'Resend' };
+      const errTxt = await res.text();
+      console.error("Resend API error:", errTxt);
+    } catch (e) {
+      console.error("Resend error:", e);
+    }
+  }
+
+  return { success: false, needApiKey: true };
 }
 
 export async function onRequestPost(context) {
@@ -88,15 +130,24 @@ export async function onRequestPost(context) {
       .bind(email, otp, expiresAt)
       .run();
 
-    // ส่งอีเมล
-    const mailSent = await sendMailChannelsEmail(email, otp);
+    // ส่งอีเมลจริงผ่าน Brevo หรือ Resend
+    const sendResult = await sendEmailOtp(email, otp, env);
+
+    if (!sendResult.success) {
+      return new Response(JSON.stringify({
+        success: false,
+        needApiKey: true,
+        message: 'ยังไม่ได้ตั้งค่า Email API Key (Brevo หรือ Resend) ในระบบ จึงไม่สามารถส่งอีเมลได้จริง กรุณาใส่ API Key ใน Cloudflare Dashboard หรือแจ้งแอดมิน'
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'ระบบได้ส่งรหัส OTP 6 หลักไปยังอีเมลของคุณแล้ว (มีอายุ 10 นาที)',
-      mailSent: mailSent,
-      // แนบ OTP กลับไปด้วยเพื่อความสะดวกในการทดสอบ (Dev mode)
-      devOtp: otp 
+      message: `ระบบได้ส่งรหัส OTP 6 หลักไปยังอีเมล ${email} เรียบร้อยแล้ว (มีอายุ 10 นาที)`,
+      provider: sendResult.provider
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

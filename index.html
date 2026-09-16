@@ -56,9 +56,60 @@
         .btn-green-solid:hover {
             background-color: #059669;
         }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-track {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+        }
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee 35s linear infinite;
+        }
+        .marquee-track:hover .marquee-content {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="font-sans text-primary-text bg-base-bg antialiased">
+    <!-- Marquee Warning Banner -->
+    <div class="w-full bg-red-600 text-white overflow-hidden text-[12px] py-2 font-medium flex items-center shadow-inner select-none relative z-50">
+        <div class="bg-red-700 px-3 py-1 font-bold shrink-0 flex items-center gap-1.5 shadow-sm text-[11px] uppercase tracking-wider ml-1 rounded">
+            <span class="material-symbols-outlined text-[15px] animate-pulse text-amber-300">campaign</span>
+            <span>เตือนภัย</span>
+        </div>
+        <div class="marquee-track flex whitespace-nowrap overflow-hidden flex-1 cursor-pointer" title="นำเมาส์มาวางเพื่อหยุดอ่าน">
+            <div class="marquee-content flex gap-8 items-center pl-4">
+                <span class="flex items-center gap-1">🚨 <strong>คำเตือน:</strong> ตำรวจและเจ้าหน้าที่รัฐไม่มีนโยบายให้โอนเงินตรวจสอบผ่านแชตหรือโทรศัพท์เด็ดขาด</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🛡️ <strong>แนวทางป้องกัน:</strong> เช็กเลขบัญชี เบอร์โทร และชื่อผู้รับทุกครั้งก่อนโอนเงิน</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🚫 <strong>ระวัง:</strong> งานออนไลน์กดรับออเดอร์ที่ให้สำรองจ่ายเงินก่อน คือมิจฉาชีพ 100%</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">💸 <strong>กู้เงินออนไลน์:</strong> สินเชื่อถูกกฎหมายไม่มีการเรียกเก็บค่าธรรมเนียมหรือเงินมัดจำล่วงหน้า</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">📞 <strong>แจ้งเหตุฉุกเฉิน:</strong> หากถูกโกงเงิน โทรอายัดบัญชีด่วนที่ศูนย์ AOC สายด่วน 1441 ตลอด 24 ชม.</span>
+                <span class="text-red-300">•</span>
+            </div>
+            <div class="marquee-content flex gap-8 items-center pl-4" aria-hidden="true">
+                <span class="flex items-center gap-1">🚨 <strong>คำเตือน:</strong> ตำรวจและเจ้าหน้าที่รัฐไม่มีนโยบายให้โอนเงินตรวจสอบผ่านแชตหรือโทรศัพท์เด็ดขาด</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🛡️ <strong>แนวทางป้องกัน:</strong> เช็กเลขบัญชี เบอร์โทร และชื่อผู้รับทุกครั้งก่อนโอนเงิน</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🚫 <strong>ระวัง:</strong> งานออนไลน์กดรับออเดอร์ที่ให้สำรองจ่ายเงินก่อน คือมิจฉาชีพ 100%</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">💸 <strong>กู้เงินออนไลน์:</strong> สินเชื่อถูกกฎหมายไม่มีการเรียกเก็บค่าธรรมเนียมหรือเงินมัดจำล่วงหน้า</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">📞 <strong>แจ้งเหตุฉุกเฉิน:</strong> หากถูกโกงเงิน โทรอายัดบัญชีด่วนที่ศูนย์ AOC สายด่วน 1441 ตลอด 24 ชม.</span>
+                <span class="text-red-300">•</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
@@ -315,13 +366,41 @@
                 container.innerHTML = recent.map(r => {
                     const dateStr = r.incident_date || r.created_at || '';
                     const fDate = dateStr ? new Date(dateStr).toLocaleDateString('th-TH', { month: 'short', day: 'numeric' }) : '';
+                    const reportCount = r.report_count || 1;
+                    const multiAccCount = r.multi_account_count || 1;
+
+                    // สีเหลืองถ้า 1 ครั้ง, สีแดงถ้ามากกว่า 1 ครั้ง
+                    let countBadge = '';
+                    if (reportCount > 1) {
+                        countBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-100 text-danger border border-red-200 animate-pulse">
+                            <span class="material-symbols-outlined text-[13px]">dangerous</span> ถูกรายงานซ้ำ ${reportCount} ครั้ง
+                        </span>`;
+                    } else {
+                        countBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-300">
+                            <span class="material-symbols-outlined text-[13px] text-amber-600">warning</span> มีรายงาน 1 ครั้ง
+                        </span>`;
+                    }
+
+                    let multiAccBadge = '';
+                    if (multiAccCount > 1) {
+                        multiAccBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                            <span class="material-symbols-outlined text-[12px]">account_balance_wallet</span> ม้า ${multiAccCount} บัญชี
+                        </span>`;
+                    }
+
+                    const shareQuery = encodeURIComponent(r.bank_account || r.phone_number || r.scammer_name);
+                    const shareUrl = `${window.location.origin}/index.html?search=${shareQuery}`;
+                    const shareText = `⚠️ เตือนภัยมิจฉาชีพ: ${r.scammer_name} บัญชี ${r.bank_account} ตรวจพบใน Whodis`;
+
                     return `
                         <div class="bg-white border border-gray-200 hover:border-red-300 rounded-2xl p-5 shadow-xs transition-all flex flex-col justify-between">
                             <div>
                                 <div class="flex items-start justify-between gap-2 mb-2">
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex flex-wrap items-center gap-1.5">
                                         <span class="w-2.5 h-2.5 rounded-full bg-danger shrink-0"></span>
                                         <span class="font-bold text-primary-text text-[15px] truncate">${escapeHtml(r.scammer_name || 'ไม่ระบุชื่อ')}</span>
+                                        ${countBadge}
+                                        ${multiAccBadge}
                                     </div>
                                     <span class="text-[11px] font-bold text-danger bg-red-50 border border-red-100 px-2 py-0.5 rounded-full shrink-0">
                                         ${escapeHtml(r.category || 'มิจฉาชีพ')}
@@ -335,11 +414,15 @@
                                     ${escapeHtml(r.incident_details || 'มีพฤติกรรมหลอกลวงประชาชน')}
                                 </p>
                             </div>
-                            <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+                            <div class="mt-3 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 text-xs">
                                 <span class="text-gray-400 text-[11px]">${fDate}</span>
-                                <button onclick="fillSearch('${escapeHtml(r.bank_account || r.phone_number || r.scammer_name)}')" class="font-bold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center gap-0.5">
-                                    ตรวจเช็กประวัติ &rarr;
-                                </button>
+                                <div class="flex items-center gap-1.5">
+                                    <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener" class="px-2 py-1 bg-[#06C755] text-white rounded font-bold text-[11px] hover:opacity-90">LINE</a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener" class="px-2 py-1 bg-[#1877F2] text-white rounded font-bold text-[11px] hover:opacity-90">FB</a>
+                                    <button onclick="fillSearch('${escapeHtml(r.bank_account || r.phone_number || r.scammer_name)}')" class="font-bold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center gap-0.5 ml-1">
+                                        เช็ก &rarr;
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -348,6 +431,14 @@
             } catch (err) {
                 console.error('Failed to load live feed:', err);
             }
+        }
+
+        function copyShareLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('คัดลอกลิงก์เตือนภัยแล้ว! สามารถนำไปส่งต่อในกลุ่มแชตหรือโซเชียลมีเดียได้ทันที');
+            }).catch(() => {
+                prompt('ก๊อบปี้ลิงก์นี้เพื่อแชร์เตือนภัย:', url);
+            });
         }
 
         function handleSearch(e) {
@@ -395,18 +486,77 @@
                     let itemsHtml = results.map(row => {
                         const dateStr = row.incident_date || row.created_at || '';
                         const formattedDate = dateStr ? new Date(dateStr).toLocaleDateString('th-TH') : '';
+                        const reportCount = row.report_count || 1;
+                        const multiAccCount = row.multi_account_count || 1;
+
+                        // 1 ครั้งสีเหลือง, มากกว่า 1 ครั้งสีแดง
+                        let countBadge = '';
+                        if (reportCount > 1) {
+                            countBadge = `
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-danger border border-red-200 animate-pulse">
+                                    <span class="material-symbols-outlined text-[15px]">dangerous</span> ถูกรายงานซ้ำแล้ว ${reportCount} ครั้ง (อันตรายสูง)
+                                </span>
+                            `;
+                        } else {
+                            countBadge = `
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300">
+                                    <span class="material-symbols-outlined text-[15px] text-amber-600">warning</span> มีรายงาน 1 ครั้ง — ควรระวัง
+                                </span>
+                            `;
+                        }
+
+                        let multiAccBadge = '';
+                        if (multiAccCount > 1) {
+                            multiAccBadge = `
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                                    <span class="material-symbols-outlined text-[14px]">account_balance_wallet</span> ตรวจพบบัญชีม้า ${multiAccCount} บัญชี
+                                </span>
+                            `;
+                        }
+
+                        const shareQuery = encodeURIComponent(row.bank_account || row.phone_number || row.scammer_name);
+                        const shareUrl = `${window.location.origin}/index.html?search=${shareQuery}`;
+                        const shareText = `⚠️ เตือนภัยมิจฉาชีพ: ${row.scammer_name} บัญชี ${row.bank_account} ถูกรายงานในระบบ Whodis ตรวจสอบประวัติ: ${shareUrl}`;
+
                         return `
-                            <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
-                                <div class="flex justify-between items-start mb-3">
+                            <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                                <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
                                     <div>
-                                        <h3 class="font-bold text-[16px] text-primary-text">${escapeHtml(row.scammer_name)}</h3>
-                                        <p class="text-[14px] font-mono text-muted-text mt-1">บัญชี: ${escapeHtml(row.bank_account)} ${row.bank_name ? '(' + escapeHtml(row.bank_name) + ')' : ''}</p>
+                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <h3 class="font-bold text-[18px] text-primary-text">${escapeHtml(row.scammer_name)}</h3>
+                                            ${countBadge}
+                                            ${multiAccBadge}
+                                        </div>
+                                        <p class="text-[14px] font-mono text-muted-text flex flex-wrap items-center gap-2">
+                                            <span><strong>บัญชี:</strong> ${escapeHtml(row.bank_account)} ${row.bank_name ? '(' + escapeHtml(row.bank_name) + ')' : ''}</span>
+                                            ${row.phone_number ? `<span class="text-gray-300">•</span><span><strong>เบอร์โทร:</strong> ${escapeHtml(row.phone_number)}</span>` : ''}
+                                            ${row.category ? `<span class="text-gray-300">•</span><span class="bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-700">${escapeHtml(row.category)}</span>` : ''}
+                                        </p>
                                     </div>
-                                    <span class="text-[12px] text-muted-text bg-gray-100 px-2 py-1 rounded">
+                                    <span class="text-[12px] text-muted-text bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-lg shrink-0">
                                         ${formattedDate}
                                     </span>
                                 </div>
-                                <p class="text-[14px] text-primary-text bg-gray-50 p-3 rounded-lg border border-gray-100">${escapeHtml(row.incident_details)}</p>
+                                <p class="text-[14px] text-primary-text bg-gray-50 p-4 rounded-xl border border-gray-100 leading-relaxed mb-4">
+                                    ${escapeHtml(row.incident_details)}
+                                </p>
+                                <!-- ปุ่มแชร์เตือนภัย One-Click Share -->
+                                <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-100 text-xs">
+                                    <span class="text-muted-text flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[15px] text-primary-text">share</span> แชร์เตือนภัยให้คนใกล้ตัว:
+                                    </span>
+                                    <div class="flex items-center gap-2">
+                                        <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#06C755] text-white font-bold hover:opacity-90 transition-opacity">
+                                            LINE
+                                        </a>
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#1877F2] text-white font-bold hover:opacity-90 transition-opacity">
+                                            Facebook
+                                        </a>
+                                        <button onclick="copyShareLink('${shareUrl}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors">
+                                            <span class="material-symbols-outlined text-[14px]">content_copy</span> คัดลอกลิงก์
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         `;
                     }).join('');

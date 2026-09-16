@@ -56,9 +56,60 @@
         .btn-green-solid:hover {
             background-color: #059669;
         }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-track {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+        }
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee 35s linear infinite;
+        }
+        .marquee-track:hover .marquee-content {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="font-sans text-primary-text bg-base-bg antialiased min-h-screen flex flex-col">
+    <!-- Marquee Warning Banner -->
+    <div class="w-full bg-red-600 text-white overflow-hidden text-[12px] py-2 font-medium flex items-center shadow-inner select-none relative z-50">
+        <div class="bg-red-700 px-3 py-1 font-bold shrink-0 flex items-center gap-1.5 shadow-sm text-[11px] uppercase tracking-wider ml-1 rounded">
+            <span class="material-symbols-outlined text-[15px] animate-pulse text-amber-300">campaign</span>
+            <span>เตือนภัย</span>
+        </div>
+        <div class="marquee-track flex whitespace-nowrap overflow-hidden flex-1 cursor-pointer" title="นำเมาส์มาวางเพื่อหยุดอ่าน">
+            <div class="marquee-content flex gap-8 items-center pl-4">
+                <span class="flex items-center gap-1">🚨 <strong>คำเตือน:</strong> ตำรวจและเจ้าหน้าที่รัฐไม่มีนโยบายให้โอนเงินตรวจสอบผ่านแชตหรือโทรศัพท์เด็ดขาด</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🛡️ <strong>แนวทางป้องกัน:</strong> เช็กเลขบัญชี เบอร์โทร และชื่อผู้รับทุกครั้งก่อนโอนเงิน</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🚫 <strong>ระวัง:</strong> งานออนไลน์กดรับออเดอร์ที่ให้สำรองจ่ายเงินก่อน คือมิจฉาชีพ 100%</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">💸 <strong>กู้เงินออนไลน์:</strong> สินเชื่อถูกกฎหมายไม่มีการเรียกเก็บค่าธรรมเนียมหรือเงินมัดจำล่วงหน้า</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">📞 <strong>แจ้งเหตุฉุกเฉิน:</strong> หากถูกโกงเงิน โทรอายัดบัญชีด่วนที่ศูนย์ AOC สายด่วน 1441 ตลอด 24 ชม.</span>
+                <span class="text-red-300">•</span>
+            </div>
+            <div class="marquee-content flex gap-8 items-center pl-4" aria-hidden="true">
+                <span class="flex items-center gap-1">🚨 <strong>คำเตือน:</strong> ตำรวจและเจ้าหน้าที่รัฐไม่มีนโยบายให้โอนเงินตรวจสอบผ่านแชตหรือโทรศัพท์เด็ดขาด</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🛡️ <strong>แนวทางป้องกัน:</strong> เช็กเลขบัญชี เบอร์โทร และชื่อผู้รับทุกครั้งก่อนโอนเงิน</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">🚫 <strong>ระวัง:</strong> งานออนไลน์กดรับออเดอร์ที่ให้สำรองจ่ายเงินก่อน คือมิจฉาชีพ 100%</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">💸 <strong>กู้เงินออนไลน์:</strong> สินเชื่อถูกกฎหมายไม่มีการเรียกเก็บค่าธรรมเนียมหรือเงินมัดจำล่วงหน้า</span>
+                <span class="text-red-300">•</span>
+                <span class="flex items-center gap-1">📞 <strong>แจ้งเหตุฉุกเฉิน:</strong> หากถูกโกงเงิน โทรอายัดบัญชีด่วนที่ศูนย์ AOC สายด่วน 1441 ตลอด 24 ชม.</span>
+                <span class="text-red-300">•</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 

@@ -15,12 +15,29 @@ export async function onRequestGet(context) {
       });
     }
 
-    // ดึงเฉพาะรายงานที่อนุมัติแล้วสำหรับบุคคลทั่วไป
+    // ดึงเฉพาะรายงานที่อนุมัติแล้วสำหรับบุคคลทั่วไป พร้อมนับจำนวนครั้งที่ถูกรายงาน
     const { results } = await db.prepare(
-      `SELECT id, scammer_name, bank_account, bank_name, incident_date, claim_amount, incident_details, evidence_file, status, created_at 
-       FROM reports 
-       WHERE status = 'approved' 
-       ORDER BY created_at DESC 
+      `SELECT 
+         r.id, r.scammer_name, r.bank_account, r.bank_name, r.phone_number, r.category,
+         r.incident_date, r.claim_amount, r.incident_details, r.evidence_file, r.status, r.created_at,
+         (
+           SELECT COUNT(*) FROM reports r2 
+           WHERE r2.status = 'approved' 
+           AND (
+             (r2.bank_account = r.bank_account AND r2.bank_account != '')
+             OR (r2.phone_number = r.phone_number AND r2.phone_number IS NOT NULL AND r2.phone_number != '')
+             OR (r2.scammer_name = r.scammer_name AND r2.scammer_name != '')
+           )
+         ) AS report_count,
+         (
+           SELECT COUNT(DISTINCT r3.bank_account) FROM reports r3
+           WHERE r3.status = 'approved'
+           AND r3.scammer_name = r.scammer_name
+           AND r3.bank_account != ''
+         ) AS multi_account_count
+       FROM reports r 
+       WHERE r.status = 'approved' 
+       ORDER BY r.created_at DESC 
        LIMIT ?`
     ).bind(limit).all();
 
