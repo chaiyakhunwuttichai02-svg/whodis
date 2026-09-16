@@ -19,7 +19,7 @@ export async function onRequestGet(context) {
       "COUNT(*) as total_reports, " +
       "SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_reports, " +
       "SUM(CASE WHEN status != 'approved' AND status != 'rejected' THEN 1 ELSE 0 END) as pending_reports, " +
-      "SUM(CASE WHEN status = 'approved' THEN COALESCE(damage_amount, 0) ELSE 0 END) as total_damage " +
+      "SUM(CASE WHEN status = 'approved' THEN COALESCE(claim_amount, 0) ELSE 0 END) as total_damage " +
       "FROM reports"
     ).all();
 

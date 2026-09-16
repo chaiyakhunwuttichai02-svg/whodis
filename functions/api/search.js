@@ -48,7 +48,7 @@ export async function onRequestGet(context) {
 
     // ค้นหาเฉพาะรายงานที่อนุมัติแล้ว (status = 'approved')
     const { results } = await db.prepare(
-      `SELECT id, scammer_name, bank_account, bank_name, phone_number, category, incident_date, damage_amount, claim_amount, incident_details, evidence_file, status, created_at 
+      `SELECT id, scammer_name, bank_account, bank_name, phone_number, category, incident_date, claim_amount, incident_details, evidence_file, status, created_at 
        FROM reports 
        WHERE status = 'approved' 
        AND (
