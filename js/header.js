@@ -170,19 +170,30 @@ function renderHeader() {
   renderSosWidget();
 }
 
-// ข้อมูลสายด่วนอายัดบัญชีฉุกเฉินทุกธนาคาร 24 ชม. พร้อมโลโก้จริง
+// ข้อมูลสายด่วนอายัดบัญชีฉุกเฉินทุกธนาคาร 24 ชม. พร้อมโลโก้จริง (ครอบคลุมทุกธนาคารในประเทศไทย)
 const SOS_BANKS = [
-  { id: 'aoc', name: 'ศูนย์ AOC (ตำรวจไซเบอร์)', desc: 'ระงับบัญชีทุกธนาคาร 24 ชม.', phone: '1441', rawPhone: '1441', logo: null, isAoc: true, keywords: 'aoc ตำรวจ ไซเบอร์ 1441' },
-  { id: 'kbank', name: 'ธนาคารกสิกรไทย (KBANK)', desc: 'ศูนย์รับแจ้งเหตุภัยออนไลน์ 24 ชม.', phone: '02-888-8888 กด 001', rawPhone: '028888888', logo: 'assets/banks/kbank.png', keywords: 'kbank กสิกร เขียว' },
-  { id: 'scb', name: 'ธนาคารไทยพาณิชย์ (SCB)', desc: 'สายด่วนภัยทางการเงิน 24 ชม.', phone: '02-777-7575', rawPhone: '027777575', logo: 'assets/banks/scb.png', keywords: 'scb ไทยพาณิชย์ ม่วง' },
-  { id: 'ktb', name: 'ธนาคารกรุงไทย (KTB)', desc: 'สายด่วนภัยไซเบอร์ 24 ชม.', phone: '02-111-1111 กด 111', rawPhone: '021111111', logo: 'assets/banks/ktb.png', keywords: 'ktb กรุงไทย ฟ้า เป๋าตัง' },
-  { id: 'bbl', name: 'ธนาคารกรุงเทพ (BBL)', desc: 'ศูนย์แจ้งเหตุฉุกเฉิน 24 ชม.', phone: '1333 หรือ 02-645-5555', rawPhone: '1333', logo: 'assets/banks/bbl.png', keywords: 'bbl กรุงเทพ บัวหลวง น้ำเงิน' },
-  { id: 'bay', name: 'ธนาคารกรุงศรีอยุธยา (BAY)', desc: 'สายด่วนรับแจ้งเหตุ 24 ชม.', phone: '1572 กด 5', rawPhone: '1572', logo: 'assets/banks/bay.png', keywords: 'bay กรุงศรี เหลือง' },
-  { id: 'ttb', name: 'ธนาคารทหารไทยธนชาต (TTB)', desc: 'สายด่วนแจ้งภัยออนไลน์', phone: '1428 กด 03', rawPhone: '1428', logo: 'assets/banks/ttb.png', keywords: 'ttb ทหารไทย ธนชาต' },
-  { id: 'gsb', name: 'ธนาคารออมสิน (GSB)', desc: 'ศูนย์รับแจ้งภัยทางการเงิน', phone: '1115 กด 6', rawPhone: '1115', logo: 'assets/banks/gsb.png', keywords: 'gsb ออมสิน ชมพู' },
-  { id: 'truemoney', name: 'ทรูมันนี่ (TrueMoney)', desc: 'ศูนย์แจ้งเหตุภัยทางการเงิน 24 ชม.', phone: '1240 กด 6', rawPhone: '1240', logo: 'assets/banks/truemoney.png', keywords: 'truemoney ทรูมันนี่ วอลเล็ท' },
-  { id: 'baac', name: 'ธ.ก.ส. (BAAC)', desc: 'ศูนย์รับแจ้งภัยทางการเงิน', phone: '02-555-0555', rawPhone: '025550555', logo: 'assets/banks/baac.png', keywords: 'baac ธกส เกษตร' },
-  { id: 'cimb', name: 'ธนาคาร ซีไอเอ็มบี ไทย (CIMB)', desc: 'สายด่วนแจ้งเหตุฉุกเฉิน', phone: '02-626-7777', rawPhone: '026267777', logo: 'assets/banks/cimb.png', keywords: 'cimb ซีไอเอ็มบี แดง' }
+  { id: 'aoc', name: 'ศูนย์ AOC (ตำรวจไซเบอร์)', desc: 'ระงับบัญชีทุกธนาคาร 24 ชม.', phone: '1441', rawPhone: '1441', logo: null, isAoc: true, keywords: 'aoc ตำรวจ ไซเบอร์ 1441 แจ้งความ ออนไลน์' },
+  { id: 'kbank', name: 'ธนาคารกสิกรไทย (KBANK)', desc: 'ศูนย์รับแจ้งเหตุภัยออนไลน์ 24 ชม.', phone: '02-888-8888 กด 001', rawPhone: '028888888', logo: 'assets/banks/kbank.png', keywords: 'kbank กสิกร เขียว เคแบงก์ kplus' },
+  { id: 'scb', name: 'ธนาคารไทยพาณิชย์ (SCB)', desc: 'สายด่วนภัยทางการเงิน 24 ชม.', phone: '02-777-7575', rawPhone: '027777575', logo: 'assets/banks/scb.png', keywords: 'scb ไทยพาณิชย์ ม่วง แม่มณี scbeasy' },
+  { id: 'ktb', name: 'ธนาคารกรุงไทย (KTB)', desc: 'สายด่วนภัยไซเบอร์ 24 ชม.', phone: '02-111-1111 กด 111', rawPhone: '021111111', logo: 'assets/banks/ktb.png', keywords: 'ktb กรุงไทย ฟ้า เป๋าตัง krungthai next' },
+  { id: 'bbl', name: 'ธนาคารกรุงเทพ (BBL)', desc: 'ศูนย์แจ้งเหตุฉุกเฉิน 24 ชม.', phone: '1333 หรือ 02-645-5555 กด *3', rawPhone: '1333', logo: 'assets/banks/bbl.png', keywords: 'bbl กรุงเทพ บัวหลวง น้ำเงิน bangkok bank' },
+  { id: 'bay', name: 'ธนาคารกรุงศรีอยุธยา (BAY)', desc: 'สายด่วนรับแจ้งเหตุ 24 ชม.', phone: '1572 กด 5', rawPhone: '1572', logo: 'assets/banks/bay.png', keywords: 'bay กรุงศรี เหลือง krungsri kma' },
+  { id: 'ttb', name: 'ธนาคารทหารไทยธนชาต (TTB)', desc: 'สายด่วนแจ้งภัยออนไลน์ 24 ชม.', phone: '1428 กด 03', rawPhone: '1428', logo: 'assets/banks/ttb.png', keywords: 'ttb ทหารไทย ธนชาต tmb thanachart touch' },
+  { id: 'gsb', name: 'ธนาคารออมสิน (GSB)', desc: 'ศูนย์รับแจ้งภัยทางการเงิน 24 ชม.', phone: '1115 กด 6', rawPhone: '1115', logo: 'assets/banks/gsb.png', keywords: 'gsb ออมสิน ชมพู mymo' },
+  { id: 'baac', name: 'ธ.ก.ส. (BAAC)', desc: 'ศูนย์รับแจ้งภัยทางการเงิน 24 ชม.', phone: '02-555-0555 กด *3', rawPhone: '025550555', logo: 'assets/banks/baac.png', keywords: 'baac ธกส เกษตร ธนาคารเพื่อการเกษตร baac mobile' },
+  { id: 'ghb', name: 'ธนาคารอาคารสงเคราะห์ (ธอส. / GHB)', desc: 'ศูนย์รับแจ้งเหตุภัยทางการเงิน', phone: '02-645-9000 กด 33', rawPhone: '026459000', logo: 'assets/banks/ghb.png', keywords: 'ghb ธอส อาคารสงเคราะห์ ghmall' },
+  { id: 'kkp', name: 'ธนาคารเกียรตินาคินภัทร (KKP)', desc: 'สายด่วนแจ้งเหตุภัยทางการเงิน 24 ชม.', phone: '02-165-5555 กด 6', rawPhone: '021655555', logo: 'assets/banks/kkp.png', keywords: 'kkp เกียรตินาคิน เกียรตินาคินภัทร dime edge' },
+  { id: 'uob', name: 'ธนาคารยูโอบี (UOB)', desc: 'สายด่วนรับแจ้งภัยทุจริต 24 ชม.', phone: '02-344-9555', rawPhone: '023449555', logo: 'assets/banks/uob.png', keywords: 'uob ยูโอบี tmrw' },
+  { id: 'cimb', name: 'ธนาคาร ซีไอเอ็มบี ไทย (CIMB)', desc: 'สายด่วนแจ้งเหตุฉุกเฉิน 24 ชม.', phone: '02-626-7777 กด 00', rawPhone: '026267777', logo: 'assets/banks/cimb.png', keywords: 'cimb ซีไอเอ็มบี แดง octo cimb thai' },
+  { id: 'tisco', name: 'ธนาคารทิสโก้ (TISCO)', desc: 'ศูนย์รับแจ้งเหตุภัยทางการเงิน 24 ชม.', phone: '02-633-6000 กด *7', rawPhone: '026336000', logo: 'assets/banks/tisco.png', keywords: 'tisco ทิสโก้' },
+  { id: 'lhb', name: 'ธนาคารแลนด์ แอนด์ เฮ้าส์ (LH Bank)', desc: 'สายด่วนแจ้งระงับธุรกรรม 24 ชม.', phone: '02-359-0000 กด 8', rawPhone: '023590000', logo: 'assets/banks/lhb.png', keywords: 'lhb แลนด์ แอนด์ เฮ้าส์ lh bank m choice' },
+  { id: 'tcrb', name: 'ธนาคารไทยเครดิต (Thai Credit)', desc: 'สายด่วนรับแจ้งเหตุภัยทางการเงิน 24 ชม.', phone: '02-697-5454 กด 0', rawPhone: '026975454', logo: 'assets/banks/tcrb.png', keywords: 'tcrb ไทยเครดิต เพื่อรายย่อย alpha' },
+  { id: 'ibank', name: 'ธนาคารอิสลามแห่งประเทศไทย (iBank)', desc: 'สายด่วนรับแจ้งเหตุทางการเงิน 24 ชม.', phone: '02-204-2766 หรือ 1302 กด 003', rawPhone: '022042766', logo: 'assets/banks/ibank.png', keywords: 'ibank อิสลาม อิสลามแห่งประเทศไทย' },
+  { id: 'icbc', name: 'ธนาคารไอซีบีซี (ไทย) (ICBC)', desc: 'สายด่วนรับแจ้งเหตุ 24 ชม.', phone: '02-629-5588 กด 4', rawPhone: '026295588', logo: 'assets/banks/icbc.png', keywords: 'icbc ไอซีบีซี จีน' },
+  { id: 'citi', name: 'ซิตี้แบงก์ (Citi Thailand)', desc: 'สายด่วนแจ้งเหตุฉุกเฉิน 24 ชม.', phone: '02-232-2484', rawPhone: '022322484', logo: 'assets/banks/citi.png', keywords: 'citi ซิตี้แบงก์ ซิตี้ ซิตี้คอร์ป' },
+  { id: 'truemoney', name: 'ทรูมันนี่ (TrueMoney Wallet)', desc: 'ศูนย์แจ้งเหตุภัยทางการเงิน 24 ชม.', phone: '1240 กด 6', rawPhone: '1240', logo: 'assets/banks/truemoney.png', keywords: 'truemoney ทรูมันนี่ วอลเล็ท wallet สแกน' },
+  { id: 'bot', name: 'ศคง. ธนาคารแห่งประเทศไทย (BOT)', desc: 'คุ้มครองผู้ใช้บริการทางการเงิน / ปรึกษาภัยการเงิน', phone: '1213', rawPhone: '1213', logo: null, icon: 'account_balance', keywords: 'bot แบงก์ชาติ ธปท ศคง ร้องเรียน 1213' },
+  { id: 'nbtc', name: 'สำนักงาน กสทช. (NBTC)', desc: 'รับแจ้งเบาะแส SMS หลอกลวง / เบอร์คอลเซ็นเตอร์', phone: '1200', rawPhone: '1200', logo: null, icon: 'cell_tower', keywords: 'nbtc กสทช sms คอลเซ็นเตอร์ เบอร์แปลก หลอกลวง 1200' }
 ];
 
 function renderSosWidget() {
@@ -224,7 +235,7 @@ function renderSosWidget() {
           <div class="relative flex items-center">
             <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[19px]">search</span>
             <input type="text" id="sos-search-input" oninput="filterSosBanks(this.value)"
-                   placeholder="ค้นหาชื่อธนาคาร เช่น กสิกร, SCB, ออมสิน, กรุงไทย..."
+                   placeholder="ค้นหาชื่อธนาคาร เช่น กสิกร, SCB, ออมสิน, กรุงไทย, ธอส..."
                    class="w-full h-[40px] pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-red-500 transition-colors">
           </div>
         </div>
@@ -295,11 +306,15 @@ function renderSosBankItems(banks) {
       `;
     }
 
+    const logoHtml = b.logo
+      ? `<img src="${b.logo}" alt="${escapeHtml(b.name)}" class="w-full h-full object-contain rounded-lg">`
+      : `<div class="w-full h-full bg-slate-100 rounded-lg flex items-center justify-center text-slate-700"><span class="material-symbols-outlined text-[20px]">${b.icon || 'account_balance'}</span></div>`;
+
     return `
       <div class="pt-2.5 first:pt-0 flex items-center justify-between gap-3 hover:bg-gray-50/80 p-2 rounded-xl transition-colors">
         <div class="flex items-center gap-3 min-w-0">
           <div class="w-10 h-10 rounded-xl bg-white border border-gray-200 p-1 flex items-center justify-center shrink-0 shadow-2xs">
-            <img src="${b.logo}" alt="${escapeHtml(b.name)}" class="w-full h-full object-contain rounded-lg">
+            ${logoHtml}
           </div>
           <div class="min-w-0">
             <h4 class="text-[13.5px] font-semibold text-primary-text truncate">${escapeHtml(b.name)}</h4>
