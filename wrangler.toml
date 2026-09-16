@@ -1,9 +1,8 @@
 name = "whodis"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "."
-account_id = "1fff713dc0436cc6e9b38966b88f9fd9"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "whodis-db"
-database_id = "whodis-db"
+database_id = "c214c3cb-cb23-4b55-a069-8e7e4179ced6"
