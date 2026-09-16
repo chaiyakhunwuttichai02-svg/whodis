@@ -126,6 +126,12 @@
                     <p class="text-muted-text text-[14px]">ยินดีต้อนรับกลับสู่ Whodis</p>
                 </div>
 
+                <!-- แจ้งเตือนเมื่อถูกส่งต่อมาจากหน้าที่ต้องล็อกอินก่อนเข้าชม -->
+                <div id="login-notice" class="hidden mb-4 p-3.5 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-[13.5px] flex items-center gap-2.5 shadow-2xs">
+                    <span class="material-symbols-outlined text-[20px] text-amber-600 shrink-0">lock</span>
+                    <span class="font-medium">กรุณาเข้าสู่ระบบก่อนเข้าใช้งานหน้านี้</span>
+                </div>
+
                 <!-- Alert Error Message -->
                 <div id="error-alert" class="hidden mb-4 p-3.5 bg-red-50 border border-red-200 text-danger rounded-xl text-[14px] flex items-center gap-2">
                     <span class="material-symbols-outlined text-[20px]">error</span>
@@ -178,12 +184,24 @@
     <script src="js/auth.js"></script>
     <script src="js/header.js"></script>
     <script>
-        // ถ้าเข้าสู่ระบบอยู่แล้ว ให้เปลี่ยนเส้นทางตามบทบาท
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectParam = urlParams.get('redirect');
+        const reasonParam = urlParams.get('reason');
+
+        // แสดงกล่องเตือนหากถูกส่งต่อมาจากหน้าที่ต้องล็อกอิน
+        if (reasonParam === 'need_login' || redirectParam) {
+            const noticeBox = document.getElementById('login-notice');
+            if (noticeBox) noticeBox.classList.remove('hidden');
+        }
+
+        // ถ้าเข้าสู่ระบบอยู่แล้ว ให้เปลี่ยนเส้นทางตามบทบาทหรือหน้าที่ตั้งใจไป
         if (Auth.isLoggedIn()) {
-            if (Auth.isAdmin()) {
-                window.location.href = 'admin_reports.html';
+            if (redirectParam && !redirectParam.includes('login') && !redirectParam.includes('register')) {
+                window.location.replace(redirectParam);
+            } else if (Auth.isAdmin()) {
+                window.location.replace('admin_reports.html');
             } else {
-                window.location.href = 'index.html';
+                window.location.replace('index.html');
             }
         }
 
@@ -211,7 +229,10 @@
 
                 if (res.ok && data.success) {
                     Auth.setUser(data.user);
-                    if (data.user.role === 'admin') {
+                    // นำทางไปยังหน้าที่ตั้งใจเข้าแต่แรก (Seamless Redirect)
+                    if (redirectParam && !redirectParam.includes('login') && !redirectParam.includes('register')) {
+                        window.location.href = redirectParam;
+                    } else if (data.user.role === 'admin') {
                         window.location.href = 'admin_reports.html';
                     } else {
                         window.location.href = 'index.html';
@@ -223,6 +244,7 @@
             } catch (err) {
                 alertBox.classList.remove('hidden');
                 alertText.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง';
+
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'เข้าสู่ระบบ';
