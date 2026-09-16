@@ -41,15 +41,25 @@ export async function onRequestGet(context) {
       console.error('Failed to log search:', logErr);
     }
 
+    // ทำความสะอาดคำค้นหา (ตัดขีดและช่องว่างออกเพื่อค้นหาตัวเลข)
+    const cleanTerm = searchTerm.replace(/[-\s]/g, '');
+    const rawKeyword = `%${searchTerm}%`;
+    const cleanKeyword = `%${cleanTerm}%`;
+
     // ค้นหาเฉพาะรายงานที่อนุมัติแล้ว (status = 'approved')
-    const keyword = `%${searchTerm}%`;
     const { results } = await db.prepare(
-      `SELECT id, scammer_name, bank_account, bank_name, incident_date, claim_amount, incident_details, evidence_file, status, created_at 
+      `SELECT id, scammer_name, bank_account, bank_name, phone_number, category, incident_date, damage_amount, claim_amount, incident_details, evidence_file, status, created_at 
        FROM reports 
        WHERE status = 'approved' 
-       AND (scammer_name LIKE ? OR bank_account LIKE ?) 
+       AND (
+         scammer_name LIKE ? 
+         OR bank_account LIKE ? 
+         OR phone_number LIKE ?
+         OR REPLACE(REPLACE(bank_account, '-', ''), ' ', '') LIKE ?
+         OR REPLACE(REPLACE(phone_number, '-', ''), ' ', '') LIKE ?
+       ) 
        ORDER BY created_at DESC`
-    ).bind(keyword, keyword).all();
+    ).bind(rawKeyword, rawKeyword, rawKeyword, cleanKeyword, cleanKeyword).all();
 
     return new Response(JSON.stringify({
       success: true,
