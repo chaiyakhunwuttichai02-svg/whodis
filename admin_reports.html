@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Whodis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; }
+        .sidebar { background-color: #1f2937; }
+        .sidebar-item:hover { background-color: #374151; color: white; }
+        .sidebar-item.active { background-color: #3b82f6; color: white !important; }
+        .toggle-checkbox:checked { right: 0; border-color: #3b82f6; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #3b82f6; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <!-- Sidebar ด้านซ้าย -->
+    <aside class="sidebar w-64 h-full flex-shrink-0 flex flex-col text-gray-300 transition-all duration-300">
+        <div class="h-16 flex items-center px-6 border-b border-gray-700">
+            <span class="material-symbols-outlined text-[28px] mr-2 text-white">security</span>
+            <span class="text-white font-bold text-lg tracking-wider">Whodis Admin</span>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4">
+            <nav class="space-y-1 px-3">
+                <button onclick="setView('reports', 'all')" id="nav-dashboard" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg text-left">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>
+                    Dashboard
+                </button>
+                <button onclick="setView('reports', 'pending')" id="nav-pending" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-orange-400 text-left">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">hourglass_empty</span>
+                    Pending Reports
+                </button>
+                <button onclick="setView('reports', 'approved')" id="nav-approved" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-emerald-400 text-left">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">check_circle</span>
+                    Approved
+                </button>
+                <button onclick="setView('reports', 'rejected')" id="nav-rejected" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-red-400 text-left">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">cancel</span>
+                    Rejected
+                </button>
+                <hr class="border-gray-700 my-4 mx-4">
+                <button onclick="setView('users')" id="nav-users" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-left">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">group</span>
+                    Users
+                </button>
+                <button onclick="setView('settings')" id="nav-settings" class="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg mt-2 text-left">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">settings</span>
+                    Settings
+                </button>
+            </nav>
+        </div>
+        
+        <div class="p-4 border-t border-gray-700">
+            <button onclick="Auth.logout()" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+                <span class="material-symbols-outlined mr-2 text-[18px]">logout</span>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- พื้นที่เนื้อหาด้านขวา -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <!-- Top Navbar -->
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0 z-10">
+            <div id="page-title" class="text-xl font-bold text-gray-800">Dashboard Overview</div>
+            
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="text-sm font-semibold text-gray-600 hover:text-gray-900 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[18px]">home</span> หน้าบ้าน
+                </a>
+                <a href="report.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">add</span> Add Report
+                </a>
+                
+                <!-- โปรไฟล์แอดมิน -->
+                <div class="flex items-center gap-3 border-l pl-4 border-gray-200">
+                    <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm border border-blue-100">
+                        <span class="material-symbols-outlined text-[22px]">person</span>
+                    </div>
+                    <div class="hidden md:block text-sm">
+                        <div id="admin-name" class="font-bold text-gray-700 leading-tight">Admin</div>
+                        <div id="admin-email" class="text-xs text-gray-400">admin@whodis.com</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content (Scrollable) -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            
+            <div id="admin-alert" class="hidden mb-4 p-4 rounded-xl text-[14px]"></div>
+
+            <!-- View 1: Reports View -->
+            <div id="view-reports">
+                <!-- 4 กล่องสถิติ -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div onclick="setView('reports', 'pending')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-orange-400 flex justify-between items-center hover:shadow-md transition">
+                        <div>
+                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">PENDING REVIEW</div>
+                            <div id="stat-pending" class="text-3xl font-bold text-gray-800">0</div>
+                        </div>
+                        <span class="material-symbols-outlined text-orange-400 text-[32px]">hourglass_top</span>
+                    </div>
+                    <div onclick="setView('reports', 'approved')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-emerald-500 flex justify-between items-center hover:shadow-md transition">
+                        <div>
+                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">APPROVED</div>
+                            <div id="stat-approved" class="text-3xl font-bold text-gray-800">0</div>
+                        </div>
+                        <span class="material-symbols-outlined text-emerald-500 text-[32px]">check_box</span>
+                    </div>
+                    <div onclick="setView('reports', 'rejected')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-red-500 flex justify-between items-center hover:shadow-md transition">
+                        <div>
+                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">REJECTED</div>
+                            <div id="stat-rejected" class="text-3xl font-bold text-gray-800">0</div>
+                        </div>
+                        <span class="material-symbols-outlined text-red-500 text-[32px]">cancel_presentation</span>
+                    </div>
+                    <div onclick="setView('reports', 'all')" class="cursor-pointer bg-white rounded-xl p-5 shadow-sm border-l-4 border-l-gray-800 flex justify-between items-center hover:shadow-md transition">
+                        <div>
+                            <div class="text-[11px] font-bold text-gray-500 tracking-wider mb-1">TOTAL REPORTS</div>
+                            <div id="stat-total" class="text-3xl font-bold text-gray-800">0</div>
+                        </div>
+                        <span class="material-symbols-outlined text-gray-800 text-[32px]">bar_chart</span>
+                    </div>
+                </div>
+
+                <!-- ตารางรายงาน -->
+                <div class="mb-6">
+                    <div class="bg-white p-4 rounded-t-xl border-b border-gray-100 flex flex-col sm:flex-row justify-between gap-4">
+                        <div class="relative w-full sm:w-80">
+                            <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[20px]">search</span>
+                            <input type="text" id="searchInput" placeholder="Search reports..." onkeyup="filterReportsTable()" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                        <select id="filterSelect" onchange="setView('reports', this.value)" class="border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-blue-500 cursor-pointer">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="bg-white rounded-b-xl shadow-sm overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="reportsTable">
+                            <thead>
+                                <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 tracking-wider border-b border-gray-100">
+                                    <th class="px-6 py-4">NO.</th>
+                                    <th class="px-6 py-4">SCAMMER</th>
+                                    <th class="px-6 py-4">SUBJECT / DETAILS</th>
+                                    <th class="px-6 py-4 text-center">STATUS</th>
+                                    <th class="px-6 py-4">DATE</th>
+                                    <th class="px-6 py-4 text-center">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody" class="text-sm">
+                                <tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">กำลังโหลดข้อมูล...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 2: Users View -->
+            <div id="view-users" class="hidden">
+                <div class="mb-6">
+                    <div class="bg-white p-4 rounded-t-xl border-b border-gray-100 flex justify-between items-center">
+                        <div class="relative w-full sm:w-80">
+                            <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[20px]">search</span>
+                            <input type="text" id="searchUserInput" placeholder="Search users by name or email..." onkeyup="filterUsersTable()" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-b-xl shadow-sm overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="usersTable">
+                            <thead>
+                                <tr class="bg-gray-50 text-[11px] font-bold text-gray-500 tracking-wider border-b border-gray-100">
+                                    <th class="px-6 py-4">ID</th>
+                                    <th class="px-6 py-4">USERNAME / NAME</th>
+                                    <th class="px-6 py-4">EMAIL</th>
+                                    <th class="px-6 py-4 text-center">ROLE</th>
+                                    <th class="px-6 py-4">JOINED DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="text-sm">
+                                <tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">กำลังโหลดรายชื่อผู้ใช้...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 3: Settings View -->
+            <div id="view-settings" class="hidden">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div class="border-b border-gray-100 px-6 py-4">
+                            <h3 class="text-lg font-bold text-gray-800">General Settings</h3>
+                            <p class="text-sm text-gray-500">จัดการข้อมูลพื้นฐานของระบบเว็บไซต์</p>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Site Name (ชื่อเว็บไซต์)</label>
+                                <input type="text" value="Whodis Detection System" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Support Email</label>
+                                <input type="email" value="support@whodis.com" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:outline-none">
+                            </div>
+                            <div class="flex items-center justify-between pt-2">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Maintenance Mode (ปิดปรับปรุงระบบ)</p>
+                                    <p class="text-xs text-gray-500">เปิดเพื่อปิดไม่ให้ผู้ใช้งานทั่วไปเข้าถึงเว็บไซต์ชั่วคราว</p>
+                                </div>
+                                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                    <input type="checkbox" name="toggle" id="toggle1" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300"/>
+                                    <label for="toggle1" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-6 py-3 text-right">
+                            <button type="button" onclick="alert('บันทึกการตั้งค่าเรียบร้อยแล้ว')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal ดูรูปภาพ -->
+    <div id="imageModal" class="fixed inset-0 bg-black/80 z-[100] hidden flex items-center justify-center p-4 cursor-pointer" onclick="closeImageModal()">
+        <div class="relative max-w-3xl max-h-[90vh] overflow-hidden" onclick="event.stopPropagation()">
+            <img id="modalImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl bg-white">
+            <button onclick="closeImageModal()" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition">✕</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script>
+        // ตรวจสอบสิทธิ์ Admin
+        Auth.requireAdmin();
+
+        const currentUser = Auth.getUser();
+        if (currentUser) {
+            document.getElementById('admin-name').textContent = currentUser.username || 'Admin';
+            document.getElementById('admin-email').textContent = currentUser.email || 'admin@whodis.com';
+        }
+
+        let currentView = 'reports';
+        let currentFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewParam = urlParams.get('view') || 'reports';
+            const filterParam = urlParams.get('filter') || 'all';
+            setView(viewParam, filterParam);
+        });
+
+        function setView(view, filter = 'all') {
+            currentView = view;
+            currentFilter = filter;
+
+            document.getElementById('view-reports').classList.add('hidden');
+            document.getElementById('view-users').classList.add('hidden');
+            document.getElementById('view-settings').classList.add('hidden');
+
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+
+            const title = document.getElementById('page-title');
+
+            if (view === 'reports') {
+                document.getElementById('view-reports').classList.remove('hidden');
+                document.getElementById('filterSelect').value = filter;
+
+                if (filter === 'pending') {
+                    title.textContent = 'Pending Reports';
+                    document.getElementById('nav-pending').classList.add('active');
+                } else if (filter === 'approved') {
+                    title.textContent = 'Approved Reports';
+                    document.getElementById('nav-approved').classList.add('active');
+                } else if (filter === 'rejected') {
+                    title.textContent = 'Rejected Reports';
+                    document.getElementById('nav-rejected').classList.add('active');
+                } else {
+                    title.textContent = 'Dashboard Overview';
+                    document.getElementById('nav-dashboard').classList.add('active');
+                }
+                loadReports(filter);
+            } else if (view === 'users') {
+                document.getElementById('view-users').classList.remove('hidden');
+                document.getElementById('nav-users').classList.add('active');
+                title.textContent = 'User Management';
+                loadUsers();
+            } else if (view === 'settings') {
+                document.getElementById('view-settings').classList.remove('hidden');
+                document.getElementById('nav-settings').classList.add('active');
+                title.textContent = 'System Settings';
+            }
+        }
+
+        async function loadReports(filter) {
+            const tbody = document.getElementById('reportsTableBody');
+            tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">กำลังดึงข้อมูลรายงาน...</td></tr>`;
+
+            try {
+                const res = await fetch(`/api/admin?view=reports&filter=${filter}`);
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
+                    return;
+                }
+
+                // สถิติ
+                if (data.stats) {
+                    document.getElementById('stat-pending').textContent = data.stats.pending || 0;
+                    document.getElementById('stat-approved').textContent = data.stats.approved || 0;
+                    document.getElementById('stat-rejected').textContent = data.stats.rejected || 0;
+                    document.getElementById('stat-total').textContent = data.stats.total || 0;
+                }
+
+                const reports = data.reports || [];
+                if (reports.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">ไม่มีข้อมูลรายงานในขณะนี้</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                reports.forEach((row, idx) => {
+                    const st = (row.status || '').toLowerCase();
+                    let badgeClass = 'bg-orange-100 text-orange-800';
+                    let badgeText = 'Pending';
+                    if (st === 'approved') {
+                        badgeClass = 'bg-emerald-100 text-emerald-800';
+                        badgeText = 'Approved';
+                    } else if (st === 'rejected') {
+                        badgeClass = 'bg-red-100 text-red-800';
+                        badgeText = 'Rejected';
+                    }
+
+                    const dateStr = row.created_at ? new Date(row.created_at).toLocaleDateString('th-TH') : '-';
+                    const evidence = row.evidence_file || '';
+
+                    let viewImageBtn = '';
+                    if (evidence) {
+                        viewImageBtn = `
+                            <button onclick="openImageModal('${escapeHtml(evidence)}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-lg transition" title="ดูหลักฐาน">
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                            </button>
+                        `;
+                    }
+
+                    html += `
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors search-item">
+                            <td class="px-6 py-4 text-gray-500">${idx + 1}</td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-800 search-txt">${escapeHtml(row.scammer_name || 'ไม่ระบุชื่อ')}</div>
+                                <div class="text-[12px] text-gray-500 mt-0.5 search-txt">${escapeHtml(row.bank_account || '-')} ${row.bank_name ? '(' + escapeHtml(row.bank_name) + ')' : ''}</div>
+                            </td>
+                            <td class="px-6 py-4 max-w-xs truncate text-gray-600 search-txt" title="${escapeHtml(row.incident_details || '-')}">${escapeHtml(row.incident_details || '-')}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium ${badgeClass}">${badgeText}</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-500 whitespace-nowrap">${dateStr}</td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-1">
+                                    ${viewImageBtn}
+                                    ${st !== 'approved' ? `
+                                        <button onclick="handleReportAction(${row.id}, 'approve')" class="text-emerald-500 hover:bg-emerald-50 p-1.5 rounded-lg transition" title="อนุมัติ">
+                                            <span class="material-symbols-outlined text-[18px]">check</span>
+                                        </button>
+                                    ` : ''}
+                                    ${st !== 'rejected' ? `
+                                        <button onclick="handleReportAction(${row.id}, 'reject')" class="text-orange-500 hover:bg-orange-50 p-1.5 rounded-lg transition" title="ปฏิเสธ">
+                                            <span class="material-symbols-outlined text-[18px]">close</span>
+                                        </button>
+                                    ` : ''}
+                                    <button onclick="handleReportAction(${row.id}, 'delete')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition" title="ลบ">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-red-500">ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้</td></tr>`;
+            }
+        }
+
+        async function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">กำลังโหลดรายชื่อผู้ใช้...</td></tr>`;
+
+            try {
+                const res = await fetch('/api/admin?view=users');
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูลผู้ใช้</td></tr>`;
+                    return;
+                }
+
+                const users = data.users || [];
+                if (users.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">ไม่มีข้อมูลผู้ใช้งาน</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                users.forEach(u => {
+                    const urole = (u.role || 'user').toLowerCase();
+                    const isAdm = urole === 'admin';
+                    const roleBadge = isAdm
+                        ? `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Admin</span>`
+                        : `<span class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">User</span>`;
+                    const dateStr = u.created_at ? new Date(u.created_at).toLocaleDateString('th-TH') : '-';
+
+                    html += `
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors search-item">
+                            <td class="px-6 py-4 font-medium text-gray-500">#${u.id}</td>
+                            <td class="px-6 py-4 font-bold text-gray-800 search-txt">${escapeHtml(u.username)}</td>
+                            <td class="px-6 py-4 text-gray-600 search-txt">${escapeHtml(u.email)}</td>
+                            <td class="px-6 py-4 text-center">${roleBadge}</td>
+                            <td class="px-6 py-4 text-gray-500">${dateStr}</td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-red-500">ไม่สามารถโหลดข้อมูลได้</td></tr>`;
+            }
+        }
+
+        async function handleReportAction(reportId, action) {
+            const confirmMsg = action === 'delete' ? 'ยืนยันการลบรายงานนี้?' : `ยืนยันการเปลี่ยนสถานะเป็น ${action}?`;
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const res = await fetch('/api/admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reportId, action })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    loadReports(currentFilter);
+                } else {
+                    alert(data.message || 'เกิดข้อผิดพลาด');
+                }
+            } catch (err) {
+                alert('ไม่สามารถดำเนินการได้ในขณะนี้');
+            }
+        }
+
+        function openImageModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+            document.getElementById('modalImage').src = '';
+        }
+
+        function filterReportsTable() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll("#reportsTable .search-item");
+            rows.forEach(row => {
+                const texts = row.querySelectorAll(".search-txt");
+                let found = false;
+                texts.forEach(t => {
+                    if (t.innerText.toLowerCase().includes(input)) found = true;
+                });
+                row.style.display = found ? "" : "none";
+            });
+        }
+
+        function filterUsersTable() {
+            const input = document.getElementById('searchUserInput').value.toLowerCase();
+            const rows = document.querySelectorAll("#usersTable .search-item");
+            rows.forEach(row => {
+                const texts = row.querySelectorAll(".search-txt");
+                let found = false;
+                texts.forEach(t => {
+                    if (t.innerText.toLowerCase().includes(input)) found = true;
+                });
+                row.style.display = found ? "" : "none";
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+</html>

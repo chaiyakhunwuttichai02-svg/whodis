@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Whodis - สร้างบัญชีผู้ใช้ใหม่</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        "base-bg": "#f8fafc",
+                        "card-bg": "#ffffff",
+                        "primary-text": "#0f172a",
+                        "muted-text": "#64748b",
+                        "danger": "#ef4444",
+                        "success": "#10b981",
+                        "warning": "#facc15",
+                        "dark-badge": "#1e293b"
+                    },
+                    fontFamily: { "sans": ["Inter", "Noto Sans Thai", "sans-serif"] }
+                } 
+            } 
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .nav-link.active {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+        .btn-green-solid {
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 0.5rem 1.4rem;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn-green-solid:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body class="font-sans text-primary-text bg-base-bg antialiased min-h-screen flex flex-col">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <main class="w-full pt-12 pb-24 bg-base-bg flex-1 flex items-center justify-center">
+        <div class="max-w-[440px] w-full mx-auto px-4">
+            
+            <!-- หัวข้อหน้า Register -->
+            <div class="text-center mb-8">
+                <div class="w-12 h-12 bg-success text-white rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-sm">
+                    <span class="material-symbols-outlined text-[24px]">person_add</span>
+                </div>
+                <h1 class="text-[28px] font-bold text-primary-text mb-2">สร้างบัญชีผู้ใช้ใหม่</h1>
+                <p class="text-muted-text text-[14px]">ร่วมเป็นส่วนหนึ่งในการปกป้องและแจ้งเตือนภัยมิจฉาชีพ</p>
+            </div>
+
+            <!-- กล่องฟอร์ม Register -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                
+                <div id="alert-box" class="hidden mb-6 p-4 rounded-xl text-[14px] flex items-center gap-2"></div>
+
+                <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[13px] font-semibold text-primary-text mb-1.5">ชื่อผู้ใช้ (Username)</label>
+                        <input id="username" type="text" required class="w-full h-[46px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:bg-white transition-colors" placeholder="ตั้งชื่อผู้ใช้ของคุณ">
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-semibold text-primary-text mb-1.5">อีเมล (Email)</label>
+                        <input id="email" type="email" required class="w-full h-[46px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:bg-white transition-colors" placeholder="name@example.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-semibold text-primary-text mb-1.5">รหัสผ่าน (Password)</label>
+                        <input id="password" type="password" required minlength="6" class="w-full h-[46px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:bg-white transition-colors" placeholder="อย่างน้อย 6 ตัวอักษร">
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-semibold text-primary-text mb-1.5">ยืนยันรหัสผ่าน</label>
+                        <input id="confirm_password" type="password" required minlength="6" class="w-full h-[46px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:bg-white transition-colors" placeholder="กรอกรหัสผ่านอีกครั้ง">
+                    </div>
+
+                    <button id="registerBtn" type="submit" class="w-full h-[50px] bg-primary-text hover:bg-gray-800 text-white text-[15px] font-bold rounded-xl shadow-md transition-transform hover:scale-[1.01] flex items-center justify-center gap-2 mt-4">
+                        สมัครสมาชิก <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+                    </button>
+                </form>
+
+                <div class="mt-8 text-center pt-6 border-t border-gray-100">
+                    <p class="text-[14px] text-muted-text">
+                        มีบัญชีอยู่แล้ว? <a href="login.html" class="font-bold text-primary-text hover:underline">เข้าสู่ระบบที่นี่</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="w-full pb-8 pt-4 border-t border-gray-200 mt-auto">
+        <div class="max-w-[1000px] mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-1 mb-2">
+                <span class="material-symbols-outlined text-[16px] text-primary-text">verified_user</span>
+                <span class="font-bold text-[14px] text-primary-text">Whodis</span>
+            </div>
+            <p class="text-[12px] text-muted-text">Check Before You Pay — เช็กก่อนโอนทุกครั้ง ป้องกันดีกว่าแก้</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            const alertBox = document.getElementById('alert-box');
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                showAlert('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษรขึ้นไป', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `กำลังบันทึกข้อมูล... <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>`;
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showAlert(data.message || 'สมัครสมาชิกสำเร็จ! กำลังพาคุณไปหน้าเข้าสู่ระบบ...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1800);
+                } else {
+                    showAlert(data.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก', 'error');
+                }
+            } catch (err) {
+                showAlert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `สมัครสมาชิก <span class="material-symbols-outlined text-[18px]">how_to_reg</span>`;
+            }
+        }
+
+        function showAlert(msg, type) {
+            const alertBox = document.getElementById('alert-box');
+            alertBox.classList.remove('hidden');
+            if (type === 'success') {
+                alertBox.className = 'mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl text-[14px] flex items-center gap-2';
+                alertBox.innerHTML = `<span class="material-symbols-outlined text-[20px]">check_circle</span> <span>${msg}</span>`;
+            } else {
+                alertBox.className = 'mb-6 p-4 bg-red-50 border border-red-200 text-danger rounded-xl text-[14px] flex items-center gap-2';
+                alertBox.innerHTML = `<span class="material-symbols-outlined text-[20px]">error</span> <span>${msg}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>

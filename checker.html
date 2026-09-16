@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Whodis - Scam Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        "base-bg": "#f8fafc",
+                        "card-bg": "#ffffff",
+                        "primary-text": "#0f172a",
+                        "muted-text": "#64748b",
+                        "danger": "#ef4444",
+                        "success": "#10b981",
+                        "warning": "#facc15",
+                        "dark-badge": "#1e293b"
+                    },
+                    fontFamily: { "sans": ["Inter", "Noto Sans Thai", "sans-serif"] }
+                } 
+            } 
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .nav-link.active {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+        .btn-green-solid {
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 0.5rem 1.4rem;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn-green-solid:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body class="font-sans text-primary-text bg-base-bg antialiased min-h-screen flex flex-col">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <main class="w-full pt-10 pb-20 flex-1">
+        <div class="max-w-[700px] mx-auto px-4">
+            
+            <!-- หัวข้อหน้าเว็บ -->
+            <div class="text-center mb-8">
+                <h1 class="text-[32px] md:text-[40px] font-bold text-primary-text mb-2">Scam Checker</h1>
+                <p class="text-muted-text text-[15px]">ตรวจสอบเบอร์โทร เลขบัญชี พร้อมเพย์ URL หรือชื่อ ก่อนโอนเงิน</p>
+            </div>
+
+            <!-- กล่องเนื้อหาหลัก -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-6 md:p-10 shadow-sm">
+                
+                <!-- ส่วนที่ 1: ค้นหาด้วยข้อความ -->
+                <div class="mb-8">
+                    <label class="block text-[15px] font-bold text-primary-text mb-3">เบอร์โทร / เลขบัญชี / พร้อมเพย์ / URL / ชื่อ</label>
+                    <div class="relative">
+                        <input id="checker-input" type="text" class="w-full h-[54px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[15px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="พิมพ์ข้อมูลที่ต้องการตรวจสอบลงที่นี่...">
+                    </div>
+                    
+                    <!-- ปุ่มแนะนำ (ลองกด) -->
+                    <div class="mt-4 flex flex-wrap items-center gap-2 text-[13px] text-muted-text">
+                        <span class="font-medium mr-1">ลอง:</span>
+                        <button onclick="fillAndCheck('081-234-5678')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors border border-gray-200">081-234-5678</button>
+                        <button onclick="fillAndCheck('123-4-56789-0')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors border border-gray-200">123-4-56789-0</button>
+                        <button onclick="fillAndCheck('062-345-6789')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors border border-gray-200">062-345-6789</button>
+                    </div>
+                </div>
+
+                <!-- เส้นคั่นแบ่งโซน AI -->
+                <div class="flex items-center gap-4 my-10">
+                    <div class="h-px bg-gray-200 flex-1"></div>
+                    <div class="text-[14px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[18px] text-blue-500">auto_awesome</span> AI วิเคราะห์ Screenshot แชต
+                    </div>
+                    <div class="h-px bg-gray-200 flex-1"></div>
+                </div>
+
+                <!-- ส่วนที่ 2: อัปโหลดรูปภาพให้ AI -->
+                <div class="mb-8 text-center">
+                    <p class="text-[14px] text-muted-text mb-5">อัปโหลดภาพหน้าจอแชต หรือสลิปโอนเงิน แล้วให้ AI วิเคราะห์สัญญาณอันตรายให้</p>
+                    
+                    <!-- กล่องอัปโหลดไฟล์ (ลากวางได้) -->
+                    <label class="block w-full border-2 border-dashed border-gray-300 hover:border-blue-400 bg-gray-50 hover:bg-blue-50/50 rounded-2xl p-10 cursor-pointer transition-colors group">
+                        <input id="ai-file-input" type="file" class="hidden" accept="image/jpeg, image/png, image/webp" onchange="handleImageSelect(event)">
+                        <div id="upload-prompt" class="flex flex-col items-center gap-3">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 group-hover:text-blue-500 transition-colors">
+                                <span class="material-symbols-outlined text-[24px]">cloud_upload</span>
+                            </div>
+                            <span class="text-[15px] font-bold text-primary-text">คลิกเพื่ออัปโหลดหรือลากไฟล์มาวาง</span>
+                            <span class="text-[13px] text-muted-text">(รองรับไฟล์ JPG, PNG)</span>
+                        </div>
+                        <div id="upload-preview" class="hidden flex flex-col items-center gap-2">
+                            <img id="preview-img" class="max-h-40 rounded-lg shadow-sm border border-gray-200" alt="Preview" />
+                            <span id="preview-name" class="text-xs text-muted-text"></span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- ปุ่ม Submit -->
+                <button onclick="analyzeWithAI()" class="w-full h-[54px] bg-primary-text hover:bg-gray-800 text-white text-[16px] font-bold rounded-xl flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] shadow-md">
+                    <span class="material-symbols-outlined text-[20px]">magic_button</span> ให้ AI วิเคราะห์ (ทดลอง)
+                </button>
+
+                <!-- AI Analysis Result Area -->
+                <div id="ai-result" class="hidden mt-6 p-5 rounded-2xl border transition-all"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full pb-8 pt-4 border-t border-gray-200 mt-auto">
+        <div class="max-w-[1000px] mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-1 mb-2">
+                <span class="material-symbols-outlined text-[16px] text-primary-text">verified_user</span>
+                <span class="font-bold text-[14px] text-primary-text">Whodis</span>
+            </div>
+            <p class="text-[12px] text-muted-text">Check Before You Pay — เช็กก่อนโอนทุกครั้ง ป้องกันดีกว่าแก้</p>
+            <p class="text-[11px] text-gray-400 mt-2">ต้นแบบเพื่อการสาธิต - ข้อมูลจำลอง - ไม่ใช่การยืนยันตัวตนทางการ</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        function fillAndCheck(val) {
+            document.getElementById('checker-input').value = val;
+            window.location.href = `index.html?search=${encodeURIComponent(val)}`;
+        }
+
+        document.getElementById('checker-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const val = e.target.value.trim();
+                if (val.length >= 4) {
+                    window.location.href = `index.html?search=${encodeURIComponent(val)}`;
+                } else {
+                    alert('กรุณากรอกข้อมูลอย่างน้อย 4 ตัวอักษรหรือตัวเลข');
+                }
+            }
+        });
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-img').src = e.target.result;
+                    document.getElementById('preview-name').textContent = file.name;
+                    document.getElementById('upload-prompt').classList.add('hidden');
+                    document.getElementById('upload-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function analyzeWithAI() {
+            const fileInput = document.getElementById('ai-file-input');
+            const textInput = document.getElementById('checker-input');
+            const resultBox = document.getElementById('ai-result');
+
+            if (!fileInput.files[0] && !textInput.value.trim()) {
+                alert('กรุณากรอกข้อความหรืออัปโหลดรูปภาพที่ต้องการวิเคราะห์');
+                return;
+            }
+
+            resultBox.className = 'mt-6 p-5 rounded-2xl border border-blue-200 bg-blue-50/50 block';
+            resultBox.innerHTML = `
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-blue-600 animate-spin">sync</span>
+                    <span class="font-bold text-blue-900 text-[15px]">AI กำลังประมวลผลข้อความและรูปภาพ...</span>
+                </div>
+                <p class="text-xs text-blue-700">กำลังตรวจจับรูปแบบภาษาเร่งเร้าการโอนเงิน, ตรวจจับสลิปปลอม, และเปรียบเทียบกับฐานข้อมูล Scam</p>
+            `;
+
+            setTimeout(() => {
+                resultBox.className = 'mt-6 p-5 rounded-2xl border border-amber-200 bg-amber-50 block shadow-sm';
+                resultBox.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-warning text-[28px] shrink-0">warning</span>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-[16px] mb-1">ผลการวิเคราะห์เบื้องต้นโดย AI: พบสัญญาณความเสี่ยงปานกลาง (Medium Risk)</h4>
+                            <p class="text-sm text-gray-700 mb-3 leading-relaxed">
+                                • พบการใช้ภาษาในเชิงเร่งรัดให้ตัดสินใจโอนเงินด่วน เช่น <em>"จำกัดเวลา"</em> หรือ <em>"ราคานี้เฉพาะตอนนี้"</em><br>
+                                • บัญชีผู้รับไม่ตรงกับชื่อร้านค้าทางการ หรือเป็นบัญชีบุคคลทั่วไป<br>
+                                • <strong>คำแนะนำ:</strong> ขอหลักฐานการส่งของเพิ่มเติม หรือเลือกใช้บริการเก็บเงินปลายทาง / โอนผ่านตัวกลางที่น่าเชื่อถือ
+                            </p>
+                            <a href="index.html?search=${encodeURIComponent(textInput.value.trim() || '081-234-5678')}" class="inline-flex items-center text-xs font-bold text-blue-600 hover:underline">
+                                ค้นหาประวัติคนโกงในฐานข้อมูล Whodis ต่อ &rarr;
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Whodis - Check Before You Pay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        "base-bg": "#f8fafc",
+                        "card-bg": "#ffffff",
+                        "primary-text": "#0f172a",
+                        "muted-text": "#64748b",
+                        "danger": "#ef4444",
+                        "success": "#10b981",
+                        "warning": "#facc15",
+                        "dark-badge": "#1e293b"
+                    },
+                    fontFamily: { "sans": ["Inter", "Noto Sans Thai", "sans-serif"] }
+                } 
+            } 
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .nav-link.active {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+        .btn-green-solid {
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 0.5rem 1.4rem;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn-green-solid:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body class="font-sans text-primary-text bg-base-bg antialiased">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <main class="w-full pt-10 pb-12">
+        <div class="max-w-[1000px] mx-auto px-4">
+            
+            <!-- ส่วนหน้าค้นหาหลัก (Default View) -->
+            <div id="main-view">
+                <!-- ส่วนค้นหาหลัก -->
+                <div class="text-center flex flex-col items-center mt-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-gray-200 text-muted-text text-[13px] font-semibold rounded-full mb-6 shadow-sm">
+                        <span class="material-symbols-outlined text-[16px]">shield</span> Check Before You Pay
+                    </div>
+                    
+                    <h1 class="text-[40px] md:text-[56px] font-bold text-primary-text leading-tight mb-4">
+                        เช็กก่อนโอน <br> <span class="text-danger">ก่อนสูญเงิน</span>
+                    </h1>
+                    
+                    <p class="text-muted-text text-[15px] md:text-[18px] max-w-2xl leading-relaxed mb-8">
+                        แพลตฟอร์มตรวจสอบมิจฉาชีพจากข้อมูลรายงานจริงและ AI วิเคราะห์ความเสี่ยง 
+                        เปลี่ยนพฤติกรรมจาก "โดนโกงแล้วค่อยแจ้ง" เป็น "ตรวจสอบล่วงหน้าก่อนสูญเงิน"
+                    </p>
+
+                    <div class="w-full max-w-3xl bg-white p-3 rounded-2xl border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-4">
+                        <form id="search-form" onsubmit="handleSearch(event)" class="flex flex-col sm:flex-row items-center gap-3">
+                            <div class="relative flex-1 w-full flex items-center">
+                                <span class="material-symbols-outlined absolute left-4 text-gray-400 text-[24px]">search</span>
+                                <input id="search-input" 
+                                       class="w-full h-[54px] pl-[50px] pr-4 bg-transparent text-[16px] text-primary-text placeholder:text-gray-400 border-none focus:outline-none focus:ring-0" 
+                                       placeholder="ลองค้นหาเบอร์หรือเลขบัญชีที่สงสัย เช่น 081-234-5678 หรือ 123-4-56789-0" 
+                                       type="text" 
+                                       minlength="4" 
+                                       required />
+                            </div>
+                            <button class="w-full sm:w-auto h-[54px] px-10 bg-primary-text hover:bg-gray-800 text-white text-[16px] font-bold rounded-xl flex items-center justify-center gap-2 transition-transform hover:scale-[1.02]" type="submit">
+                                เช็ก
+                            </button>
+                        </form>
+                    </div>
+                    <div class="flex items-center gap-2 text-[13px] text-muted-text mb-12">
+                        <span class="material-symbols-outlined text-[16px] text-success">check_circle</span> ฟรี ไม่ต้องสมัคร - ใช้งานได้ทันที
+                    </div>
+                </div>
+
+                <!-- ระดับความเสี่ยง -->
+                <div class="border-t border-gray-200 pt-10 text-center">
+                    <h3 class="text-[13px] text-muted-text font-bold mb-5 tracking-wider">ระดับความเสี่ยงที่ใช้ทั่วทั้งแพลตฟอร์ม</h3>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
+                            <div class="w-3 h-3 rounded-full bg-success"></div>
+                            <span class="text-[14px] font-bold text-primary-text">Low Risk</span>
+                            <span class="text-[13px] text-muted-text hidden sm:inline">- ประวัติใส</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
+                            <div class="w-3 h-3 rounded-full bg-warning"></div>
+                            <span class="text-[14px] font-bold text-primary-text">Medium Risk</span>
+                            <span class="text-[13px] text-muted-text hidden sm:inline">- พบรายงานบ้าง</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
+                            <div class="w-3 h-3 rounded-full bg-danger"></div>
+                            <span class="text-[14px] font-bold text-primary-text">High Risk</span>
+                            <span class="text-[13px] text-muted-text hidden sm:inline">- พบรายงานหลายครั้ง</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6 ฟีเจอร์หลัก -->
+                <div class="mt-20 mb-8 text-center">
+                    <h2 class="text-[24px] md:text-[28px] font-bold text-primary-text mb-2">ทุกฟีเจอร์เพื่อป้องกันคุณ</h2>
+                    <p class="text-[15px] text-muted-text">ตั้งแต่ก่อนโอน จนถึงกรณีที่โดนโกงแล้ว พร้อมดูแลทุกขั้นตอน</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                    <a href="index.html" class="bg-white border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-100">
+                            <span class="material-symbols-outlined text-primary-text">search</span>
+                        </div>
+                        <h3 class="font-bold text-[16px] mb-1">Check Before You Pay</h3>
+                        <p class="text-[12px] text-muted-text leading-relaxed">จำลองหน้าจอก่อนโอน พร้อมเหตุผลและคำแนะนำที่ชัดเจน</p>
+                    </a>
+                    <a href="checker.html" class="bg-white border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-100">
+                            <span class="material-symbols-outlined text-primary-text">smart_toy</span>
+                        </div>
+                        <h3 class="font-bold text-[16px] mb-1">Scam Checker</h3>
+                        <p class="text-[12px] text-muted-text leading-relaxed">ค้นหาเบอร์/บัญชี/URL และอัปโหลดภาพให้ AI วิเคราะห์ความเสี่ยง</p>
+                    </a>
+                    <a href="report.html" class="bg-white border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-100">
+                            <span class="material-symbols-outlined text-primary-text">campaign</span>
+                        </div>
+                        <h3 class="font-bold text-[16px] mb-1">แจ้งมิจฉาชีพ</h3>
+                        <p class="text-[12px] text-muted-text leading-relaxed">ฟอร์มรายงานแบบ Step-by-step พร้อมแนบหลักฐาน</p>
+                    </a>
+                    <a href="stats.html" class="bg-white border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-100">
+                            <span class="material-symbols-outlined text-primary-text">bar_chart</span>
+                        </div>
+                        <h3 class="font-bold text-[16px] mb-1">สถิติ Scam</h3>
+                        <p class="text-[12px] text-muted-text leading-relaxed">ดูแนวโน้มการโกงแบบเรียลไทม์ เปรียบเทียบรายเดือน</p>
+                    </a>
+                    <a href="knowledge.html" class="bg-white border border-gray-100 p-6 rounded-2xl hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-100">
+                            <span class="material-symbols-outlined text-primary-text">menu_book</span>
+                        </div>
+                        <h3 class="font-bold text-[16px] mb-1">รู้จักการโกง</h3>
+                        <p class="text-[12px] text-muted-text leading-relaxed">เนื้อหาป้องกันและ Quiz ทดสอบสัญชาตญาณ</p>
+                    </a>
+                    <a href="emergency.html" class="bg-white border border-red-100 p-6 rounded-2xl hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-red-100">
+                            <span class="material-symbols-outlined text-danger">sos</span>
+                        </div>
+                        <h3 class="font-bold text-danger text-[16px] mb-1">ถูกโกงแล้วทำไง</h3>
+                        <p class="text-[12px] text-muted-text leading-relaxed">ขั้นตอนช่วยเหลือเร่งด่วน พร้อมเบอร์ฉุกเฉิน</p>
+                    </a>
+                </div>
+
+                <!-- 3 ฟีเจอร์ย่อยด้านล่างสุด -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 mb-10 pt-10 border-t border-gray-200">
+                    <div class="text-center p-4">
+                        <div class="w-10 h-10 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                            <span class="material-symbols-outlined text-primary-text text-[20px]">filter_alt</span>
+                        </div>
+                        <h4 class="font-bold text-[15px] mb-1">กลั่นกรองทุกรายงาน</h4>
+                        <p class="text-[12px] text-muted-text">รายงานต้องผ่านการตรวจสอบก่อนเผยแพร่ ป้องกันการใส่ร้าย</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="w-10 h-10 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                            <span class="material-symbols-outlined text-primary-text text-[20px]">verified</span>
+                        </div>
+                        <h4 class="font-bold text-[15px] mb-1">Badge บอกความน่าเชื่อถือ</h4>
+                        <p class="text-[12px] text-muted-text">แยกสถานะของแต่ละรายงานชัดเจน (ยืนยันแล้ว vs รอตรวจสอบ)</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="w-10 h-10 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                            <span class="material-symbols-outlined text-primary-text text-[20px]">info</span>
+                        </div>
+                        <h4 class="font-bold text-[15px] mb-1">Disclaimer ทุกจุด</h4>
+                        <p class="text-[12px] text-muted-text">ระบุชัดว่าเป็นการประเมินความเสี่ยง ไม่ใช่การตัดสิน</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- หน้าผลลัพธ์การค้นหา (Search Results View) -->
+            <div id="results-view" class="hidden mb-8">
+                <button onclick="resetSearch()" class="inline-flex items-center text-[14px] text-muted-text hover:text-primary-text mb-6 mt-4 transition-colors">
+                    <span class="material-symbols-outlined text-[18px] mr-1">arrow_back</span> กลับไปหน้าค้นหา
+                </button>
+                
+                <form onsubmit="handleSearch(event)" class="w-full bg-white p-2 rounded-xl border border-gray-200 shadow-sm flex items-center gap-2 mb-8">
+                    <span class="material-symbols-outlined ml-3 text-gray-400">search</span>
+                    <input id="results-search-input" class="w-full h-[44px] bg-transparent text-[15px] focus:outline-none" type="text" minlength="4" required />
+                    <button class="h-[44px] px-6 bg-primary-text text-white rounded-lg font-medium hover:bg-gray-800 transition-colors" type="submit">ค้นหา</button>
+                </form>
+
+                <div id="search-content">
+                    <!-- แสดงผลลัพธ์จากการค้นหาด้วย JavaScript -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer ส่วนล่างสุด -->
+    <footer class="w-full pb-8 pt-4 border-t border-gray-200">
+        <div class="max-w-[1000px] mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-1 mb-2">
+                <span class="material-symbols-outlined text-[16px] text-primary-text">verified_user</span>
+                <span class="font-bold text-[14px] text-primary-text">Whodis</span>
+            </div>
+            <p class="text-[12px] text-muted-text">Check Before You Pay — เช็กก่อนโอนทุกครั้ง ป้องกันดีกว่าแก้</p>
+            <p class="text-[11px] text-gray-400 mt-2">ต้นแบบเพื่อการสาธิต - ข้อมูลจำลอง - ไม่ใช่การยืนยันตัวตนทางการ</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('search');
+            if (query) {
+                document.getElementById('search-input').value = query;
+                document.getElementById('results-search-input').value = query;
+                performSearch(query);
+            }
+        });
+
+        function handleSearch(e) {
+            e.preventDefault();
+            const input = e.target.querySelector('input');
+            const term = (input.value || '').trim();
+            if (term.length < 4) {
+                alert('กรุณากรอกอย่างน้อย 4 ตัวอักษรหรือ 4 ตัวเลข');
+                return;
+            }
+            performSearch(term);
+        }
+
+        async function performSearch(term) {
+            const mainView = document.getElementById('main-view');
+            const resultsView = document.getElementById('results-view');
+            const content = document.getElementById('search-content');
+            document.getElementById('results-search-input').value = term;
+
+            mainView.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+
+            content.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-primary-text"></div>
+                    <p class="text-sm text-muted-text mt-3">กำลังตรวจสอบข้อมูลในระบบ...</p>
+                </div>
+            `;
+
+            try {
+                const res = await fetch(`/api/search?q=${encodeURIComponent(term)}`);
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    content.innerHTML = `
+                        <div class="p-4 bg-red-50 border border-red-200 text-danger rounded-xl flex items-center gap-2">
+                            <span class="material-symbols-outlined">error</span> ${escapeHtml(data.message || 'เกิดข้อผิดพลาดในการค้นหา')}
+                        </div>
+                    `;
+                    return;
+                }
+
+                const results = data.results || [];
+                if (results.length > 0) {
+                    let itemsHtml = results.map(row => {
+                        const dateStr = row.incident_date || row.created_at || '';
+                        const formattedDate = dateStr ? new Date(dateStr).toLocaleDateString('th-TH') : '';
+                        return `
+                            <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-bold text-[16px] text-primary-text">${escapeHtml(row.scammer_name)}</h3>
+                                        <p class="text-[14px] font-mono text-muted-text mt-1">บัญชี: ${escapeHtml(row.bank_account)} ${row.bank_name ? '(' + escapeHtml(row.bank_name) + ')' : ''}</p>
+                                    </div>
+                                    <span class="text-[12px] text-muted-text bg-gray-100 px-2 py-1 rounded">
+                                        ${formattedDate}
+                                    </span>
+                                </div>
+                                <p class="text-[14px] text-primary-text bg-gray-50 p-3 rounded-lg border border-gray-100">${escapeHtml(row.incident_details)}</p>
+                            </div>
+                        `;
+                    }).join('');
+
+                    content.innerHTML = `
+                        <div class="p-6 bg-red-50 border border-red-200 rounded-2xl mb-6 text-center shadow-sm">
+                            <span class="material-symbols-outlined text-danger text-[48px] mb-2">warning</span>
+                            <h2 class="text-[24px] font-bold text-danger mb-1">High Risk - พบประวัติความเสี่ยง!</h2>
+                            <p class="text-danger/80">พบข้อมูล "${escapeHtml(term)}" ในฐานข้อมูลรายงานมิจฉาชีพ โปรดระงับการโอนเงินทันที</p>
+                        </div>
+                        <div class="space-y-4">
+                            ${itemsHtml}
+                        </div>
+                    `;
+                } else {
+                    content.innerHTML = `
+                        <div class="p-10 bg-white border border-gray-200 rounded-2xl text-center shadow-sm">
+                            <span class="material-symbols-outlined text-success text-[48px] mb-2">check_circle</span>
+                            <h2 class="text-[20px] font-bold text-primary-text mb-2">ยังไม่พบประวัติในระบบ</h2>
+                            <p class="text-muted-text text-[14px] max-w-md mx-auto">
+                                การไม่พบประวัติ ไม่ได้การันตีว่าปลอดภัย 100% โปรดตรวจสอบความน่าเชื่อถือของร้านค้าอีกครั้งก่อนโอนเงิน
+                            </p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                content.innerHTML = `
+                    <div class="p-4 bg-red-50 border border-red-200 text-danger rounded-xl flex items-center gap-2">
+                        <span class="material-symbols-outlined">error</span> ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้
+                    </div>
+                `;
+            }
+        }
+
+        function resetSearch() {
+            document.getElementById('main-view').classList.remove('hidden');
+            document.getElementById('results-view').classList.add('hidden');
+            history.pushState(null, '', 'index.html');
+        }
+    </script>
+</body>
+</html>

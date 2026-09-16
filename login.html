@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Whodis - เข้าสู่ระบบ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        "base-bg": "#f8fafc",
+                        "card-bg": "#ffffff",
+                        "primary-text": "#0f172a",
+                        "muted-text": "#64748b",
+                        "danger": "#ef4444",
+                        "success": "#10b981",
+                        "warning": "#facc15",
+                        "dark-badge": "#1e293b"
+                    },
+                    fontFamily: { "sans": ["Inter", "Noto Sans Thai", "sans-serif"] }
+                } 
+            } 
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .nav-link.active {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+        .btn-green-solid {
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 0.5rem 1.4rem;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn-green-solid:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body class="font-sans text-primary-text bg-base-bg antialiased min-h-screen flex flex-col">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <main class="w-full pt-12 pb-24 flex-1 flex items-center justify-center">
+        <div class="max-w-[420px] w-full mx-auto px-4">
+            
+            <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                <div class="text-center mb-6">
+                    <a href="index.html" class="inline-flex items-center gap-2 mb-3">
+                        <div class="w-10 h-10 bg-primary-text text-white rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[22px]">verified_user</span>
+                        </div>
+                    </a>
+                    <h2 class="text-[24px] font-bold text-primary-text">เข้าสู่ระบบ</h2>
+                    <p class="text-muted-text text-[14px]">ยินดีต้อนรับกลับสู่ Whodis</p>
+                </div>
+
+                <!-- Alert Error Message -->
+                <div id="error-alert" class="hidden mb-4 p-3.5 bg-red-50 border border-red-200 text-danger rounded-xl text-[14px] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">error</span>
+                    <span id="error-text"></span>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[13px] font-bold text-primary-text mb-1.5">อีเมล</label>
+                        <input id="email" type="email" required class="w-full h-[48px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="name@example.com">
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-[13px] font-bold text-primary-text">รหัสผ่าน</label>
+                            <a href="forgot_password.html" class="text-[12px] text-blue-600 hover:underline">ลืมรหัสผ่าน?</a>
+                        </div>
+                        <input id="password" type="password" required class="w-full h-[48px] px-4 bg-gray-50 border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-primary-text focus:ring-1 focus:ring-primary-text transition-colors" placeholder="••••••••">
+                    </div>
+
+                    <button id="loginBtn" type="submit" class="w-full h-[48px] bg-primary-text hover:bg-gray-800 text-white font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 mt-2">
+                        เข้าสู่ระบบ
+                    </button>
+                </form>
+
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-3 text-muted-text">หรือ</span></div>
+                </div>
+
+                <p class="text-center text-[14px] text-muted-text">
+                    ยังไม่มีบัญชีผู้ใช้? 
+                    <a href="register.html" class="font-bold text-primary-text hover:underline ml-1">สมัครสมาชิก</a>
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="w-full pb-8 pt-4 border-t border-gray-200 mt-auto">
+        <div class="max-w-[1000px] mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-1 mb-2">
+                <span class="material-symbols-outlined text-[16px] text-primary-text">verified_user</span>
+                <span class="font-bold text-[14px] text-primary-text">Whodis</span>
+            </div>
+            <p class="text-[12px] text-muted-text">Check Before You Pay — เช็กก่อนโอนทุกครั้ง ป้องกันดีกว่าแก้</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script>
+        // ถ้าเข้าสู่ระบบอยู่แล้ว ให้เปลี่ยนเส้นทางตามบทบาท
+        if (Auth.isLoggedIn()) {
+            if (Auth.isAdmin()) {
+                window.location.href = 'admin_reports.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const alertBox = document.getElementById('error-alert');
+            const alertText = document.getElementById('error-text');
+
+            alertBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = `กำลังตรวจสอบ... <span class="material-symbols-outlined animate-spin text-[18px]">sync</span>`;
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    Auth.setUser(data.user);
+                    if (data.user.role === 'admin') {
+                        window.location.href = 'admin_reports.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    alertBox.classList.remove('hidden');
+                    alertText.textContent = data.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง!';
+                }
+            } catch (err) {
+                alertBox.classList.remove('hidden');
+                alertText.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'เข้าสู่ระบบ';
+            }
+        }
+    </script>
+</body>
+</html>

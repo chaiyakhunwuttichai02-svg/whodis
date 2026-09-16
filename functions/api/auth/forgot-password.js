@@ -1,0 +1,111 @@
+// functions/api/auth/forgot-password.js
+// Cloudflare Pages Function: ขอรหัส OTP สำหรับรีเซ็ตรหัสผ่าน
+
+async function sendMailChannelsEmail(toEmail, otp) {
+  try {
+    const payload = {
+      personalizations: [{ to: [{ email: toEmail }] }],
+      from: { email: "no-reply@whodis.pages.dev", name: "Whodis Security" },
+      subject: "รหัส OTP สำหรับรีเซ็ตรหัสผ่าน Whodis",
+      content: [
+        {
+          type: "text/html",
+          value: `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff;">
+              <h2 style="color: #0f172a; text-align: center; margin-bottom: 8px;">🔐 รีเซ็ตรหัสผ่าน Whodis</h2>
+              <p style="color: #64748b; font-size: 14px; line-height: 1.6; text-align: center;">คุณได้ทำการขอรหัสผ่านใหม่สำหรับบัญชี Whodis กรุณานำรหัส OTP 6 หลักด้านล่างนี้ไปกรอกในหน้าเว็บ:</p>
+              <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; padding: 18px; text-align: center; border-radius: 12px; margin: 24px 0;">
+                <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #0f172a;">${otp}</span>
+              </div>
+              <p style="color: #ef4444; font-size: 13px; text-align: center;">⏱️ รหัสนี้มีอายุการใช้งาน 10 นาที</p>
+              <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;" />
+              <p style="color: #94a3b8; font-size: 12px; text-align: center;">หากคุณไม่ได้เป็นผู้ขอรีเซ็ตรหัสผ่าน โปรดเพิกเฉยต่ออีเมลนี้</p>
+            </div>
+          `
+        }
+      ]
+    };
+
+    const res = await fetch("https://api.mailchannels.net/tx/v1/send", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (e) {
+    console.error("MailChannels error:", e);
+    return false;
+  }
+}
+
+export async function onRequestPost(context) {
+  try {
+    const { request, env } = context;
+    const body = await request.json();
+    const email = (body.email || '').trim().toLowerCase();
+
+    if (!email) {
+      return new Response(JSON.stringify({ success: false, message: 'กรุณากรอกอีเมลของคุณ' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const db = env.DB;
+    if (!db) {
+      return new Response(JSON.stringify({ success: false, message: 'D1 Database not bound' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // ตรวจสอบว่ามีอีเมลในตาราง users หรือไม่
+    const user = await db.prepare('SELECT id, username FROM users WHERE LOWER(email) = LOWER(?)')
+      .bind(email)
+      .first();
+
+    if (!user) {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: 'ไม่พบบัญชีผู้ใช้ที่ลงทะเบียนด้วยอีเมลนี้ในระบบ' 
+      }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // สร้างรหัส OTP 6 หลัก
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+    // เคลียร์ OTP เก่าที่ยังไม่ได้ใช้ของอีเมลนี้
+    await db.prepare('UPDATE password_resets SET used = 1 WHERE email = ? AND used = 0')
+      .bind(email)
+      .run();
+
+    // บันทึก OTP ใหม่
+    await db.prepare('INSERT INTO password_resets (email, otp, expires_at, used) VALUES (?, ?, ?, 0)')
+      .bind(email, otp, expiresAt)
+      .run();
+
+    // ส่งอีเมล
+    const mailSent = await sendMailChannelsEmail(email, otp);
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'ระบบได้ส่งรหัส OTP 6 หลักไปยังอีเมลของคุณแล้ว (มีอายุ 10 นาที)',
+      mailSent: mailSent,
+      // แนบ OTP กลับไปด้วยเพื่อความสะดวกในการทดสอบ (Dev mode)
+      devOtp: otp 
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
