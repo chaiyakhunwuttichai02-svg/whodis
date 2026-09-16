@@ -180,6 +180,76 @@
                     </div>
                 </div>
 
+                <!-- Infographic Warning Banner: 3 สเต็ปเช็กก่อนโอน & สายด่วน 1441 -->
+                <div class="mt-12 max-w-4xl mx-auto">
+                    <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden text-left">
+                        <!-- Decorative ambient glow -->
+                        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -left-10 -top-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <!-- Left: 3 Steps Infographic -->
+                            <div class="flex-1 space-y-3.5">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold">
+                                    <span class="material-symbols-outlined text-[15px]">security</span>
+                                    <span>แนวทางป้องกันตัว 3 สเต็ปเช็กก่อนโอน</span>
+                                </div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                                    หยุดคิดสักนิด ก่อนกดโอนเงิน!
+                                </h3>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                                    <!-- Step 1 -->
+                                    <div class="bg-white/10 backdrop-blur-sm p-3.5 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                                        <div class="w-6 h-6 rounded-lg bg-blue-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</div>
+                                        <div>
+                                            <p class="text-[13px] font-bold text-white">เช็กใน Whodis</p>
+                                            <p class="text-[11px] text-gray-300 leading-snug mt-0.5">ค้นหาเบอร์โทรหรือเลขบัญชีก่อนโอนเงินทุกครั้ง</p>
+                                        </div>
+                                    </div>
+                                    <!-- Step 2 -->
+                                    <div class="bg-white/10 backdrop-blur-sm p-3.5 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                                        <div class="w-6 h-6 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</div>
+                                        <div>
+                                            <p class="text-[13px] font-bold text-white">เทียบชื่อผู้รับ</p>
+                                            <p class="text-[11px] text-gray-300 leading-snug mt-0.5">ชื่อบัญชีต้องตรงกับคนคุย ห้ามโอนเข้าบัญชีม้า</p>
+                                        </div>
+                                    </div>
+                                    <!-- Step 3 -->
+                                    <div class="bg-white/10 backdrop-blur-sm p-3.5 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                                        <div class="w-6 h-6 rounded-lg bg-red-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</div>
+                                        <div>
+                                            <p class="text-[13px] font-bold text-white">วางสายเมื่อถูกขู่</p>
+                                            <p class="text-[11px] text-gray-300 leading-snug mt-0.5">ตำรวจไม่มีนโยบายให้โอนเงินตรวจสอบเด็ดขาด</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Hotline Quick Action Card -->
+                            <div class="w-full md:w-60 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 shrink-0 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center gap-1.5 text-xs font-bold text-amber-300 mb-1">
+                                        <span class="material-symbols-outlined text-[16px]">call</span>
+                                        <span>สายด่วนฉุกเฉิน 24 ชม.</span>
+                                    </div>
+                                    <p class="text-xs text-gray-200">หากถูกหลอกโอนเงิน โทรอายัดบัญชีด่วนที่ศูนย์ AOC</p>
+                                    <div class="my-2">
+                                        <a href="tel:1441" class="text-2xl font-black text-white hover:text-amber-300 transition-colors tracking-wider block">
+                                            📞 1441
+                                        </a>
+                                        <span class="text-[10px] text-gray-300 block">สายด่วนปราบอาชญากรรมไซเบอร์</span>
+                                    </div>
+                                </div>
+                                <a href="emergency.html" class="w-full py-2 px-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl text-center transition-colors flex items-center justify-center gap-1 shadow-sm mt-1">
+                                    <span>ดูวิธีแจ้งความ</span>
+                                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Live Alert Feed -->
                 <div class="mt-14 max-w-4xl mx-auto text-left">
                     <div class="flex items-center justify-between mb-4">
@@ -371,11 +441,14 @@
 
                     // สีเหลืองถ้า 1 ครั้ง, สีแดงถ้ามากกว่า 1 ครั้ง
                     let countBadge = '';
+                    let dotClass = '';
                     if (reportCount > 1) {
+                        dotClass = 'bg-danger animate-pulse';
                         countBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-100 text-danger border border-red-200 animate-pulse">
                             <span class="material-symbols-outlined text-[13px]">dangerous</span> ถูกรายงานซ้ำ ${reportCount} ครั้ง
                         </span>`;
                     } else {
+                        dotClass = 'bg-amber-400';
                         countBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-300">
                             <span class="material-symbols-outlined text-[13px] text-amber-600">warning</span> มีรายงาน 1 ครั้ง
                         </span>`;
@@ -397,7 +470,7 @@
                             <div>
                                 <div class="flex items-start justify-between gap-2 mb-2">
                                     <div class="flex flex-wrap items-center gap-1.5">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-danger shrink-0"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full ${dotClass} shrink-0"></span>
                                         <span class="font-bold text-primary-text text-[15px] truncate">${escapeHtml(r.scammer_name || 'ไม่ระบุชื่อ')}</span>
                                         ${countBadge}
                                         ${multiAccBadge}
@@ -491,13 +564,16 @@
 
                         // 1 ครั้งสีเหลือง, มากกว่า 1 ครั้งสีแดง
                         let countBadge = '';
+                        let dotClass = '';
                         if (reportCount > 1) {
+                            dotClass = 'bg-danger animate-pulse';
                             countBadge = `
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-danger border border-red-200 animate-pulse">
                                     <span class="material-symbols-outlined text-[15px]">dangerous</span> ถูกรายงานซ้ำแล้ว ${reportCount} ครั้ง (อันตรายสูง)
                                 </span>
                             `;
                         } else {
+                            dotClass = 'bg-amber-400';
                             countBadge = `
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300">
                                     <span class="material-symbols-outlined text-[15px] text-amber-600">warning</span> มีรายงาน 1 ครั้ง — ควรระวัง
@@ -523,6 +599,7 @@
                                 <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
                                     <div>
                                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <span class="w-3 h-3 rounded-full ${dotClass} shrink-0 inline-block"></span>
                                             <h3 class="font-bold text-[18px] text-primary-text">${escapeHtml(row.scammer_name)}</h3>
                                             ${countBadge}
                                             ${multiAccBadge}

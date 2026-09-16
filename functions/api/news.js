@@ -1,13 +1,62 @@
 // functions/api/news.js
-// Cloudflare Pages Function: ดึงข่าวสารเตือนภัยมิจฉาชีพอัปเดตสดแบบเรียลไทม์
+// Cloudflare Pages Function: ดึงข่าวสารเตือนภัยมิจฉาชีพอัปเดตสดแบบเรียลไทม์ พร้อมรูปภาพปกข่าว
 
 export async function onRequestGet(context) {
+  function getThematicImage(title) {
+    const t = (title || '').toLowerCase();
+    if (t.includes('คอลเซ็นเตอร์') || t.includes('โทร') || t.includes('แอปดูด') || t.includes('สาย')) {
+      return 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=240&auto=format&fit=crop&q=80';
+    }
+    if (t.includes('บัญชีม้า') || t.includes('โอนเงิน') || t.includes('สลิป') || t.includes('ธนาคาร') || t.includes('เส้นเงิน')) {
+      return 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=240&auto=format&fit=crop&q=80';
+    }
+    if (t.includes('ลงทุน') || t.includes('dropship') || t.includes('หุ้น') || t.includes('คริปโต') || t.includes('งานออนไลน์')) {
+      return 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=240&auto=format&fit=crop&q=80';
+    }
+    if (t.includes('sms') || t.includes('ลิงก์') || t.includes('ใบสั่ง') || t.includes('เว็บปลอม') || t.includes('หลอกคลิก')) {
+      return 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=240&auto=format&fit=crop&q=80';
+    }
+    if (t.includes('ศิลปะ') || t.includes('ซื้อขาย') || t.includes('ของ') || t.includes('พัสดุ') || t.includes('สินค้า')) {
+      return 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=240&auto=format&fit=crop&q=80';
+    }
+    return 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=240&auto=format&fit=crop&q=80';
+  }
+
+  function decodeHtml(html) {
+    return (html || '')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&apos;/g, "'");
+  }
+
+  function formatTimeAgo(pubDateStr) {
+    if (!pubDateStr) return '';
+    const date = new Date(pubDateStr);
+    if (isNaN(date.getTime())) return '';
+    
+    const now = new Date();
+    const diffMs = now - date;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+
+    if (diffMin < 1) return 'เมื่อสักครู่';
+    if (diffMin < 60) return `${diffMin} นาทีที่แล้ว`;
+    if (diffHour < 24) return `${diffHour} ชม. ที่แล้ว`;
+    if (diffDay < 7) return `${diffDay} วันที่แล้ว`;
+    return date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+  }
+
   try {
     const query = encodeURIComponent('มิจฉาชีพ OR หลอกโอนเงิน OR บัญชีม้า OR ตำรวจไซเบอร์');
     const url = `https://news.google.com/rss/search?q=${query}&hl=th&gl=TH&ceid=TH:th`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 9500);
 
     const res = await fetch(url, {
       signal: controller.signal,
@@ -22,41 +71,11 @@ export async function onRequestGet(context) {
     }
 
     const text = await res.text();
-
-    function decodeHtml(html) {
-      return (html || '')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&apos;/g, "'");
-    }
-
-    function formatTimeAgo(pubDateStr) {
-      if (!pubDateStr) return '';
-      const date = new Date(pubDateStr);
-      if (isNaN(date.getTime())) return '';
-      
-      const now = new Date();
-      const diffMs = now - date;
-      const diffSec = Math.floor(diffMs / 1000);
-      const diffMin = Math.floor(diffSec / 60);
-      const diffHour = Math.floor(diffMin / 60);
-      const diffDay = Math.floor(diffHour / 24);
-
-      if (diffMin < 1) return 'เมื่อสักครู่';
-      if (diffMin < 60) return `${diffMin} นาทีที่แล้ว`;
-      if (diffHour < 24) return `${diffHour} ชม. ที่แล้ว`;
-      if (diffDay < 7) return `${diffDay} วันที่แล้ว`;
-      return date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
-    }
-
     const itemRegex = /<item>([\s\S]*?)<\/item>/g;
     const news = [];
     let match;
 
-    while ((match = itemRegex.exec(text)) !== null) {
+    while ((match = itemRegex.exec(text)) !== null && news.length < 6) {
       const itemContent = match[1];
       let rawTitle = (/<title>(.*?)<\/title>/.exec(itemContent) || [])[1] || '';
       const link = (/<link>(.*?)<\/link>/.exec(itemContent) || [])[1] || '';
@@ -64,7 +83,6 @@ export async function onRequestGet(context) {
       const source = (/<source[^>]*>(.*?)<\/source>/.exec(itemContent) || [])[1] || 'ข่าวสารเตือนภัย';
 
       const decodedSource = decodeHtml(source);
-      // Filter out social networks
       if (decodedSource.toLowerCase().includes('facebook') || decodedSource.toLowerCase().includes('twitter') || decodedSource.toLowerCase().includes('tiktok')) {
         continue;
       }
@@ -76,17 +94,20 @@ export async function onRequestGet(context) {
       }
       title = title.replace(/\s*#\S+/g, '').replace(/https?:\/\/\S+/g, '').trim();
 
-      if (!title) continue;
+      if (!title || news.some(n => n.title === title || n.link === link)) continue;
 
       news.push({
         title,
         link,
         pubDate,
         timeAgo: formatTimeAgo(pubDate),
-        source: decodedSource
+        source: decodedSource,
+        image: getThematicImage(title)
       });
+    }
 
-      if (news.length >= 6) break;
+    if (news.length === 0) {
+      throw new Error('No news items found');
     }
 
     return new Response(JSON.stringify({
@@ -96,30 +117,53 @@ export async function onRequestGet(context) {
     }), {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'public, max-age=900, s-maxage=900' // 15 minutes cache
+        'Cache-Control': 'public, max-age=600, s-maxage=600'
       }
     });
 
   } catch (err) {
-    // Fallback static news if Google RSS fetch encounters any issue
     const fallbackNews = [
       {
-        title: "รัฐบาลเร่งตั้ง 4 ระบบกลางสกัดเงินมิจฉาชีพ เชื่อมข้อมูลทุกหน่วยงาน แจ้งครั้งเดียว–ตามเงินทัน–อายัดเร็ว",
+        title: "รัฐบาลเร่งตั้ง 4 ระบบกลางสกัดเงินมิจฉาชีพ เชื่อมข้อมูลทุกหน่วยงาน “แจ้งครั้งเดียว–ตามเงินทัน–อายัดเร็ว”",
         link: "https://www.thaigov.go.th",
         source: "กรมประชาสัมพันธ์",
-        timeAgo: "วันนี้"
+        timeAgo: "วันนี้",
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=240&auto=format&fit=crop&q=80"
       },
       {
-        title: "เตือนภัย SMS แนบลิงก์แอบอ้างหน่วยงานรัฐหรือค้างชำระค่าปรับ หลอกกดโอนเงิน",
+        title: "เตือนภัย SMS แนบลิงก์แอบอ้าง “ใบสั่งจราจรค้างชำระ” หลอกกดลิงก์กรอกข้อมูลบัตรและดูดเงิน",
         link: "https://www.antifakenewscenter.com",
         source: "ศูนย์ต่อต้านข่าวปลอม",
-        timeAgo: "วันนี้"
+        timeAgo: "วันนี้",
+        image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=240&auto=format&fit=crop&q=80"
       },
       {
-        title: "ระวังกลโกงหลอกทำงานออนไลน์ กดรับออเดอร์ หรือสำรองจ่ายเงิน มิจฉาชีพ 100%",
+        title: "รวบบัญชีม้า แก๊งหลอกเหยื่อลงทุนธุรกิจออนไลน์แบบ Dropship สูญเงินกว่าครึ่งล้าน",
+        link: "https://www.fm91bkk.com",
+        source: "สวพ.FM91",
+        timeAgo: "วันนี้",
+        image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=240&auto=format&fit=crop&q=80"
+      },
+      {
+        title: "เตือนภัย! มิจฉาชีพหลอกรับซื้องานศิลปะ หลอกลงทุนผ่านแพลตฟอร์มปลอมสูญเงินแสน",
+        link: "https://www.antifakenewscenter.com",
+        source: "ศูนย์ต่อต้านข่าวปลอม",
+        timeAgo: "เมื่อวาน",
+        image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=240&auto=format&fit=crop&q=80"
+      },
+      {
+        title: "สกัดเส้นเงินมิจฉาชีพ! ตำรวจไซเบอร์ผนึกกำลังทลายรังแก๊งคอลเซ็นเตอร์ข้ามชาติ",
         link: "https://pct.police.go.th",
         source: "ศูนย์ปราบปรามอาชญากรรมทางเทคโนโลยี",
-        timeAgo: "วันนี้"
+        timeAgo: "เมื่อวาน",
+        image: "https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=240&auto=format&fit=crop&q=80"
+      },
+      {
+        title: "ระวังแก๊งอ้างเป็นเจ้าหน้าที่รัฐ โทรสั่งให้โอนเงินในบัญชีไปตรวจสอบ มิจฉาชีพ 100%",
+        link: "https://pct.police.go.th",
+        source: "ตำรวจไซเบอร์",
+        timeAgo: "เมื่อวาน",
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=240&auto=format&fit=crop&q=80"
       }
     ];
 
