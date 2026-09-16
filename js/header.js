@@ -164,6 +164,8 @@ function renderHeader() {
     mobileBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
+  }
+
   // Initialize SOS Emergency Hotline Widget
   renderSosWidget();
 }
