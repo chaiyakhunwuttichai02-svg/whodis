@@ -817,22 +817,27 @@
                     const data = await res.json();
                     reply = data.response;
                 } else {
-                    // Client-side fallback direct to Google Gemini API if running as raw file/local
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userKey}`;
-                    const geminiRes = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ role: 'user', parts: [{ text: `You are FinStudy AI tutor for finance students (Tone: ${currentTone}). Context: ${extractedDocText.slice(0, 4000)}\n\nQuestion: ${query}` }] }]
-                        })
-                    });
-                    const geminiData = await geminiRes.json();
-                    reply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "เกิดข้อผิดพลาดในการประมวลผล";
-                } else {
-                    // Fallback
-                    reply = (currentTone === 'eli5') 
-                        ? `💡 **[โหมด ELI5: อธิบายให้เห็นภาพ]**\nสำหรับคำถาม "${query}" ให้ลองมองเหมือนการขับรถครับ ความเร็วคือผลตอบแทน ส่วนเบรกคือการบริหารความเสี่ยง ในการเรียนการเงิน เรื่องสำคัญที่สุดคือมูลค่าเงินตามเวลา (Time Value of Money) ครับ!`
-                        : `📐 **[โหมด Academic: มาตรฐานข้อสอบ IC/AISA/CFP]**\nคำถาม: "${query}"\nตามหลักการทางการเงิน ให้พิจารณาผลตอบแทนต่อความเสี่ยง (Risk-Adjusted Return) โดยใช้ Sharpe Ratio และการประเมินมูลค่าด้วย DCF เป็นแกนหลักครับ`;
+                    // Client-side fallback direct to Google Gemini API
+                    try {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userKey}`;
+                        const geminiRes = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ role: 'user', parts: [{ text: `You are FinStudy AI tutor for finance students (Tone: ${currentTone}). Context: ${extractedDocText.slice(0, 4000)}\n\nQuestion: ${query}` }] }]
+                            })
+                        });
+                        const geminiData = await geminiRes.json();
+                        reply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    } catch (directErr) {
+                        console.warn("Direct Gemini call fallback error:", directErr);
+                    }
+
+                    if (!reply) {
+                        reply = (currentTone === 'eli5') 
+                            ? `💡 **[โหมด ELI5: อธิบายให้เห็นภาพ]**\nสำหรับคำถาม "${query}" ให้ลองมองเหมือนการขับรถครับ ความเร็วคือผลตอบแทน ส่วนเบรกคือการบริหารความเสี่ยง ในการเรียนการเงิน เรื่องสำคัญที่สุดคือมูลค่าเงินตามเวลา (Time Value of Money) ครับ!`
+                            : `📐 **[โหมด Academic: มาตรฐานข้อสอบ IC/AISA/CFP]**\nคำถาม: "${query}"\nตามหลักการทางการเงิน ให้พิจารณาผลตอบแทนต่อความเสี่ยง (Risk-Adjusted Return) โดยใช้ Sharpe Ratio และการประเมินมูลค่าด้วย DCF เป็นแกนหลักครับ`;
+                    }
                 }
                 removeTyping(typingId);
                 appendChatMessage('assistant', reply);
