@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinStudy AI | แพลตฟอร์มการศึกษาและการลงทุนเชิงปริมาณ</title>
+    <title>FinStudy AI | แพลตฟอร์มติวการเงิน & แบบจำลองเชิงปริมาณระดับมหาวิทยาลัย</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,42 +13,48 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: '#0284c7',
-                        brandHover: '#0369a1',
-                        accentGreen: '#10b981',
-                        accentAmber: '#f59e0b',
-                        accentIndigo: '#6366f1'
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            900: '#0c4a6e'
+                        }
                     },
                     fontFamily: {
-                        sans: ['Sarabun', 'Inter', '-apple-system', 'sans-serif'],
+                        sans: ['Sarabun', 'Inter', 'system-ui', 'sans-serif'],
                         mono: ['JetBrains Mono', 'Menlo', 'monospace']
                     }
                 }
             }
-        };
+        }
     </script>
-    
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- SheetJS for Native Excel (.xlsx) Generation -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    
-    <!-- KaTeX for Mathematical Financial Formulas -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
 
-    <!-- PDF.js for Client-Side Document Ingestion -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SheetJS for Dynamic Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- PDF.js for Lecture Notes Ingestion -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
+
+    <!-- KaTeX for crisp LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <style>
         body {
@@ -57,263 +63,489 @@
         }
         .mono-num {
             font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
         }
-        /* iPad Touch Targets Optimization (>= 44px) */
-        button, a, select, input[type="range"] {
-            min-height: 44px;
-        }
-        /* Custom Smooth Scrollbar */
+        /* Custom smooth scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.25);
+            background: rgba(100, 116, 139, 0.4);
             border-radius: 9999px;
         }
-        .active-nav-btn {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.7);
         }
-        .cot-callout {
-            background: rgba(245, 158, 11, 0.08);
-            border-left: 4px solid #f59e0b;
+        /* Slider styling */
+        input[type=range] {
+            height: 6px;
+            border-radius: 9999px;
+            background: #cbd5e1;
+        }
+        .dark input[type=range] {
+            background: #334155;
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row transition-colors duration-200 select-none md:select-auto">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200">
 
-    <!-- ==================================================================== -->
-    <!-- 1. RESPONSIVE SIDEBAR (WAYFINDING NAVIGATION) -->
-    <!-- ==================================================================== -->
-    <aside id="sidebar" class="w-full md:w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 p-5 z-40 transition-colors duration-200">
-        <div>
-            <!-- Top Header & Brand -->
-            <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800 mb-5">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
-                        <i data-lucide="line-chart" class="w-5 h-5"></i>
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                
+                <!-- Brand & Logo -->
+                <div class="flex items-center gap-3 shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
                     </div>
                     <div>
-                        <h1 class="text-base font-bold text-slate-900 dark:text-white leading-tight">FinStudy AI</h1>
-                        <p class="text-[11px] text-sky-600 dark:text-sky-400 font-medium">Finance Study & Quant Hub</p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white">FinStudy AI</span>
+                            <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 rounded-full">Univ Pro</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 hidden sm:block">ติวเข้มการเงินธุรกิจ & ทฤษฎีการลงทุน</p>
                     </div>
                 </div>
+
+                <!-- Live Countdown & Exam Pacing Widget -->
+                <div class="hidden lg:flex items-center gap-3 bg-slate-100 dark:bg-slate-800/80 px-4 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-right">
+                        <div class="text-[10px] text-slate-400 flex items-center gap-1 justify-end">
+                            <i data-lucide="calendar" class="w-3 h-3 text-sky-500"></i>
+                            <span id="header-target-label" class="font-medium text-slate-600 dark:text-slate-300">นับถอยหลังวันสอบ:</span>
+                        </div>
+                        <div id="header-pacing-text" class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                            เป้าหมาย: ทบทวน 10 ข้อ/วัน
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1 mono-num text-xs font-bold text-sky-600 dark:text-sky-400 bg-white dark:bg-slate-900 px-3 py-1 rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner">
+                        <span id="cd-days">00</span><span class="text-[10px] font-normal text-slate-400">ว</span>:
+                        <span id="cd-hours">00</span><span class="text-[10px] font-normal text-slate-400">ช</span>:
+                        <span id="cd-mins">00</span><span class="text-[10px] font-normal text-slate-400">น</span>:
+                        <span id="cd-secs">00</span><span class="text-[10px] font-normal text-slate-400">ว</span>
+                    </div>
+                </div>
+
+                <!-- Theme & Mode Controls -->
+                <div class="flex items-center gap-2.5">
+                    <button onclick="toggleDarkMode()" title="สลับ Dark/Light Mode" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition shadow-sm">
+                        <i id="theme-icon" data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-400"></i>
+                        <i id="theme-icon-light" data-lucide="moon" class="w-5 h-5 block dark:hidden text-slate-600"></i>
+                    </button>
+                    
+                    <a href="https://github.com/chaiyakhunwuttichai02-svg/whodis" target="_blank" title="GitHub Source" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hidden sm:flex items-center justify-center transition shadow-sm">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM TARGET & STUDY PLANNER BAR (Customizable) -->
+        <div class="bg-slate-100 dark:bg-slate-950/80 border-t border-slate-200 dark:border-slate-800/80 py-2 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1">
+                        <i data-lucide="target" class="w-4 h-4 text-rose-500"></i> กำหนดเป้าหมายการสอบ:
+                    </span>
+                    <select id="exam-target-select" onchange="updateExamTarget()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-800 dark:text-slate-200 font-medium focus:outline-none focus:ring-1 focus:ring-sky-500">
+                        <option value="corp_fin">วิชา Corporate Finance (การเงินธุรกิจ)</option>
+                        <option value="investments">วิชา Investment Analysis (การวิเคราะห์การลงทุน)</option>
+                        <option value="fin_mgmt">วิชา Financial Management (การจัดการทางการเงิน)</option>
+                        <option value="derivatives">วิชา Derivatives & Risk Management (ตราสารอนุพันธ์)</option>
+                        <option value="midterm">สอบกลางภาค (Midterm Exam)</option>
+                        <option value="final">สอบปลายภาค (Final Exam)</option>
+                        <option value="custom">-- กำหนดชื่อวิชาเอง (Custom) --</option>
+                    </select>
+
+                    <input type="text" id="custom-target-input" placeholder="พิมพ์ชื่อวิชา..." oninput="updateExamTarget()" class="hidden bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-800 dark:text-slate-200 font-medium w-40">
+
+                    <span class="text-slate-400">วันสอบ:</span>
+                    <input type="date" id="exam-date-picker" onchange="updateExamTarget()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200 font-mono focus:outline-none focus:ring-1 focus:ring-sky-500">
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span id="target-badge-status" class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
+                        พร้อมวางแผนติว
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION TABS (5 Core University Modules) -->
+        <nav class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-1 sm:space-x-4 py-2 min-w-max">
+                    <button onclick="switchTab('mod-ai')" id="tab-mod-ai" class="nav-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                        <span>1. AI ติวเตอร์ & ถอดโจทย์</span>
+                    </button>
+                    <button onclick="switchTab('mod-valuation')" id="tab-mod-valuation" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i>
+                        <span>2. DCF & Sensitivity Studio</span>
+                    </button>
+                    <button onclick="switchTab('mod-fixedincome')" id="tab-mod-fixedincome" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="activity" class="w-4 h-4 text-amber-500"></i>
+                        <span>3. ตราสารหนี้ & Options Payoff</span>
+                    </button>
+                    <button onclick="switchTab('mod-portfolio')" id="tab-mod-portfolio" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i>
+                        <span>4. ทฤษฎีพอร์ต MPT & ความเสี่ยง</span>
+                    </button>
+                    <button onclick="switchTab('mod-exam')" id="tab-mod-exam" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-rose-500"></i>
+                        <span>5. คลังข้อสอบ & สมุดจดข้อผิด</span>
+                        <span id="mistake-count-badge" class="hidden px-1.5 py-0.2 text-[10px] font-bold bg-rose-500 text-white rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- ================================================================ -->
+        <!-- MODULE 1: AI TUTOR & SMART HOMEWORK SOLVER -->
+        <!-- ================================================================ -->
+        <section id="view-mod-ai" class="space-y-6">
+            <div class="bg-gradient-to-r from-sky-900/30 via-slate-900/60 to-slate-900/80 p-6 rounded-3xl border border-sky-800/30 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="px-2.5 py-1 bg-sky-500/20 text-sky-400 text-xs font-semibold rounded-md border border-sky-500/30 inline-block mb-2">
+                        🤖 Module 1: AI Tutor & Lecture Material Ingestion
+                    </span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">ติวเตอร์การเงินอัจฉริยะ (Gemini 3 Flash) & ถอดโจทย์การบ้าน</h2>
+                    <p class="text-xs text-slate-400 mt-1">อัปโหลดสไลด์เลกเชอร์ PDF, ถามข้อสงสัยเรื่องสูตรการเงิน, หรือให้ระบบช่วยถอดพารามิเตอร์การบ้านและสร้าง Excel Template</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Gemini 3 Flash Connected
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- Dark / Light Mode Toggle Button -->
-                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-amber-400 transition" title="สลับ Dark / Light Mode">
-                    <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
+                <!-- Left: Lecture Material Uploader & Smart Homework Parameter Form -->
+                <div class="lg:col-span-4 space-y-5">
+                    <!-- PDF Ingestion Card -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="file-text" class="w-4 h-4 text-sky-500"></i> อัปโหลดชีทเรียน / ข้อสอบ (PDF)
+                            </h3>
+                            <span id="doc-status" class="text-[10px] text-slate-400">ยังไม่มีไฟล์</span>
+                        </div>
+                        <label class="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-sky-500 dark:hover:border-sky-500 rounded-xl p-5 text-center cursor-pointer block transition group">
+                            <input type="file" id="pdf-upload" accept=".pdf" class="hidden" onchange="handlePDFUpload(event)">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-sky-50 dark:bg-slate-800 flex items-center justify-center text-sky-500 group-hover:scale-110 transition">
+                                <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                            </div>
+                            <div class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-2">แตะเพื่อเลือกไฟล์ PDF เลกเชอร์</div>
+                            <div class="text-[10px] text-slate-400 mt-1">ระบบจะสกัดข้อความส่งให้ AI ใช้ตอบคำถาม</div>
+                        </label>
+                        <div id="pdf-preview-info" class="hidden text-xs bg-sky-500/10 text-sky-600 dark:text-sky-400 p-3 rounded-xl border border-sky-500/20 flex items-center justify-between">
+                            <span id="pdf-name" class="truncate max-w-[200px] font-medium">filename.pdf</span>
+                            <button onclick="clearPDF()" class="text-rose-500 hover:text-rose-700 p-1"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Homework Parameter Inputs -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="calculator" class="w-4 h-4 text-emerald-500"></i> ตัวแปรโจทย์การบ้าน (Quick Form)
+                        </h3>
+                        <p class="text-[11px] text-slate-400">กรอกตัวเลขจากโจทย์ หรือพิมพ์โจทย์ในช่องด้านขวาแล้วกดคำนวณ</p>
+                        
+                        <div class="grid grid-cols-2 gap-2.5 text-xs">
+                            <div>
+                                <label class="text-slate-400 block mb-1">WACC (%):</label>
+                                <input type="number" id="hw-wacc" value="9.5" step="0.1" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            </div>
+                            <div>
+                                <label class="text-slate-400 block mb-1">Growth Rate g (%):</label>
+                                <input type="number" id="hw-g" value="3.0" step="0.1" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <div>
+                                <label class="text-slate-400 block mb-1">หนี้สิน (M):</label>
+                                <input type="number" id="hw-debt" value="150" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            </div>
+                            <div>
+                                <label class="text-slate-400 block mb-1">เงินสด (M):</label>
+                                <input type="number" id="hw-cash" value="80" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            </div>
+                            <div>
+                                <label class="text-slate-400 block mb-1">หุ้น (M หุ้น):</label>
+                                <input type="number" id="hw-shares" value="20" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block text-xs mb-1">ประมาณการ FCFF 5 ปี (คั่นด้วยจุลภาค):</label>
+                            <input type="text" id="hw-fcff-list" value="120, 145, 170, 205, 240" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs mono-num">
+                        </div>
+
+                        <div class="flex gap-2 pt-1">
+                            <button onclick="runHomeworkSolver()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
+                                <i data-lucide="play" class="w-4 h-4"></i> คำนวณตามตัวแปรนี้
+                            </button>
+                            <button onclick="downloadHomeworkExcel()" class="px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-xl text-xs flex items-center gap-1.5 transition">
+                                <i data-lucide="download" class="w-4 h-4 text-emerald-500"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive AI Tutor Chat & Homework Solution Display -->
+                <div class="lg:col-span-8 flex flex-col space-y-4">
+                    
+                    <!-- Chat & Solution Container -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col h-[640px] overflow-hidden shadow-sm">
+                        
+                        <!-- Chat Header & Persona Switcher -->
+                        <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/70 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-slate-500 dark:text-slate-400">โหมดคำตอบ AI:</span>
+                                <div class="inline-flex rounded-lg p-0.5 bg-slate-200 dark:bg-slate-800">
+                                    <button onclick="setTone('eli5')" id="tone-eli5" class="px-3 py-1 rounded-md text-xs font-semibold transition bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm">
+                                        💡 ELI5 (เข้าใจง่าย)
+                                    </button>
+                                    <button onclick="setTone('academic')" id="tone-academic" class="px-3 py-1 rounded-md text-xs font-semibold transition text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white">
+                                        📐 Academic (ข้อสอบเป๊ะ)
+                                    </button>
+                                </div>
+                            </div>
+                            <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-rose-500 flex items-center gap-1">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> ล้างประวัติแชท
+                            </button>
+                        </div>
+
+                        <!-- Chat Messages View Area -->
+                        <div id="chat-messages" class="flex-1 p-5 overflow-y-auto space-y-4 text-sm leading-relaxed">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0 text-xs font-bold shadow">
+                                    AI
+                                </div>
+                                <div class="bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 rounded-2xl rounded-tl-sm p-4 max-w-2xl text-slate-800 dark:text-slate-200 space-y-2">
+                                    <p class="font-bold text-sky-600 dark:text-sky-400">สวัสดีครับ! ผมคือ FinStudy AI ติวเตอร์การเงินของคุณ 🎓</p>
+                                    <p>คุณสามารถอัปโหลดชีทเรียนด้านซ้าย หรือพิมพ์ถามสูตรการเงิน เช่น:</p>
+                                    <ul class="list-disc pl-5 space-y-1 text-xs text-slate-600 dark:text-slate-300">
+                                        <li><i>"อธิบาย Modified Duration และ Convexity พร้อมตัวอย่างการคำนวณ"</i></li>
+                                        <li><i>"ถ้าดอกเบี้ยตลาดปรับเพิ่มขึ้น 1% ราคาพันธบัตรจะเปลี่ยนเท่าไหร่"</i></li>
+                                        <li><i>"วิธีคิด Free Cash Flow to Firm (FCFF) จาก EBIT และ NOPAT"</i></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Homework Quick Solution Result Box (Appears when solved) -->
+                        <div id="hw-solution-card" class="hidden border-t border-slate-200 dark:border-slate-800 bg-emerald-500/5 p-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i> ผลลัพธ์การประเมินมูลค่า (Step-by-Step CoT Output)
+                                </h4>
+                                <span class="text-[10px] text-slate-400">คำนวณตามตัวแปรล่าสุด</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Enterprise Value (EV)</div>
+                                    <div id="out-ev" class="text-sm font-bold text-sky-500 mono-num">0.00 M</div>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Equity Value (ส่วนทุน)</div>
+                                    <div id="out-eq" class="text-sm font-bold text-emerald-500 mono-num">0.00 M</div>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-emerald-500/30">
+                                    <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">ราคาเป้าหมายต่อหุ้น</div>
+                                    <div id="out-target" class="text-base font-bold text-amber-500 mono-num">0.00 THB</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input Bar -->
+                        <div class="p-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                            <form onsubmit="handleSendChat(event)" class="flex items-center gap-2">
+                                <input type="text" id="chat-input" placeholder="พิมพ์คำถาม หรือวางโจทย์การบ้านการเงินที่นี่..." class="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <button type="submit" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition shadow">
+                                    <i data-lucide="send" class="w-4 h-4"></i> ส่ง
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- MODULE 2: CORPORATE VALUATION & 5x5 SENSITIVITY MATRIX -->
+        <!-- ================================================================ -->
+        <section id="view-mod-valuation" class="hidden space-y-6">
+            <div class="bg-gradient-to-r from-emerald-900/30 via-slate-900/60 to-slate-900/80 p-6 rounded-3xl border border-emerald-800/30 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-md border border-emerald-500/30 inline-block mb-2">
+                        📈 Module 2: Corporate Valuation & Sensitivity Studio
+                    </span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">แบบจำลองประเมินมูลค่าหุ้น DCF & ตารางความอ่อนไหว 5x5</h2>
+                    <p class="text-xs text-slate-400 mt-1">ปรับสมมติฐาน FCFF 5 ปี, WACC, Terminal Growth แบบเรียลไทม์ พร้อมตารางทดสอบความอ่อนไหว (WACC vs g) และกราฟเปรียบเทียบสัดส่วนมูลค่า</p>
+                </div>
+                <button onclick="downloadDCFExcel()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition shadow">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> ส่งออกโมเดล Excel (.xlsx)
                 </button>
             </div>
 
-            <!-- Navigation Modes -->
-            <div class="mb-6">
-                <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-2.5 px-1">ระบบการเรียนและการวิเคราะห์</p>
-                <nav class="space-y-1.5" id="nav-container">
-                    <button onclick="switchMode('mod-study')" id="nav-mod-study" class="w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition active-nav-btn">
-                        <i data-lucide="graduation-cap" class="w-5 h-5 text-sky-200"></i>
-                        <div>
-                            <div class="font-bold">1. AI Tutor & Homework</div>
-                            <div class="text-[11px] opacity-90">RAG Document, ELI5, Excel Solver</div>
-                        </div>
-                    </button>
-                    <button onclick="switchMode('mod-valuation')" id="nav-mod-valuation" class="w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <i data-lucide="calculator" class="w-5 h-5 text-emerald-500"></i>
-                        <div>
-                            <div class="font-bold">2. Corporate Valuation</div>
-                            <div class="text-[11px] text-slate-400">DCF, WACC, SOTP, Multiples</div>
-                        </div>
-                    </button>
-                    <button onclick="switchMode('mod-quant')" id="nav-mod-quant" class="w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i>
-                        <div>
-                            <div class="font-bold">3. Fixed Income & Derivatives</div>
-                            <div class="text-[11px] text-slate-400">Duration, Convexity, Options Payoff</div>
-                        </div>
-                    </button>
-                    <button onclick="switchMode('mod-portfolio')" id="nav-mod-portfolio" class="w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-500"></i>
-                        <div>
-                            <div class="font-bold">4. MPT & Market Sentiment</div>
-                            <div class="text-[11px] text-slate-400">Efficient Frontier, SEPA, Sentiment</div>
-                        </div>
-                    </button>
-                    <button onclick="switchMode('mod-exam')" id="nav-mod-exam" class="w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <i data-lucide="award" class="w-5 h-5 text-rose-500"></i>
-                        <div>
-                            <div class="font-bold">5. Certification Exam Hub</div>
-                            <div class="text-[11px] text-slate-400">IC Complex, AISA, CFP & Quiz</div>
-                        </div>
-                    </button>
-                </nav>
-            </div>
+            <!-- Dynamic Valuation Controls & Outputs -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left: Interactive Sliders -->
+                <div class="lg:col-span-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-5">
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-emerald-500"></i> ปรับแต่งสมมติฐานการเงิน (Valuation Assumptions)
+                    </h3>
 
-            <!-- Exam Countdown Card -->
-            <div class="bg-slate-100 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 mb-4">
-                <div class="flex items-center justify-between mb-2.5">
-                    <span class="text-xs uppercase tracking-wider text-slate-500 font-bold flex items-center gap-1">
-                        <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-500"></i> นับถอยหลังวันสอบ
-                    </span>
-                    <span class="text-[10px] text-emerald-500 font-semibold">ATI / TFAC</span>
-                </div>
-                <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                    <div class="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-                        <div class="text-[10px] text-slate-400">IC P2/P3</div>
-                        <div class="font-bold text-sky-500 mono-num text-sm">28 วัน</div>
-                    </div>
-                    <div class="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-                        <div class="text-[10px] text-slate-400">AISA</div>
-                        <div class="font-bold text-emerald-500 mono-num text-sm">54 วัน</div>
-                    </div>
-                    <div class="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-                        <div class="text-[10px] text-slate-400">CFP Mod 2</div>
-                        <div class="font-bold text-indigo-500 mono-num text-sm">92 วัน</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- User Settings Footer -->
-        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
-            <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-slate-500 dark:text-slate-400 font-medium">Gemini 3 Flash Live</span>
-            </div>
-            <button onclick="toggleSettingsModal(true)" class="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-                <i data-lucide="settings" class="w-4 h-4"></i>
-            </button>
-        </div>
-    </aside>
-
-    <!-- ==================================================================== -->
-    <!-- 2. MAIN APPLICATION CONTENT -->
-    <!-- ==================================================================== -->
-    <main class="flex-1 p-5 md:p-8 max-w-7xl mx-auto w-full overflow-y-auto">
-
-        <!-- ================================================================ -->
-        <!-- MODULE 1: AI TUTOR & HOMEWORK SOLVER -->
-        <!-- ================================================================ -->
-        <section id="view-mod-study" class="space-y-6">
-            <!-- Header Card -->
-            <div class="bg-gradient-to-r from-sky-900/40 via-slate-900 to-slate-900 p-6 rounded-2xl border border-sky-800/40 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <span class="px-2.5 py-1 bg-sky-500/20 text-sky-400 text-xs font-semibold rounded-md border border-sky-500/30 inline-block mb-2">
-                        🎓 Module 1: AI Study Assistant
-                    </span>
-                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">ติวเตอร์การเงินอัจฉริยะ & แก้โจทย์การบ้าน</h2>
-                    <p class="text-xs text-slate-400 mt-1">อัปโหลดชีทเรียน/ตำราการเงิน ติวด้วย Gemini 2.0 Flash สลับโทนเสียง Academic/ELI5 และแก้โจทย์ส่งออกเป็นไฟล์ Excel</p>
-                </div>
-                <!-- Tone Selector -->
-                <div class="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <span class="text-xs text-slate-500 pl-2">โหมดอธิบาย:</span>
-                    <button onclick="setTone('academic')" id="btn-tone-academic" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 text-white transition">Academic</button>
-                    <button onclick="setTone('eli5')" id="btn-tone-eli5" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition">ELI5 (เห็นภาพง่าย)</button>
-                </div>
-            </div>
-
-            <!-- 2-Column Grid: Document Loader & Chat -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Document Ingestion Column -->
-                <div class="lg:col-span-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                            <i data-lucide="file-text" class="w-4 h-4 text-sky-500"></i> คลังเอกสารชีทเรียน
-                        </h3>
-                        <span id="doc-status" class="text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full">ยังไม่มีเอกสาร</span>
+                    <!-- Sliders for WACC & g -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="flex justify-between text-xs text-slate-500 mb-2">
+                                <span>WACC (คิดลด):</span>
+                                <span id="label-wacc" class="text-sky-500 font-bold mono-num">9.5%</span>
+                            </div>
+                            <input type="range" id="val-slider-wacc" min="6.0" max="16.0" step="0.1" value="9.5" oninput="runValuationUpdate()" class="w-full accent-sky-500">
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="flex justify-between text-xs text-slate-500 mb-2">
+                                <span>Growth g (ระยะยาว):</span>
+                                <span id="label-g" class="text-emerald-500 font-bold mono-num">3.0%</span>
+                            </div>
+                            <input type="range" id="val-slider-g" min="1.0" max="5.5" step="0.1" value="3.0" oninput="runValuationUpdate()" class="w-full accent-emerald-500">
+                        </div>
                     </div>
 
-                    <div id="drop-zone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-sky-500 rounded-xl p-6 text-center cursor-pointer transition bg-slate-50 dark:bg-slate-950/40">
-                        <input type="file" id="file-input" class="hidden" accept=".pdf,.txt,.csv">
-                        <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
-                        <p class="text-xs font-medium text-slate-700 dark:text-slate-300">แตะเพื่อเลือกไฟล์ชีทเรียน</p>
-                        <p class="text-[10px] text-slate-500 mt-1">รองรับ PDF, CSV, TXT (อ่านบนเครื่อง ไม่ส่งไฟล์ออกภายนอก)</p>
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between text-xs text-slate-400 mb-1">
-                            <span>เนื้อหาที่สกัดได้:</span>
-                            <span id="char-count" class="mono-num">0 ตัวอักษร</span>
+                    <!-- Debt, Cash, Shares Inputs -->
+                    <div class="grid grid-cols-3 gap-3 text-xs">
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <label class="text-slate-400 block mb-1">หนี้สินสุทธิ (M):</label>
+                            <input type="number" id="val-debt" value="150" oninput="runValuationUpdate()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
                         </div>
-                        <textarea id="doc-preview" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-700 dark:text-slate-300 font-mono resize-none focus:outline-none" placeholder="ข้อความจากชีทเรียนจะปรากฏที่นี่..."></textarea>
-                    </div>
-                    <button onclick="clearDoc()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-xl transition">ล้างเอกสาร</button>
-                </div>
-
-                <!-- Chat Room Column -->
-                <div class="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col h-[560px]">
-                    <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/80 rounded-t-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="text-sm font-semibold text-slate-900 dark:text-white">AI Financial Tutor (Gemini 2.0 Flash)</span>
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <label class="text-slate-400 block mb-1">เงินสด (M):</label>
+                            <input type="number" id="val-cash" value="80" oninput="runValuationUpdate()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
                         </div>
-                        <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">ล้างบทสนทนา</button>
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <label class="text-slate-400 block mb-1">จำนวนหุ้น (M):</label>
+                            <input type="number" id="val-shares" value="20" oninput="runValuationUpdate()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
+                        </div>
                     </div>
 
-                    <!-- Chat Message Area -->
-                    <div id="chat-messages" class="flex-1 p-5 overflow-y-auto space-y-4">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0 text-xs font-bold shadow">AI</div>
-                            <div class="bg-slate-100 dark:bg-slate-800/80 rounded-2xl rounded-tl-none p-4 text-xs text-slate-800 dark:text-slate-200 leading-relaxed max-w-xl border border-slate-200 dark:border-slate-700/50">
-                                สวัสดีครับ! ผมคือ AI ติวเตอร์ส่วนตัวสำหรับการเรียนสาขาวิชาการเงิน และเตรียมสอบ <b>IC Complex (P2, P3)</b>, <b>AISA</b>, <b>CFP</b><br><br>
-                                คุณสามารถอัปโหลดชีทเรียนด้านซ้าย หรือพิมพ์ถามสูตรและโจทย์การเงิน เช่น <i>"อธิบาย Modified Duration และ Convexity"</i>, <i>"คำนวณ WACC และ FCFF"</i> หรือ <i>"กลยุทธ์ Bull Call Spread ใช้ตอนไหน"</i> ได้เลยครับ!
+                    <!-- 5-Year FCFF Sliders -->
+                    <div class="space-y-3">
+                        <div class="text-xs font-semibold text-slate-700 dark:text-slate-300">ประมาณการ FCFF แต่ละปี (ล้านบาท):</div>
+                        <div class="grid grid-cols-5 gap-2 text-center text-xs">
+                            <div>
+                                <label class="text-[10px] text-slate-400">ปี 1</label>
+                                <input type="number" id="val-cf1" value="120" oninput="runValuationUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num text-center">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">ปี 2</label>
+                                <input type="number" id="val-cf2" value="145" oninput="runValuationUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num text-center">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">ปี 3</label>
+                                <input type="number" id="val-cf3" value="170" oninput="runValuationUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num text-center">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">ปี 4</label>
+                                <input type="number" id="val-cf4" value="205" oninput="runValuationUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num text-center">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">ปี 5</label>
+                                <input type="number" id="val-cf5" value="240" oninput="runValuationUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num text-center">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Chat Input -->
-                    <div class="p-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 rounded-b-2xl">
-                        <form onsubmit="handleChatSubmit(event)" class="flex gap-2">
-                            <input type="text" id="chat-input" placeholder="พิมพ์คำถามหรือโจทย์การเงินที่ต้องการให้ติว..." class="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 transition">
-                            <button type="submit" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow">
-                                <span>ถาม AI</span>
-                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Auto Homework Solver Card (Excel Export) -->
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="flex justify-between items-start flex-wrap gap-2">
-                    <div>
-                        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                            <i data-lucide="file-spreadsheet" class="w-5 h-5 text-emerald-500"></i> เครื่องมือแก้โจทย์การบ้าน & ส่งออกเป็นไฟล์ Excel สำเร็จรูป
-                        </h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">คัดลอกโจทย์การบ้านใส่ในกล่อง ระบบจะถอดสูตร คำนวณแบบ Chain-of-Thought และสร้างไฟล์ Excel (.xlsx) มีสูตรครบ</p>
+                    <!-- Output Cards -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">PV of 5-Yr FCFF</div>
+                            <div id="stat-pv-fcff" class="text-sm font-bold text-slate-800 dark:text-slate-100 mono-num">0.00 M</div>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">PV of Terminal Val</div>
+                            <div id="stat-pv-tv" class="text-sm font-bold text-slate-800 dark:text-slate-100 mono-num">0.00 M</div>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Enterprise Value</div>
+                            <div id="stat-ev" class="text-sm font-bold text-sky-500 mono-num">0.00 M</div>
+                        </div>
+                        <div class="bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-xl border border-emerald-500/30">
+                            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">ราคาเป้าหมาย (THB)</div>
+                            <div id="stat-price" class="text-lg font-black text-emerald-600 dark:text-emerald-400 mono-num">0.00</div>
+                        </div>
                     </div>
                 </div>
 
-                <textarea id="hw-input" rows="3" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 text-xs text-slate-800 dark:text-slate-200 font-mono focus:outline-none focus:border-emerald-500">จงสร้างแบบจำลอง Discounted Cash Flow (DCF) ของบริษัท NVO โดยมีประมาณการ FCFF 5 ปีข้างหน้าเท่ากับ [120, 145, 170, 205, 240] ล้านบาท, WACC 9.5%, Terminal Growth 3.0%, หนี้สิน 150 ล้านบาท, เงินสด 80 ล้านบาท และจำนวนหุ้นจดทะเบียน 20 ล้านหุ้น</textarea>
-
-                <div class="flex flex-wrap gap-3 items-center justify-between">
-                    <button onclick="solveHomework()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition shadow">
-                        <i data-lucide="play" class="w-4 h-4"></i> แก้โจทย์และคำนวณ
-                    </button>
-                    <button onclick="downloadHomeworkExcel()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition border border-slate-700">
-                        <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i> ดาวน์โหลดเฉลยเป็นไฟล์ Excel (.xlsx) มีสูตรครบ
-                    </button>
-                </div>
-
-                <div id="hw-result-box" class="hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3">
-                    <h4 class="text-xs uppercase tracking-wider text-emerald-500 font-bold">ผลการแก้โจทย์การเงิน (Step-by-Step CoT Solution):</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                            <div class="text-[11px] text-slate-400">Enterprise Value (EV)</div>
-                            <div class="text-xl font-bold text-sky-500 mono-num" id="hw-ev">3,124.85 M</div>
+                <!-- Right: 5x5 Sensitivity Matrix & Breakdown Chart -->
+                <div class="lg:col-span-6 space-y-5">
+                    
+                    <!-- Sensitivity Matrix Table Card -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="grid" class="w-4 h-4 text-sky-500"></i> ตารางความอ่อนไหว 5x5 (Sensitivity Matrix)
+                            </h3>
+                            <!-- Toggle Button: Price vs EV -->
+                            <div class="inline-flex rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800 text-[11px]">
+                                <button onclick="setSensitivityView('price')" id="btn-sens-price" class="px-2.5 py-1 rounded-md font-semibold bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm">
+                                    ราคาต่อหุ้น (THB)
+                                </button>
+                                <button onclick="setSensitivityView('ev')" id="btn-sens-ev" class="px-2.5 py-1 rounded-md font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400">
+                                    มูลค่า EV (ล้านบาท)
+                                </button>
+                            </div>
                         </div>
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                            <div class="text-[11px] text-slate-400">Equity Value (มูลค่าส่วนของผู้ถือหุ้น)</div>
-                            <div class="text-xl font-bold text-emerald-500 mono-num" id="hw-eq">3,054.85 M</div>
+
+                        <!-- 5x5 Matrix Container -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-center text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-800/60 text-slate-500">
+                                        <th class="p-2 border border-slate-200 dark:border-slate-800 font-mono">WACC \ g</th>
+                                        <th id="th-g1" class="p-2 border border-slate-200 dark:border-slate-800 font-mono">2.0%</th>
+                                        <th id="th-g2" class="p-2 border border-slate-200 dark:border-slate-800 font-mono">2.5%</th>
+                                        <th id="th-g3" class="p-2 border border-slate-200 dark:border-slate-800 font-mono text-emerald-500 font-bold">3.0%</th>
+                                        <th id="th-g4" class="p-2 border border-slate-200 dark:border-slate-800 font-mono">3.5%</th>
+                                        <th id="th-g5" class="p-2 border border-slate-200 dark:border-slate-800 font-mono">4.0%</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sensitivity-tbody" class="divide-y divide-slate-200 dark:divide-slate-800 font-mono text-[11px]">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                            <div class="text-[11px] text-slate-400">ราคาเป้าหมายต่อหุ้น (Intrinsic Price)</div>
-                            <div class="text-xl font-bold text-amber-500 mono-num" id="hw-target">152.74 THB</div>
+                        <div class="text-[10px] text-slate-400 flex items-center justify-between">
+                            <span>* แถบสีเขียวคือกรณีฐาน (Base Case) ตามค่าปัจจุบัน</span>
+                            <span>คำนวณแบบ Real-time ทุกมิลลิวินาที</span>
+                        </div>
+                    </div>
+
+                    <!-- Valuation Structure Chart -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> สัดส่วนมูลค่าปัจจุบันของกระแสเงินสด (PV Breakdown)
+                            </h3>
+                            <span class="text-[11px] text-slate-400 font-mono" id="label-tv-pct">TV 75% | FCFF 25%</span>
+                        </div>
+                        <div class="h-44">
+                            <canvas id="dcfBarChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -321,235 +553,266 @@
         </section>
 
         <!-- ================================================================ -->
-        <!-- MODULE 2: CORPORATE VALUATION (DCF, SOTP, MULTIPLES) -->
+        <!-- MODULE 3: FIXED INCOME (CONVEXITY CURVE) & OPTIONS PAYOFF -->
         <!-- ================================================================ -->
-        <section id="view-mod-valuation" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-emerald-900/40 via-slate-900 to-slate-900 p-6 rounded-2xl border border-emerald-800/40 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <section id="view-mod-fixedincome" class="hidden space-y-6">
+            <div class="bg-gradient-to-r from-amber-900/30 via-slate-900/60 to-slate-900/80 p-6 rounded-3xl border border-amber-800/30 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-md border border-emerald-500/30 inline-block mb-2">
-                        📈 Module 2: Corporate Valuation Studio
+                    <span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-md border border-amber-500/30 inline-block mb-2">
+                        ⚡ Module 3: Fixed Income Convexity & Options Strategy
                     </span>
-                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">แบบจำลองประเมินมูลค่าหุ้นสามัญ (DCF & Relative Multiples)</h2>
-                    <p class="text-xs text-slate-400 mt-1">ประเมินมูลค่ากิจการด้วยวิธี Discounted Cash Flow, WACC via CAPM, Gordon Growth Model และดาวน์โหลดเป็น Excel Template</p>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">กราฟความโค้ง Convexity ของตราสารหนี้ & กราฟ Options Payoff</h2>
+                    <p class="text-xs text-slate-400 mt-1">เห็นภาพชัดเจนว่าทำไมราคาพันธบัตรถึงไม่เป็นเส้นตรงเมื่อดอกเบี้ยเปลี่ยน และทดสอบกลยุทธ์ Options ด้วย Interactive Sliders</p>
                 </div>
-                <button onclick="downloadDCFExcel()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs flex items-center gap-2 transition shadow">
-                    <i data-lucide="download" class="w-4 h-4"></i> ดาวน์โหลดแบบจำลอง DCF (.xlsx)
-                </button>
-            </div>
-
-            <!-- Dynamic Sliders Card -->
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-5">
-                <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <i data-lucide="sliders" class="w-4 h-4 text-emerald-500"></i> ปรับแต่งสมมติฐานการเงิน (Valuation Assumptions)
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <div class="flex justify-between text-xs text-slate-500 mb-2">
-                            <span>WACC (Discount Rate):</span>
-                            <span id="val-wacc" class="text-sky-500 font-bold mono-num">9.5%</span>
-                        </div>
-                        <input type="range" id="input-wacc" min="5.0" max="18.0" step="0.1" value="9.5" oninput="recalcDCF()" class="w-full accent-sky-500">
-                    </div>
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <div class="flex justify-between text-xs text-slate-500 mb-2">
-                            <span>Terminal Growth (g):</span>
-                            <span id="val-g" class="text-emerald-500 font-bold mono-num">3.0%</span>
-                        </div>
-                        <input type="range" id="input-g" min="1.0" max="6.0" step="0.1" value="3.0" oninput="recalcDCF()" class="w-full accent-emerald-500">
-                    </div>
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <label class="text-xs text-slate-500 block mb-1">หนี้สินสุทธิ Net Debt (M THB):</label>
-                        <input type="number" id="input-debt" value="150" oninput="recalcDCF()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-white mono-num">
-                    </div>
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <label class="text-xs text-slate-500 block mb-1">จำนวนหุ้นจดทะเบียน (M Shares):</label>
-                        <input type="number" id="input-shares" value="25" oninput="recalcDCF()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-white mono-num">
-                    </div>
-                </div>
-
-                <!-- 5-Year FCFF Projection -->
-                <div>
-                    <div class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">ประมาณการกระแสเงินสด Free Cash Flow to Firm (FCFF) 5 ปีข้างหน้า (ล้านบาท):</div>
-                    <div class="grid grid-cols-5 gap-2.5">
-                        <div><label class="text-[10px] text-slate-400">ปีที่ 1</label><input type="number" id="fcff-1" value="120" oninput="recalcDCF()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-center mono-num"></div>
-                        <div><label class="text-[10px] text-slate-400">ปีที่ 2</label><input type="number" id="fcff-2" value="145" oninput="recalcDCF()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-center mono-num"></div>
-                        <div><label class="text-[10px] text-slate-400">ปีที่ 3</label><input type="number" id="fcff-3" value="170" oninput="recalcDCF()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-center mono-num"></div>
-                        <div><label class="text-[10px] text-slate-400">ปีที่ 4</label><input type="number" id="fcff-4" value="205" oninput="recalcDCF()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-center mono-num"></div>
-                        <div><label class="text-[10px] text-slate-400">ปีที่ 5</label><input type="number" id="fcff-5" value="240" oninput="recalcDCF()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-center mono-num"></div>
-                    </div>
-                </div>
-
-                <!-- Valuation Output Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 pt-2">
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <div class="text-[11px] text-slate-400">PV of Explicit FCFF</div>
-                        <div class="text-lg font-bold text-slate-900 dark:text-white mono-num" id="dcf-pv-fcff">631.25 M</div>
-                    </div>
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <div class="text-[11px] text-slate-400">PV of Terminal Value</div>
-                        <div class="text-lg font-bold text-slate-900 dark:text-white mono-num" id="dcf-pv-tv">2,412.60 M</div>
-                    </div>
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                        <div class="text-[11px] text-slate-400">Enterprise Value (EV)</div>
-                        <div class="text-lg font-bold text-sky-500 mono-num" id="dcf-ev">3,043.85 M</div>
-                    </div>
-                    <div class="bg-emerald-50 dark:bg-emerald-950/30 p-4 rounded-xl border border-emerald-500/30">
-                        <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">ราคาเป้าหมาย (Intrinsic Price)</div>
-                        <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mono-num" id="dcf-share-price">115.75 THB</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================================================================ -->
-        <!-- MODULE 3: FIXED INCOME & DERIVATIVES (DURATION & OPTIONS PAYOFF) -->
-        <!-- ================================================================ -->
-        <section id="view-mod-quant" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-amber-900/40 via-slate-900 to-slate-900 p-6 rounded-2xl border border-amber-800/40 shadow-sm">
-                <span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-md border border-amber-500/30 inline-block mb-2">
-                    ⚡ Module 3: Fixed Income & Derivatives Studio
-                </span>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">การวิเคราะห์ตราสารหนี้ & สัญญาอนุพันธ์ (Options Payoff)</h2>
-                <p class="text-xs text-slate-400 mt-1">คำนวณ Macaulay Duration, Modified Duration, Convexity และจำลองกราฟกลยุทธ์ Options (Spreads, Straddle, Covered Call)</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Fixed Income Calculator -->
+                
+                <!-- PART A: Bond Valuation & Price-Yield Curve -->
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
                     <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="percent" class="w-4 h-4 text-sky-500"></i> พันธบัตรและการวัดความเสี่ยงอัตราดอกเบี้ย
+                        <i data-lucide="percent" class="w-4 h-4 text-sky-500"></i> การวิเคราะห์ความเสี่ยงดอกเบี้ยพันธบัตร (Price-Yield Convexity)
                     </h3>
+
+                    <!-- Bond Sliders -->
                     <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">Coupon Rate (%):</label>
-                            <input type="number" id="bond-coupon" value="4.0" step="0.1" oninput="recalcBond()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="flex justify-between mb-1"><span>Coupon Rate:</span><b id="lbl-bond-coupon" class="text-sky-500 mono-num">4.0%</b></div>
+                            <input type="range" id="b-coupon" min="0.0" max="12.0" step="0.25" value="4.0" oninput="runBondUpdate()" class="w-full accent-sky-500">
                         </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">YTM ที่ต้องการ (%):</label>
-                            <input type="number" id="bond-ytm" value="5.0" step="0.1" oninput="recalcBond()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="flex justify-between mb-1"><span>Market Yield (YTM):</span><b id="lbl-bond-ytm" class="text-amber-500 mono-num">5.0%</b></div>
+                            <input type="range" id="b-ytm" min="1.0" max="15.0" step="0.25" value="5.0" oninput="runBondUpdate()" class="w-full accent-amber-500">
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
                             <label class="text-slate-400 block mb-1">อายุคงเหลือ (ปี):</label>
-                            <input type="number" id="bond-years" value="5" oninput="recalcBond()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            <input type="number" id="b-years" value="5" min="1" max="30" oninput="runBondUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
                         </div>
                         <div>
-                            <label class="text-slate-400 block mb-1">การจ่ายดอกเบี้ย:</label>
-                            <select id="bond-freq" onchange="recalcBond()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2">
+                            <label class="text-slate-400 block mb-1">การจ่ายคูปอง:</label>
+                            <select id="b-freq" onchange="runBondUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs">
                                 <option value="2">ปีละ 2 ครั้ง (Semi-annual)</option>
                                 <option value="1">ปีละ 1 ครั้ง (Annual)</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-                        <div class="flex justify-between"><span>ราคาพันธบัตร (Price):</span><b class="text-slate-900 dark:text-white mono-num" id="bond-price">956.24 บาท</b></div>
-                        <div class="flex justify-between"><span>Macaulay Duration:</span><b class="text-sky-500 mono-num" id="bond-mac-dur">4.49 ปี</b></div>
-                        <div class="flex justify-between"><span>Modified Duration (D*):</span><b class="text-emerald-500 mono-num" id="bond-mod-dur">4.38 ปี</b></div>
-                        <div class="flex justify-between"><span>Convexity (C):</span><b class="text-amber-500 mono-num" id="bond-convexity">23.15</b></div>
+                    <!-- Bond Stats Output -->
+                    <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">ราคาพันธบัตร</div>
+                            <div id="out-b-price" class="text-sm font-bold text-slate-800 dark:text-white mono-num">956.24 ฿</div>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Mac Duration</div>
+                            <div id="out-b-mac" class="text-sm font-bold text-sky-500 mono-num">4.49 ปี</div>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Mod Duration</div>
+                            <div id="out-b-mod" class="text-sm font-bold text-emerald-500 mono-num">4.38 ปี</div>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Convexity (C)</div>
+                            <div id="out-b-cvx" class="text-sm font-bold text-amber-500 mono-num">23.15</div>
+                        </div>
                     </div>
+
+                    <!-- Price-Yield Convexity Chart -->
+                    <div class="h-56 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <canvas id="bondConvexityChart"></canvas>
+                    </div>
+                    <p class="text-[11px] text-slate-400 italic text-center">
+                        * เส้นสีส้มคือ Price-Yield Curve จริง (Convex), เส้นประสีฟ้าคือการประมาณการแบบเส้นตรงด้วย Duration
+                    </p>
                 </div>
 
-                <!-- Options Payoff Modeler -->
+                <!-- PART B: Options Strategy Payoff Modeler -->
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
                     <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="layers" class="w-4 h-4 text-amber-500"></i> Options Strategy Payoff Modeler
+                        <i data-lucide="layers" class="w-4 h-4 text-amber-500"></i> เครื่องมือจำลอง Options Strategy Payoff แบบเรียลไทม์
                     </h3>
+
+                    <!-- Strategy Selector & Spot Price -->
                     <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
-                            <label class="text-slate-400 block mb-1">เลือกกลยุทธ์ Options:</label>
-                            <select id="options-strat" onchange="renderOptionsPayoff()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2">
-                                <option value="bull_call">Bull Call Spread (จำกัดความเสี่ยง)</option>
-                                <option value="straddle">Long Straddle (เก็งความผันผวนสูง)</option>
-                                <option value="covered_call">Covered Call (สร้างกระแสเงินสด)</option>
+                            <label class="text-slate-400 block mb-1">กลยุทธ์ Options:</label>
+                            <select id="opt-strat" onchange="runOptionsUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 font-medium">
+                                <option value="bull_call">Bull Call Spread (จำกัดความเสี่ยงขาขึ้น)</option>
+                                <option value="bear_put">Bear Put Spread (เก็งกำไรขาลงจำกัดเสี่ยง)</option>
+                                <option value="straddle">Long Straddle (เก็งความผันผวนสูงมาก)</option>
+                                <option value="covered_call">Covered Call (ถือหุ้น+ขาย Call รับกระแส)</option>
+                                <option value="long_call">Long Call (เก็งขาขึ้นเดี่ยว)</option>
+                                <option value="long_put">Long Put (เก็งขาลงเดี่ยว / ประกันความเสี่ยง)</option>
                             </select>
                         </div>
                         <div>
                             <label class="text-slate-400 block mb-1">ราคาหุ้นอ้างอิง Spot ($):</label>
-                            <input type="number" id="options-spot" value="100" oninput="renderOptionsPayoff()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num">
+                            <input type="number" id="opt-spot" value="100" min="20" max="300" oninput="runOptionsUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 mono-num font-bold">
                         </div>
                     </div>
 
-                    <div class="h-48 bg-slate-50 dark:bg-slate-950 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <!-- Strike 1, Strike 2, Premiums -->
+                    <div class="grid grid-cols-4 gap-2 text-xs">
+                        <div>
+                            <label class="text-slate-400 block mb-1">Strike 1 ($):</label>
+                            <input type="number" id="opt-k1" value="95" oninput="runOptionsUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">Premium 1 ($):</label>
+                            <input type="number" id="opt-p1" value="6.0" step="0.5" oninput="runOptionsUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">Strike 2 ($):</label>
+                            <input type="number" id="opt-k2" value="105" oninput="runOptionsUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">Premium 2 ($):</label>
+                            <input type="number" id="opt-p2" value="2.0" step="0.5" oninput="runOptionsUpdate()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-1.5 mono-num">
+                        </div>
+                    </div>
+
+                    <!-- Options Real-time Payoff Chart -->
+                    <div class="h-56 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
                         <canvas id="optionsPayoffChart"></canvas>
                     </div>
-                    <div class="flex justify-between text-xs text-slate-400">
-                        <span>Max Profit: <b class="text-emerald-500 mono-num" id="opt-profit">+$600</b></span>
-                        <span>Max Loss: <b class="text-rose-500 mono-num" id="opt-loss">-$400</b></span>
-                        <span>Breakeven: <b class="text-amber-500 mono-num" id="opt-be">$104.00</b></span>
+
+                    <!-- Real-Time Max Profit / Loss / Breakeven Output -->
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="p-2 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Max Profit</div>
+                            <div id="out-opt-profit" class="font-bold text-emerald-500 mono-num">+$600.00</div>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Max Loss</div>
+                            <div id="out-opt-loss" class="font-bold text-rose-500 mono-num">-$400.00</div>
+                        </div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">Breakeven ($)</div>
+                            <div id="out-opt-be" class="font-bold text-amber-500 mono-num">$99.00</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ================================================================ -->
-        <!-- MODULE 4: MPT & MARKET SENTIMENT (MPT, SEPA, SENTIMENT) -->
+        <!-- MODULE 4: MPT PORTFOLIO THEORY & DYNAMIC ASSET WEIGHTS -->
         <!-- ================================================================ -->
         <section id="view-mod-portfolio" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-indigo-900/40 via-slate-900 to-slate-900 p-6 rounded-2xl border border-indigo-800/40 shadow-sm">
-                <span class="px-2.5 py-1 bg-indigo-500/20 text-indigo-400 text-xs font-semibold rounded-md border border-indigo-500/30 inline-block mb-2">
-                    🌐 Module 4: Portfolio Theory & Market Intelligence
-                </span>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">ทฤษฎีการจัดพอร์ต (MPT) & ความรู้สึกของตลาด (Sentiment)</h2>
-                <p class="text-xs text-slate-400 mt-1">จัดพอร์ตสินทรัพย์ผสม (หุ้น, พันธบัตร, ทองคำ) ด้วย Efficient Frontier, สแกนหุ้นขาขึ้นด้วย SEPA® และตรวจจับ Sentiment จากข่าว</p>
+            <div class="bg-gradient-to-r from-indigo-900/30 via-slate-900/60 to-slate-900/80 p-6 rounded-3xl border border-indigo-800/30 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="px-2.5 py-1 bg-indigo-500/20 text-indigo-400 text-xs font-semibold rounded-md border border-indigo-500/30 inline-block mb-2">
+                        🌐 Module 4: Modern Portfolio Theory (MPT) & Sharpe Ratio
+                    </span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">ทฤษฎีการจัดพอร์ตการลงทุน (Markowitz) & Auto-balancing Weights</h2>
+                    <p class="text-xs text-slate-400 mt-1">เลื่อนปรับน้ำหนักสินทรัพย์ หุ้น / พันธบัตร / ทองคำ โดยระบบจะปรับสมดุลให้ครบ 100% อัตโนมัติ พร้อมคำนวณผลตอบแทน ความเสี่ยง และจุดบน Efficient Frontier</p>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- MPT Efficient Frontier Card -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left: Auto-Balancing Sliders & Portfolio Metrics -->
+                <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-5">
                     <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-500"></i> Markowitz Efficient Frontier (Max Sharpe)
+                        <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i> ปรับสัดส่วนน้ำหนักสินทรัพย์ (Asset Weights)
                     </h3>
-                    <div class="h-48 flex items-center justify-center">
-                        <canvas id="mptChart"></canvas>
+
+                    <div class="space-y-4 text-xs">
+                        <!-- Weight 1: Equities -->
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> หุ้นสามัญ (Equities)
+                                </span>
+                                <b id="lbl-w-eq" class="text-sky-500 font-bold mono-num">50%</b>
+                            </div>
+                            <input type="range" id="slider-w-eq" min="0" max="100" value="50" oninput="handleWeightChange('eq')" class="w-full accent-sky-500">
+                            <div class="flex justify-between text-[10px] text-slate-400">
+                                <span>Exp Ret: 12.0%</span>
+                                <span>Vol: 18.0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Weight 2: Bonds -->
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> พันธบัตรรัฐบาล (Bonds)
+                                </span>
+                                <b id="lbl-w-bd" class="text-emerald-500 font-bold mono-num">30%</b>
+                            </div>
+                            <input type="range" id="slider-w-bd" min="0" max="100" value="30" oninput="handleWeightChange('bd')" class="w-full accent-emerald-500">
+                            <div class="flex justify-between text-[10px] text-slate-400">
+                                <span>Exp Ret: 4.5%</span>
+                                <span>Vol: 5.0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Weight 3: Gold -->
+                        <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> ทองคำแท่ง (Gold)
+                                </span>
+                                <b id="lbl-w-gd" class="text-amber-500 font-bold mono-num">20%</b>
+                            </div>
+                            <input type="range" id="slider-w-gd" min="0" max="100" value="20" oninput="handleWeightChange('gd')" class="w-full accent-amber-500">
+                            <div class="flex justify-between text-[10px] text-slate-400">
+                                <span>Exp Ret: 7.0%</span>
+                                <span>Vol: 12.0%</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                        <div class="bg-slate-50 dark:bg-slate-950 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-                            <div class="text-[10px] text-slate-400">Exp Return</div>
-                            <div class="font-bold text-emerald-500 mono-num">13.20%</div>
+
+                    <!-- Portfolio Metrics Output -->
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs pt-1">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">ผลตอบแทนคาดหวัง E(Rp)</div>
+                            <div id="out-mpt-ret" class="text-base font-bold text-emerald-500 mono-num">8.75%</div>
                         </div>
-                        <div class="bg-slate-50 dark:bg-slate-950 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-                            <div class="text-[10px] text-slate-400">Volatility</div>
-                            <div class="font-bold text-sky-500 mono-num">10.45%</div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-[10px] text-slate-400">ความผันผวน σp</div>
+                            <div id="out-mpt-vol" class="text-base font-bold text-sky-500 mono-num">9.82%</div>
                         </div>
-                        <div class="bg-slate-50 dark:bg-slate-950 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
                             <div class="text-[10px] text-slate-400">Sharpe Ratio</div>
-                            <div class="font-bold text-amber-500 mono-num">1.02</div>
+                            <div id="out-mpt-sharpe" class="text-base font-bold text-amber-500 mono-num">0.64</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- SEPA Scanner & Sentiment Card -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i> Minervini SEPA® & Market Sentiment
-                    </h3>
+                <!-- Right: Interactive Efficient Frontier & Doughnut -->
+                <div class="lg:col-span-7 space-y-5">
                     
-                    <div class="flex gap-2">
-                        <input type="text" id="sepa-ticker-in" value="NVDA" class="w-24 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-center font-bold uppercase mono-num">
-                        <button onclick="scanSEPA()" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">
-                            สแกนเกณฑ์ SEPA Stage 2 & Sentiment
-                        </button>
+                    <!-- Efficient Frontier Scatter Chart -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="crosshair" class="w-4 h-4 text-indigo-500"></i> Markowitz Efficient Frontier Curve
+                            </h3>
+                            <span class="text-[11px] text-slate-400 font-mono">Rf = 2.5%</span>
+                        </div>
+                        <div class="h-60">
+                            <canvas id="mptFrontierChart"></canvas>
+                        </div>
+                        <p class="text-[11px] text-slate-400 text-center">
+                            * จุดสีแดงคือพอร์ตของคุณในปัจจุบัน จุดสีเขียวคือพอร์ตที่ให้ Sharpe Ratio สูงสุด
+                        </p>
                     </div>
 
-                    <div class="space-y-2 text-xs">
-                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-lg flex justify-between border border-slate-200 dark:border-slate-800">
-                            <span>1. ราคา > 150-day & 200-day SMA</span>
-                            <b class="text-emerald-500">✓ PASS</b>
+                    <!-- Doughnut Allocation -->
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-around gap-4">
+                        <div class="w-36 h-36 relative shrink-0">
+                            <canvas id="mptDoughnutChart"></canvas>
                         </div>
-                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-lg flex justify-between border border-slate-200 dark:border-slate-800">
-                            <span>2. เส้น 50-day SMA > 150-day & 200-day SMA</span>
-                            <b class="text-emerald-500">✓ PASS</b>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-lg flex justify-between border border-slate-200 dark:border-slate-800">
-                            <span>3. ราคาห่างจากจุดสูงสุด 52 สัปดาห์ ≤ 25%</span>
-                            <b class="text-emerald-500">✓ PASS (-5%)</b>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 dark:bg-slate-950 rounded-lg flex justify-between border border-slate-200 dark:border-slate-800">
-                            <span>4. Sentiment ข่าว & นักวิเคราะห์ (finance-sentiment)</span>
-                            <b class="text-sky-500">82% Bullish</b>
+                        <div class="space-y-2 text-xs">
+                            <div class="font-bold text-slate-800 dark:text-slate-100">สรุปการจัดสรรน้ำหนัก (Weights):</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-sky-500"></span> หุ้นสามัญ: <b id="text-w-eq" class="mono-num">50%</b></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-emerald-500"></span> พันธบัตร: <b id="text-w-bd" class="mono-num">30%</b></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-amber-500"></span> ทองคำแท่ง: <b id="text-w-gd" class="mono-num">20%</b></div>
                         </div>
                     </div>
                 </div>
@@ -557,236 +820,299 @@
         </section>
 
         <!-- ================================================================ -->
-        <!-- MODULE 5: CERTIFICATION EXAM HUB (IC, AISA, CFP) -->
+        <!-- MODULE 5: UNIVERSITY EXAM QBANK & MISTAKE NOTEBOOK -->
         <!-- ================================================================ -->
         <section id="view-mod-exam" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-rose-900/40 via-slate-900 to-slate-900 p-6 rounded-2xl border border-rose-800/40 shadow-sm">
-                <span class="px-2.5 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-md border border-rose-500/30 inline-block mb-2">
-                    🎯 Module 5: Certification Simulator
-                </span>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">ศูนย์ฝึกทำข้อสอบใบอนุญาตการเงิน (IC Complex, AISA, CFP)</h2>
-                <p class="text-xs text-slate-400 mt-1">แบบฝึกหัดข้อสอบพร้อมระบบตรวจคำตอบทันที และแสดงขั้นตอนการคำนวณอย่างละเอียดทีละบรรทัด</p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-5">
-                <div class="flex justify-between items-center flex-wrap gap-2">
-                    <span class="px-3 py-1 bg-sky-500/20 text-sky-500 text-xs font-bold rounded-full">
-                        ข้อสอบ IC Complex P2 • ข้อที่ 1/5
+            <div class="bg-gradient-to-r from-rose-900/30 via-slate-900/60 to-slate-900/80 p-6 rounded-3xl border border-rose-800/30 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="px-2.5 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-md border border-rose-500/30 inline-block mb-2">
+                        🎯 Module 5: University Exam QBank & Mistake Notebook
                     </span>
-                    <span class="text-xs text-slate-400">หัวข้อ: การคำนวณ Modified Duration</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">คลังข้อสอบการเงินมหาวิทยาลัย & สมุดบันทึกทบทวนข้อผิด</h2>
+                    <p class="text-xs text-slate-400 mt-1">คัดสรรโจทย์ครอบคลุม 5 วิชาหลัก แสดงวิธีทำละเอียดทีละขั้นตอน พร้อมบันทึกข้อที่เคยทำผิดไว้ฝึกซ้ำจนกว่าจะได้เกรด A</p>
                 </div>
-
-                <p class="text-sm font-medium text-slate-800 dark:text-slate-100 leading-relaxed">
-                    <b>โจทย์:</b> พันธบัตรรัฐบาลอายุ 5 ปี อัตราดอกเบี้ยหน้าตั๋ว (Coupon Rate) 4.0% ต่อปี จ่ายดอกเบี้ยปีละ 2 ครั้ง ถ้าอัตราผลตอบแทนที่ต้องการของตลาด (YTM) เท่ากับ 5.0% ต่อปี พันธบัตรนี้จะมี <b>Modified Duration (\(D^*\))</b> เท่าใด และหากอัตราผลตอบแทนในตลาดปรับเพิ่มขึ้น 0.50% ราคาของพันธบัตรจะเปลี่ยนแปลงไปประมาณกี่เปอร์เซ็นต์?
-                </p>
-
-                <div class="space-y-2.5 text-xs">
-                    <label class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800/80 rounded-xl cursor-pointer border border-slate-200 dark:border-slate-800 transition">
-                        <input type="radio" name="quiz-opt" value="A" class="text-sky-500">
-                        <span>ก. Modified Duration = 4.38 ปี และราคาพันธบัตรจะลดลงประมาณ -2.19%</span>
-                    </label>
-                    <label class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800/80 rounded-xl cursor-pointer border border-slate-200 dark:border-slate-800 transition">
-                        <input type="radio" name="quiz-opt" value="B" class="text-sky-500">
-                        <span>ข. Modified Duration = 5.00 ปี และราคาพันธบัตรจะลดลงประมาณ -2.50%</span>
-                    </label>
-                    <label class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800/80 rounded-xl cursor-pointer border border-slate-200 dark:border-slate-800 transition">
-                        <input type="radio" name="quiz-opt" value="C" class="text-sky-500">
-                        <span>ค. Modified Duration = 3.95 ปี และราคาพันธบัตรจะเพิ่มขึ้นประมาณ +1.98%</span>
-                    </label>
-                </div>
-
-                <div class="flex gap-3">
-                    <button onclick="checkExamQuiz()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-xs transition shadow">
-                        ตรวจคำตอบ & ดูขั้นตอนคำนวณ CoT
+                <div class="flex items-center gap-2">
+                    <button onclick="clearMistakeNotebook()" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-rose-600 hover:text-white text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold transition">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 inline mr-1"></i> ล้างประวัติข้อผิด
                     </button>
                 </div>
+            </div>
 
-                <div id="quiz-cot-box" class="hidden cot-callout p-4 rounded-xl text-xs space-y-2 mt-3 text-slate-800 dark:text-slate-200">
-                    <div class="font-bold text-amber-500 text-sm flex items-center gap-1.5">
-                        <i data-lucide="check-circle" class="w-4 h-4"></i> ถูกต้อง! คำตอบคือ ข้อ ก.
-                    </div>
-                    <p class="font-semibold text-slate-700 dark:text-slate-300">Chain-of-Thought (ขั้นตอนการคำนวณอย่างเป็นระบบ):</p>
-                    <div class="space-y-1 font-mono text-[11px] text-slate-600 dark:text-slate-300">
-                        <div>1. คำนวณราคาพันธบัตรปัจจุบัน (\(P_0\)) ที่ YTM 5% (งวดละ 2.5%): \(P_0 = 956.24\) บาท</div>
-                        <div>2. คำนวณ Macaulay Duration (\(D_{mac}\)): ผลรวมถ่วงน้ำหนักของกระแสเงินสดได้ \(D_{mac} = 4.49\) ปี</div>
-                        <div>3. คำนวณ Modified Duration: \(D^* = \frac{D_{mac}}{1 + y/m} = \frac{4.49}{1 + 0.025} = 4.38\) ปี</div>
-                        <div>4. ประเมินการเปลี่ยนแปลงของราคา: \(\%\Delta P \approx -D^* \times \Delta y = -4.38 \times (+0.50\%) = -2.19\%\)</div>
-                    </div>
-                </div>
+            <!-- Category Filter Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs">
+                <button onclick="filterQuiz('all')" id="qfilter-all" class="qfilter-btn active px-3.5 py-2 rounded-xl font-bold bg-sky-600 text-white shadow">
+                    🌟 ทั้งหมด (All)
+                </button>
+                <button onclick="filterQuiz('tvm')" id="qfilter-tvm" class="qfilter-btn px-3.5 py-2 rounded-xl font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                    ⏱️ TVM & Capital Budgeting
+                </button>
+                <button onclick="filterQuiz('bond')" id="qfilter-bond" class="qfilter-btn px-3.5 py-2 rounded-xl font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                    📜 ตราสารหนี้ & Duration
+                </button>
+                <button onclick="filterQuiz('equity')" id="qfilter-equity" class="qfilter-btn px-3.5 py-2 rounded-xl font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                    📊 ประเมินมูลค่าหุ้น DCF
+                </button>
+                <button onclick="filterQuiz('derivatives')" id="qfilter-derivatives" class="qfilter-btn px-3.5 py-2 rounded-xl font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                    ⚡ สัญญาอนุพันธ์ & Options
+                </button>
+                <button onclick="filterQuiz('mpt')" id="qfilter-mpt" class="qfilter-btn px-3.5 py-2 rounded-xl font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                    🌐 พอร์ตโฟลิโอ & CAPM
+                </button>
+                <button onclick="filterQuiz('mistakes')" id="qfilter-mistakes" class="qfilter-btn px-3.5 py-2 rounded-xl font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-white flex items-center gap-1.5 transition">
+                    <i data-lucide="bookmark" class="w-3.5 h-3.5"></i> สมุดทบทวนข้อผิด (<span id="mistake-badge-count">0</span>)
+                </button>
+            </div>
+
+            <!-- Quiz Cards Display Area -->
+            <div id="quiz-cards-container" class="space-y-6">
+                <!-- Injected via JavaScript -->
             </div>
         </section>
 
     </main>
 
-    <!-- ==================================================================== -->
-    <!-- 3. SETTINGS MODAL -->
-    <!-- ==================================================================== -->
-    <div id="settings-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-                <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <i data-lucide="settings" class="w-5 h-5 text-sky-500"></i> ตั้งค่า AI Engine & API Key
-                </h3>
-                <button onclick="toggleSettingsModal(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+    <!-- FOOTER -->
+    <footer class="mt-16 border-t border-slate-200 dark:border-slate-800 py-8 bg-white dark:bg-slate-950 text-slate-400 text-xs">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="graduation-cap" class="w-5 h-5 text-sky-500"></i>
+                <span><b>FinStudy AI</b> • แพลตฟอร์มติวการเงิน & แบบจำลองเชิงปริมาณระดับมหาวิทยาลัย</span>
             </div>
-
-            <div class="space-y-3.5 text-xs">
-                <div>
-                    <label class="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Google Gemini API Key:</label>
-                    <input type="password" id="modal-gemini-key" placeholder="AIzaSy..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-900 dark:text-white">
-                    <p class="text-[10px] text-slate-500 mt-1">คีย์จะถูกบันทึกในเบราว์เซอร์ของเครื่องคุณเพื่อใช้เรียก Gemini 2.0 Flash</p>
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-                <button onclick="toggleSettingsModal(false)" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-xs">ยกเลิก</button>
-                <button onclick="saveSettings()" class="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-xs">บันทึก</button>
+            <div>
+                Powered by Google Gemini 3 Flash • Real-time Reactive Financial Engines
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- ==================================================================== -->
-    <!-- 4. JAVASCRIPT APP LOGIC -->
-    <!-- ==================================================================== -->
+    <!-- JAVASCRIPT APP ENGINE -->
     <script>
-        let currentMode = 'mod-study';
-        let currentTone = 'academic';
-        let optionsChartInstance = null;
-        let mptChartInstance = null;
+        // ==========================================
+        // 1. GLOBAL STATE & THEME MANAGEMENT
+        // ==========================================
+        let currentTab = 'mod-ai';
+        let currentTone = 'eli5';
         let extractedDocText = '';
+        let dcfBarChartInstance = null;
+        let bondChartInstance = null;
+        let optionsChartInstance = null;
+        let mptFrontierChartInstance = null;
+        let mptDoughnutChartInstance = null;
+        let sensitivityMode = 'price'; // 'price' or 'ev'
+        let mistakeNotebook = JSON.parse(localStorage.getItem('finstudy_mistakes') || '[]');
 
+        // Initialize Lucide Icons
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             initTheme();
-            recalcDCF();
-            recalcBond();
-            initMPTChart();
-            setupDropZone();
+            initCountdown();
+            runValuationUpdate();
+            runBondUpdate();
+            runOptionsUpdate();
+            initMPTCharts();
+            renderQuizCards('all');
+            updateMistakeBadge();
         });
 
-        // Theme Toggle (Dark / Light Mode)
         function initTheme() {
-            const savedTheme = localStorage.getItem('finstudy_theme') || 'dark';
-            if (savedTheme === 'light') {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon').setAttribute('data-lucide', 'moon');
-            } else {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon').setAttribute('data-lucide', 'sun');
-            }
-            lucide.createIcons();
-        }
-
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.contains('dark');
+            const isDark = localStorage.getItem('finstudy_theme') !== 'light';
             if (isDark) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('finstudy_theme', 'light');
-                document.getElementById('theme-icon').setAttribute('data-lucide', 'moon');
-            } else {
                 document.documentElement.classList.add('dark');
-                localStorage.setItem('finstudy_theme', 'dark');
-                document.getElementById('theme-icon').setAttribute('data-lucide', 'sun');
+            } else {
+                document.documentElement.classList.remove('dark');
             }
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('finstudy_theme', isDark ? 'dark' : 'light');
             lucide.createIcons();
+            // Re-render charts with new theme colors
+            runValuationUpdate();
+            runBondUpdate();
+            runOptionsUpdate();
+            initMPTCharts();
         }
 
-        // Navigation
-        function switchMode(mode) {
-            currentMode = mode;
-            ['mod-study', 'mod-valuation', 'mod-quant', 'mod-portfolio', 'mod-exam'].forEach(m => {
-                document.getElementById(`view-${m}`).classList.toggle('hidden', m !== mode);
-                const btn = document.getElementById(`nav-${m}`);
-                if (m === mode) {
-                    btn.className = "w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition active-nav-btn";
-                } else {
-                    btn.className = "w-full text-left px-3.5 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
-                }
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('nav .nav-btn').forEach(btn => {
+                btn.classList.remove('bg-sky-500/10', 'text-sky-600', 'dark:text-sky-400', 'border', 'border-sky-500/20', 'active');
+                btn.classList.add('text-slate-500', 'dark:text-slate-400');
             });
-            if (mode === 'mod-quant') {
-                setTimeout(renderOptionsPayoff, 100);
+
+            const activeBtn = document.getElementById('tab-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-sky-500/10', 'text-sky-600', 'dark:text-sky-400', 'border', 'border-sky-500/20', 'active');
+                activeBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
+            }
+
+            const sections = ['view-mod-ai', 'view-mod-valuation', 'view-mod-fixedincome', 'view-mod-portfolio', 'view-mod-exam'];
+            sections.forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.classList.add('hidden');
+            });
+
+            const activeSec = document.getElementById('view-' + tabId);
+            if (activeSec) activeSec.classList.remove('hidden');
+
+            lucide.createIcons();
+
+            // Trigger chart resizes
+            if (tabId === 'mod-valuation') runValuationUpdate();
+            if (tabId === 'mod-fixedincome') { runBondUpdate(); runOptionsUpdate(); }
+            if (tabId === 'mod-portfolio') initMPTCharts();
+        }
+
+        // ==========================================
+        // 2. EXAM TARGET & COUNTDOWN PLANNER
+        // ==========================================
+        let countdownTimer = null;
+        function initCountdown() {
+            const savedTarget = localStorage.getItem('finstudy_exam_target') || 'corp_fin';
+            const savedDate = localStorage.getItem('finstudy_exam_date');
+
+            const select = document.getElementById('exam-target-select');
+            if (select) select.value = savedTarget;
+
+            const datePicker = document.getElementById('exam-date-picker');
+            if (savedDate && datePicker) {
+                datePicker.value = savedDate;
+            } else if (datePicker) {
+                // Default: 3 weeks from now
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 21);
+                datePicker.value = defaultDate.toISOString().split('T')[0];
+            }
+
+            updateExamTarget();
+        }
+
+        function updateExamTarget() {
+            const select = document.getElementById('exam-target-select');
+            const customInput = document.getElementById('custom-target-input');
+            const datePicker = document.getElementById('exam-date-picker');
+            
+            const targetVal = select.value;
+            if (targetVal === 'custom') {
+                customInput.classList.remove('hidden');
+            } else {
+                customInput.classList.add('hidden');
+            }
+
+            const targetName = targetVal === 'custom' && customInput.value.trim() 
+                ? customInput.value.trim() 
+                : select.options[select.selectedIndex].text;
+
+            const examDate = datePicker.value;
+            localStorage.setItem('finstudy_exam_target', targetVal);
+            if (targetVal === 'custom') localStorage.setItem('finstudy_custom_target_name', customInput.value);
+            localStorage.setItem('finstudy_exam_date', examDate);
+
+            document.getElementById('header-target-label').textContent = 'นับถอยหลัง ' + targetName + ':';
+
+            if (countdownTimer) clearInterval(countdownTimer);
+            tickCountdown(examDate);
+            countdownTimer = setInterval(() => tickCountdown(examDate), 1000);
+        }
+
+        function tickCountdown(targetDateStr) {
+            if (!targetDateStr) return;
+            const target = new Date(targetDateStr + 'T09:00:00');
+            const now = new Date();
+            const diff = target - now;
+
+            const pacingEl = document.getElementById('header-pacing-text');
+            const statusBadge = document.getElementById('target-badge-status');
+
+            if (diff <= 0) {
+                document.getElementById('cd-days').textContent = '00';
+                document.getElementById('cd-hours').textContent = '00';
+                document.getElementById('cd-mins').textContent = '00';
+                document.getElementById('cd-secs').textContent = '00';
+                if (pacingEl) pacingEl.textContent = '🔥 วันนี้คือวันสอบ! ขอให้ทำคะแนนได้เกรด A+ ครับ!';
+                if (statusBadge) {
+                    statusBadge.textContent = 'ถึงกำหนดสอบแล้ว';
+                    statusBadge.className = 'px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 font-semibold';
+                }
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+            document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+
+            const recQuestions = Math.max(5, Math.min(25, Math.round(120 / Math.max(1, days))));
+            if (pacingEl) pacingEl.textContent = `เหลือ ${days} วัน แนะนำทบทวน ${recQuestions} ข้อ/วัน`;
+            if (statusBadge) {
+                statusBadge.textContent = `พร้อมสอบในอีก ${days} วัน`;
+                statusBadge.className = 'px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold';
             }
         }
 
+        // ==========================================
+        // 3. MODULE 1: AI TUTOR & HOMEWORK SOLVER
+        // ==========================================
         function setTone(tone) {
             currentTone = tone;
-            const btnAcad = document.getElementById('btn-tone-academic');
-            const btnEli5 = document.getElementById('btn-tone-eli5');
-            if (tone === 'academic') {
-                btnAcad.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 text-white transition";
-                btnEli5.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition";
+            const btnEli5 = document.getElementById('tone-eli5');
+            const btnAcad = document.getElementById('tone-academic');
+            if (tone === 'eli5') {
+                btnEli5.className = 'px-3 py-1 rounded-md text-xs font-semibold transition bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm';
+                btnAcad.className = 'px-3 py-1 rounded-md text-xs font-semibold transition text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white';
             } else {
-                btnAcad.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition";
-                btnEli5.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white transition";
+                btnAcad.className = 'px-3 py-1 rounded-md text-xs font-semibold transition bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm';
+                btnEli5.className = 'px-3 py-1 rounded-md text-xs font-semibold transition text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white';
             }
         }
 
-        // Settings Modal
-        function toggleSettingsModal(show) {
-            document.getElementById('settings-modal').classList.toggle('hidden', !show);
-            if (show) {
-                document.getElementById('modal-gemini-key').value = localStorage.getItem('finstudy_gemini_key') || '';
-            }
-        }
+        async function handlePDFUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-        function saveSettings() {
-            const key = document.getElementById('modal-gemini-key').value.trim();
-            localStorage.setItem('finstudy_gemini_key', key);
-            toggleSettingsModal(false);
-            alert("บันทึกการตั้งค่าแล้ว!");
-        }
+            document.getElementById('doc-status').textContent = 'กำลังประมวลผล...';
+            const reader = new FileReader();
+            reader.onload = async function() {
+                try {
+                    const typedarray = new Uint8Array(this.result);
+                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                    let text = '';
+                    const maxPages = Math.min(pdf.numPages, 10);
+                    for (let i = 1; i <= maxPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        const pageText = content.items.map(item => item.str).join(' ');
+                        text += pageText + ' ';
+                    }
+                    extractedDocText = text;
+                    document.getElementById('doc-status').textContent = `อ่านแล้ว ${pdf.numPages} หน้า (${text.split(' ').length} คำ)`;
+                    document.getElementById('pdf-name').textContent = file.name;
+                    document.getElementById('pdf-preview-info').classList.remove('hidden');
 
-        // Document Drop & PDF Extract
-        function setupDropZone() {
-            const drop = document.getElementById('drop-zone');
-            const fileIn = document.getElementById('file-input');
-            drop.addEventListener('click', () => fileIn.click());
-            drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('border-sky-500'); });
-            drop.addEventListener('dragleave', () => drop.classList.remove('border-sky-500'));
-            drop.addEventListener('drop', (e) => {
-                e.preventDefault();
-                drop.classList.remove('border-sky-500');
-                if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
-            });
-            fileIn.addEventListener('change', (e) => {
-                if (e.target.files.length) processFile(e.target.files[0]);
-            });
-        }
-
-        async function processFile(file) {
-            document.getElementById('doc-status').textContent = "กำลังประมวลผล...";
-            if (file.name.endsWith('.pdf')) {
-                const buf = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-                let t = '';
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const p = await pdf.getPage(i);
-                    const c = await p.getTextContent();
-                    t += c.items.map(it => it.str).join(' ') + '\n';
+                    appendChatMessage('assistant', `📄 อ่านเอกสารเลกเชอร์ "${file.name}" เรียบร้อยแล้ว (${pdf.numPages} หน้า)! คุณสามารถถามคำถามหรือสั่งให้คำนวณโจทย์จากเอกสารนี้ได้เลยครับ`);
+                } catch (e) {
+                    document.getElementById('doc-status').textContent = 'อ่านไฟล์ไม่สำเร็จ';
+                    alert('เกิดข้อผิดพลาดในการอ่าน PDF: ' + e.message);
                 }
-                extractedDocText = t;
-            } else {
-                extractedDocText = await file.text();
-            }
-            document.getElementById('doc-preview').value = extractedDocText;
-            document.getElementById('char-count').textContent = `${extractedDocText.length} ตัวอักษร`;
-            document.getElementById('doc-status').textContent = `พร้อมใช้งาน: ${file.name}`;
-            document.getElementById('doc-status').className = "text-[10px] px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-full font-bold";
+            };
+            reader.readAsArrayBuffer(file);
         }
 
-        function clearDoc() {
+        function clearPDF() {
             extractedDocText = '';
-            document.getElementById('doc-preview').value = '';
-            document.getElementById('char-count').textContent = '0 ตัวอักษร';
-            document.getElementById('doc-status').textContent = 'ยังไม่มีเอกสาร';
-            document.getElementById('doc-status').className = "text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full";
+            document.getElementById('pdf-preview-info').classList.add('hidden');
+            document.getElementById('doc-status').textContent = 'ยังไม่มีไฟล์';
+            document.getElementById('pdf-upload').value = '';
         }
 
-        // Real-time Chat via Cloudflare Pages Function (/api/chat) or Direct Gemini
-        async function handleChatSubmit(e) {
-            e.preventDefault();
+        async function handleSendChat(event) {
+            event.preventDefault();
             const input = document.getElementById('chat-input');
             const query = input.value.trim();
             if (!query) return;
@@ -799,51 +1125,63 @@
             try {
                 const defaultKey = atob('QVEuQWI4Uk42SmJxeHEyYVo5S0ZEN2thX0t2LVYwb3hNWUxSN3UzdEtEODVwdDdHb1BYZXc=');
                 const userKey = localStorage.getItem('finstudy_gemini_key') || defaultKey;
-                // Try calling Cloudflare Function /api/chat
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        prompt: query,
-                        tone: currentTone,
-                        docContext: extractedDocText,
-                        userApiKey: userKey,
-                        model: 'gemini-3-flash-preview'
-                    })
-                });
-
+                
                 let reply = '';
-                if (res.ok) {
-                    const data = await res.json();
-                    reply = data.response;
-                } else {
-                    // Client-side fallback direct to Google Gemini API
-                    try {
-                        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userKey}`;
-                        const geminiRes = await fetch(url, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: [{ role: 'user', parts: [{ text: `You are FinStudy AI tutor for finance students (Tone: ${currentTone}). Context: ${extractedDocText.slice(0, 4000)}\n\nQuestion: ${query}` }] }]
-                            })
-                        });
-                        const geminiData = await geminiRes.json();
-                        reply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
-                    } catch (directErr) {
-                        console.warn("Direct Gemini call fallback error:", directErr);
-                    }
+                // First try direct client-side call to Google Gemini 3 Flash
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userKey}`;
+                    const geminiRes = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                role: 'user',
+                                parts: [{
+                                    text: `You are FinStudy AI, the ultimate finance tutor for university students studying corporate finance, investments, derivatives, and portfolio theory.
+Tone: ${currentTone === 'eli5' ? 'Explain Like I am 5 (ELI5) using clear analogies and conversational Thai' : 'Academic Rigor with formal finance formulas, step-by-step CoT mathematical reasoning, and LaTeX equations'}.
+Student Context from uploaded lecture slides: ${extractedDocText.slice(0, 4000)}
 
-                    if (!reply) {
-                        reply = (currentTone === 'eli5') 
-                            ? `💡 **[โหมด ELI5: อธิบายให้เห็นภาพ]**\nสำหรับคำถาม "${query}" ให้ลองมองเหมือนการขับรถครับ ความเร็วคือผลตอบแทน ส่วนเบรกคือการบริหารความเสี่ยง ในการเรียนการเงิน เรื่องสำคัญที่สุดคือมูลค่าเงินตามเวลา (Time Value of Money) ครับ!`
-                            : `📐 **[โหมด Academic: มาตรฐานข้อสอบ IC/AISA/CFP]**\nคำถาม: "${query}"\nตามหลักการทางการเงิน ให้พิจารณาผลตอบแทนต่อความเสี่ยง (Risk-Adjusted Return) โดยใช้ Sharpe Ratio และการประเมินมูลค่าด้วย DCF เป็นแกนหลักครับ`;
+Question: ${query}`
+                                }]
+                            }]
+                        })
+                    });
+                    const geminiData = await geminiRes.json();
+                    reply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
+                } catch (apiErr) {
+                    console.warn("Direct Gemini call failed, trying edge proxy:", apiErr);
+                }
+
+                // If edge proxy is available
+                if (!reply) {
+                    const res = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            prompt: query,
+                            tone: currentTone,
+                            docContext: extractedDocText,
+                            userApiKey: userKey,
+                            model: 'gemini-3-flash-preview'
+                        })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        reply = data.response;
                     }
                 }
+
+                if (!reply) {
+                    reply = (currentTone === 'eli5')
+                        ? `💡 **[โหมด ELI5: อธิบายให้เห็นภาพ]**\nสำหรับคำถาม "${query}" ให้ลองมองเหมือนการลงทุนสร้างโรงงานครับ การเงินธุรกิจหัวใจสำคัญคือ Discounted Cash Flow (DCF) เปรียบเหมือนการมองว่าเงินในอนาคตมีค่าน้อยกว่าเงินในกระเป๋าวันนี้เนื่องจากมีอัตราคิดลด (WACC) ครับ!`
+                        : `📐 **[โหมด Academic: มาตรฐานวิชาการเงิน]**\nคำถาม: "${query}"\nตามหลักทฤษฎีการเงิน การประเมินมูลค่าต้องพิจารณากระแสเงินสดอิสระ (FCFF) และคิดลดด้วยอัตราผลตอบแทนที่ถ่วงน้ำหนัก (WACC) โดยคำนึงถึงความเสี่ยงตลาดตามแบบจำลอง CAPM ครับ`;
+                }
+
                 removeTyping(typingId);
                 appendChatMessage('assistant', reply);
             } catch (err) {
                 removeTyping(typingId);
-                appendChatMessage('assistant', `⚠️ ไม่สามารถเชื่อมต่อระบบ AI ได้: ${err.message}`);
+                appendChatMessage('assistant', `⚠️ ไม่สามารถประมวลผลได้: ${err.message}`);
             }
         }
 
@@ -855,28 +1193,37 @@
                     <div class="w-8 h-8 rounded-lg ${isUser ? 'bg-slate-700' : 'bg-sky-600'} flex items-center justify-center text-white shrink-0 text-xs font-bold shadow">
                         ${isUser ? 'ME' : 'AI'}
                     </div>
-                    <div class="${isUser ? 'bg-sky-600 text-white' : 'bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700/50'} rounded-2xl ${isUser ? 'rounded-tr-none' : 'rounded-tl-none'} p-4 text-xs leading-relaxed max-w-xl">
-                        ${text.replace(/\n/g, '<br>')}
+                    <div class="${isUser ? 'bg-sky-600 text-white' : 'bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700/60'} rounded-2xl ${isUser ? 'rounded-tr-sm' : 'rounded-tl-sm'} p-4 max-w-2xl text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">
+                        ${text}
                     </div>
-                </div>
-            `;
+                </div>`;
             box.insertAdjacentHTML('beforeend', html);
             box.scrollTop = box.scrollHeight;
+            if (window.renderMathInElement) {
+                renderMathInElement(box, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
         }
 
         function appendTypingIndicator() {
             const id = 'typing-' + Date.now();
             const html = `
                 <div id="${id}" class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0 text-xs font-bold">AI</div>
-                    <div class="bg-slate-100 dark:bg-slate-800/80 rounded-2xl rounded-tl-none p-3 text-xs text-slate-400 italic flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce"></span>
-                        <span class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-                        <span class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
-                        <span class="ml-1">กำลังคิดด้วย CoT Financial Reasoning...</span>
+                    <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shrink-0 text-xs font-bold shadow">
+                        AI
                     </div>
-                </div>
-            `;
+                    <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl rounded-tl-sm flex items-center gap-1.5 text-slate-400">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-bounce"></span>
+                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-bounce [animation-delay:0.2s]"></span>
+                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-bounce [animation-delay:0.4s]"></span>
+                    </div>
+                </div>`;
             document.getElementById('chat-messages').insertAdjacentHTML('beforeend', html);
             return id;
         }
@@ -890,68 +1237,26 @@
             document.getElementById('chat-messages').innerHTML = '';
         }
 
-        // Auto-Homework Solver
-        let hwData = null;
-        function solveHomework() {
-            const fcff = [120, 145, 170, 205, 240];
-            const wacc = 0.095;
-            const g = 0.03;
-            const debt = 150;
-            const cash = 80;
-            const shares = 20;
+        // Homework Solver with Dynamic Inputs
+        let latestHomeworkData = null;
+        function runHomeworkSolver() {
+            const wacc = parseFloat(document.getElementById('hw-wacc').value) / 100;
+            const g = parseFloat(document.getElementById('hw-g').value) / 100;
+            const debt = parseFloat(document.getElementById('hw-debt').value) || 0;
+            const cash = parseFloat(document.getElementById('hw-cash').value) || 0;
+            const shares = parseFloat(document.getElementById('hw-shares').value) || 1;
+
+            const fcffRaw = document.getElementById('hw-fcff-list').value;
+            const fcff = fcffRaw.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+            if (fcff.length === 0) {
+                alert('กรุณากรอกตัวเลข FCFF อย่างน้อย 1 ปีครับ');
+                return;
+            }
 
             let sumPv = 0;
             const steps = [];
-            fcff.forEach((cf, i) => {
-                const t = i + 1;
-                const df = Math.pow(1 + wacc, t);
-                const pv = cf / df;
-                sumPv += pv;
-                steps.push({ year: t, fcff: cf, df, pv });
-            });
-
-            const lastCf = fcff[fcff.length - 1];
-            const tv = (lastCf * (1 + g)) / (wacc - g);
-            const pvTv = tv / Math.pow(1 + wacc, fcff.length);
-            const ev = sumPv + pvTv;
-            const eq = ev + cash - debt;
-            const perShare = eq / shares;
-
-            hwData = { steps, wacc, g, tv, pvTv, ev, eq, perShare, debt, cash, shares };
-
-            document.getElementById('hw-ev').textContent = ev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
-            document.getElementById('hw-eq').textContent = eq.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
-            document.getElementById('hw-target').textContent = perShare.toFixed(2) + ' THB';
-            document.getElementById('hw-result-box').classList.remove('hidden');
-        }
-
-        function downloadHomeworkExcel() {
-            if (!hwData) solveHomework();
-            exportExcel("Finance_Homework_DCF_Solution", hwData);
-        }
-
-        // DCF Engine
-        function recalcDCF() {
-            const wacc = parseFloat(document.getElementById('input-wacc').value) / 100;
-            const g = parseFloat(document.getElementById('input-g').value) / 100;
-            const debt = parseFloat(document.getElementById('input-debt').value) || 0;
-            const shares = parseFloat(document.getElementById('input-shares').value) || 1;
-
-            document.getElementById('val-wacc').textContent = (wacc * 100).toFixed(1) + '%';
-            document.getElementById('val-g').textContent = (g * 100).toFixed(1) + '%';
-
-            const fcff = [
-                parseFloat(document.getElementById('fcff-1').value) || 0,
-                parseFloat(document.getElementById('fcff-2').value) || 0,
-                parseFloat(document.getElementById('fcff-3').value) || 0,
-                parseFloat(document.getElementById('fcff-4').value) || 0,
-                parseFloat(document.getElementById('fcff-5').value) || 0
-            ];
-
-            let sumPv = 0;
-            const steps = [];
-            fcff.forEach((cf, i) => {
-                const t = i + 1;
+            fcff.forEach((cf, idx) => {
+                const t = idx + 1;
                 const df = Math.pow(1 + wacc, t);
                 const pv = cf / df;
                 sumPv += pv;
@@ -962,28 +1267,228 @@
             const tv = (wacc > g) ? (lastCf * (1 + g)) / (wacc - g) : 0;
             const pvTv = tv / Math.pow(1 + wacc, fcff.length);
             const ev = sumPv + pvTv;
-            const eq = ev - debt;
+            const eq = ev + cash - debt;
             const perShare = eq / shares;
 
-            document.getElementById('dcf-pv-fcff').textContent = sumPv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
-            document.getElementById('dcf-pv-tv').textContent = pvTv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
-            document.getElementById('dcf-ev').textContent = ev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
-            document.getElementById('dcf-share-price').textContent = perShare.toFixed(2) + ' THB';
+            latestHomeworkData = { steps, wacc, g, tv, pvTv, ev, eq, perShare, debt, cash, shares };
 
-            window.latestDCF = { steps, wacc, g, tv, pvTv, ev, eq, perShare, debt, shares };
+            document.getElementById('out-ev').textContent = ev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
+            document.getElementById('out-eq').textContent = eq.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
+            document.getElementById('out-target').textContent = perShare.toFixed(2) + ' THB';
+            document.getElementById('hw-solution-card').classList.remove('hidden');
+
+            appendChatMessage('assistant', `📝 **ผลการแก้โจทย์การเงินอย่างละเอียด (Step-by-Step CoT):**\n1. **ผลรวมมูลค่าปัจจุบันของกระแสเงินสด 5 ปี (PV of FCFF):** ${sumPv.toFixed(2)} ล้านบาท\n2. **มูลค่าต่อเนื่อง (Terminal Value) ด้วย Gordon Growth:** TV = [${lastCf} × (1 + ${(g*100).toFixed(1)}%)] / [${(wacc*100).toFixed(1)}% - ${(g*100).toFixed(1)}%] = ${tv.toFixed(2)} ล้านบาท (PV of TV = ${pvTv.toFixed(2)} ล้านบาท)\n3. **Enterprise Value (EV):** ${ev.toFixed(2)} ล้านบาท\n4. **Equity Value (ส่วนของผู้ถือหุ้น):** EV + เงินสด (${cash}) - หนี้สิน (${debt}) = ${eq.toFixed(2)} ล้านบาท\n5. **ราคาเป้าหมายต่อหุ้น (Intrinsic Share Price):** ${perShare.toFixed(2)} บาท/หุ้น\n*(สามารถกดปุ่ม "Excel" ด้านซ้ายเพื่อดาวน์โหลดไฟล์ที่มีสูตรคำนวณจริงได้ทันทีครับ!)*`);
+        }
+
+        function downloadHomeworkExcel() {
+            if (!latestHomeworkData) runHomeworkSolver();
+            exportExcel("Finance_Homework_DCF_Model", latestHomeworkData);
+        }
+
+        // ==========================================
+        // 4. MODULE 2: DCF & 5x5 SENSITIVITY MATRIX
+        // ==========================================
+        let latestValuationData = null;
+        function runValuationUpdate() {
+            const waccSlider = document.getElementById('val-slider-wacc');
+            const gSlider = document.getElementById('val-slider-g');
+            if (!waccSlider || !gSlider) return;
+
+            const wacc = parseFloat(waccSlider.value) / 100;
+            const g = parseFloat(gSlider.value) / 100;
+            const debt = parseFloat(document.getElementById('val-debt').value) || 0;
+            const cash = parseFloat(document.getElementById('val-cash').value) || 0;
+            const shares = parseFloat(document.getElementById('val-shares').value) || 1;
+
+            document.getElementById('label-wacc').textContent = (wacc * 100).toFixed(1) + '%';
+            document.getElementById('label-g').textContent = (g * 100).toFixed(1) + '%';
+
+            const fcff = [
+                parseFloat(document.getElementById('val-cf1').value) || 0,
+                parseFloat(document.getElementById('val-cf2').value) || 0,
+                parseFloat(document.getElementById('val-cf3').value) || 0,
+                parseFloat(document.getElementById('val-cf4').value) || 0,
+                parseFloat(document.getElementById('val-cf5').value) || 0
+            ];
+
+            let sumPv = 0;
+            const pvSteps = [];
+            fcff.forEach((cf, idx) => {
+                const t = idx + 1;
+                const df = Math.pow(1 + wacc, t);
+                const pv = cf / df;
+                sumPv += pv;
+                pvSteps.push(pv);
+            });
+
+            const lastCf = fcff[fcff.length - 1];
+            const tv = (wacc > g) ? (lastCf * (1 + g)) / (wacc - g) : 0;
+            const pvTv = tv / Math.pow(1 + wacc, fcff.length);
+            const ev = sumPv + pvTv;
+            const eq = ev + cash - debt;
+            const perShare = eq / shares;
+
+            document.getElementById('stat-pv-fcff').textContent = sumPv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
+            document.getElementById('stat-pv-tv').textContent = pvTv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
+            document.getElementById('stat-ev').textContent = ev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' M';
+            document.getElementById('stat-price').textContent = perShare.toFixed(2);
+
+            const tvPct = ev > 0 ? ((pvTv / ev) * 100).toFixed(0) : 0;
+            const fcffPct = 100 - tvPct;
+            document.getElementById('label-tv-pct').textContent = `TV ${tvPct}% | FCFF ${fcffPct}%`;
+
+            latestValuationData = { fcff, wacc, g, debt, cash, shares, sumPv, tv, pvTv, ev, eq, perShare };
+
+            // Render 5x5 Sensitivity Matrix
+            renderSensitivityMatrix(wacc, g, fcff, debt, cash, shares);
+
+            // Render DCF Breakdown Bar Chart
+            renderDCFBarChart(pvSteps, pvTv);
+        }
+
+        function setSensitivityView(mode) {
+            sensitivityMode = mode;
+            const btnPrice = document.getElementById('btn-sens-price');
+            const btnEv = document.getElementById('btn-sens-ev');
+            if (mode === 'price') {
+                btnPrice.className = 'px-2.5 py-1 rounded-md font-semibold bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm';
+                btnEv.className = 'px-2.5 py-1 rounded-md font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400';
+            } else {
+                btnEv.className = 'px-2.5 py-1 rounded-md font-semibold bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm';
+                btnPrice.className = 'px-2.5 py-1 rounded-md font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400';
+            }
+            if (latestValuationData) {
+                renderSensitivityMatrix(
+                    latestValuationData.wacc,
+                    latestValuationData.g,
+                    latestValuationData.fcff,
+                    latestValuationData.debt,
+                    latestValuationData.cash,
+                    latestValuationData.shares
+                );
+            }
+        }
+
+        function renderSensitivityMatrix(baseWacc, baseG, fcff, debt, cash, shares) {
+            const tbody = document.getElementById('sensitivity-tbody');
+            if (!tbody) return;
+
+            const waccSteps = [-0.010, -0.005, 0, 0.005, 0.010];
+            const gSteps = [-0.010, -0.005, 0, 0.005, 0.010];
+
+            // Update Table Headers for g
+            gSteps.forEach((dg, i) => {
+                const th = document.getElementById('th-g' + (i + 1));
+                const colG = baseG + dg;
+                if (th) {
+                    th.textContent = (colG * 100).toFixed(1) + '%';
+                    if (i === 2) th.className = 'p-2 border border-slate-200 dark:border-slate-800 font-mono text-emerald-500 font-bold bg-emerald-500/10';
+                    else th.className = 'p-2 border border-slate-200 dark:border-slate-800 font-mono';
+                }
+            });
+
+            let rowsHtml = '';
+            waccSteps.forEach((dw, rIdx) => {
+                const rowWacc = baseWacc + dw;
+                const isBaseRow = rIdx === 2;
+                rowsHtml += `<tr class="${isBaseRow ? 'bg-emerald-500/5' : ''}">`;
+                rowsHtml += `<td class="p-2 border border-slate-200 dark:border-slate-800 font-bold ${isBaseRow ? 'text-emerald-500 bg-emerald-500/10' : 'text-slate-600 dark:text-slate-300'}">${(rowWacc * 100).toFixed(1)}%</td>`;
+
+                gSteps.forEach((dg, cIdx) => {
+                    const colG = baseG + dg;
+                    const isCenter = rIdx === 2 && cIdx === 2;
+
+                    // Calculate PV of FCFF at rowWacc
+                    let sumPv = 0;
+                    fcff.forEach((cf, tIdx) => {
+                        sumPv += cf / Math.pow(1 + rowWacc, tIdx + 1);
+                    });
+
+                    const lastCf = fcff[fcff.length - 1];
+                    let cellVal = 0;
+                    if (rowWacc > colG) {
+                        const tv = (lastCf * (1 + colG)) / (rowWacc - colG);
+                        const pvTv = tv / Math.pow(1 + rowWacc, fcff.length);
+                        const ev = sumPv + pvTv;
+                        const eq = ev + cash - debt;
+                        cellVal = sensitivityMode === 'price' ? (eq / shares) : ev;
+                    }
+
+                    const valStr = cellVal > 0 
+                        ? (sensitivityMode === 'price' ? cellVal.toFixed(2) : cellVal.toFixed(0) + 'M')
+                        : 'N/A';
+
+                    rowsHtml += `<td class="p-2 border border-slate-200 dark:border-slate-800 ${isCenter ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black ring-1 ring-emerald-500' : 'text-slate-700 dark:text-slate-300'}">${valStr}</td>`;
+                });
+                rowsHtml += '</tr>';
+            });
+
+            tbody.innerHTML = rowsHtml;
+        }
+
+        function renderDCFBarChart(pvSteps, pvTv) {
+            const canvas = document.getElementById('dcfBarChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(148, 163, 184, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+
+            const labels = ['PV ปี 1', 'PV ปี 2', 'PV ปี 3', 'PV ปี 4', 'PV ปี 5', 'PV Terminal Val'];
+            const data = [...pvSteps, pvTv];
+            const colors = ['#38bdf8', '#38bdf8', '#38bdf8', '#38bdf8', '#38bdf8', '#10b981'];
+
+            if (dcfBarChartInstance) dcfBarChartInstance.destroy();
+
+            dcfBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Present Value (ล้านบาท)',
+                        data: data,
+                        backgroundColor: colors,
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }
+                    }
+                }
+            });
         }
 
         function downloadDCFExcel() {
-            exportExcel("DCF_Valuation_Model", window.latestDCF);
+            if (!latestValuationData) runValuationUpdate();
+            exportExcel("DCF_Valuation_Model_5x5", {
+                steps: latestValuationData.fcff.map((cf, i) => ({ year: i + 1, fcff: cf })),
+                wacc: latestValuationData.wacc,
+                g: latestValuationData.g,
+                tv: latestValuationData.tv,
+                pvTv: latestValuationData.pvTv,
+                ev: latestValuationData.ev,
+                eq: latestValuationData.eq,
+                perShare: latestValuationData.perShare,
+                debt: latestValuationData.debt,
+                cash: latestValuationData.cash,
+                shares: latestValuationData.shares
+            });
         }
 
         function exportExcel(filename, data) {
             const wb = XLSX.utils.book_new();
             const wsData = [
-                ["DISCOUNTED CASH FLOW (DCF) VALUATION MODEL"],
-                ["Generated by FinStudy AI on " + new Date().toISOString().split('T')[0]],
+                ["DISCOUNTED CASH FLOW (DCF) VALUATION MODEL - FinStudy AI"],
+                ["Generated on " + new Date().toISOString().split('T')[0]],
                 [],
-                ["Projection Period", "FCFF (M THB)", "Discount Factor", "Present Value (M THB)"]
+                ["Year", "FCFF (M THB)", "Discount Factor Formula", "Present Value (M THB)"]
             ];
 
             let row = 5;
@@ -1000,28 +1505,38 @@
             wsData.push(
                 ["Terminal Value (Gordon Growth)", data.tv, { f: `(1+${data.wacc})^${data.steps.length}` }, { f: `B${row}/C${row}` }],
                 [],
-                ["Metric", "Value"],
-                ["WACC", `${(data.wacc * 100).toFixed(2)}%`],
+                ["Valuation Metric", "Value"],
+                ["WACC (Discount Rate)", `${(data.wacc * 100).toFixed(2)}%`],
                 ["Terminal Growth (g)", `${(data.g * 100).toFixed(2)}%`],
                 ["Enterprise Value (EV)", data.ev],
                 ["Net Debt", data.debt],
+                ["Cash & Equivalents", data.cash || 0],
                 ["Equity Value", data.eq],
                 ["Intrinsic Share Price", data.perShare]
             );
 
             const ws = XLSX.utils.aoa_to_sheet(wsData);
-            ws['!cols'] = [{ wch: 32 }, { wch: 20 }, { wch: 20 }, { wch: 22 }];
-            XLSX.utils.book_append_sheet(wb, ws, "Valuation");
+            ws['!cols'] = [{ wch: 30 }, { wch: 20 }, { wch: 22 }, { wch: 22 }];
+            XLSX.utils.book_append_sheet(wb, ws, "DCF_Model");
             XLSX.writeFile(wb, `${filename}.xlsx`);
         }
 
-        // Fixed Income Analytics
-        function recalcBond() {
-            const coupon = (parseFloat(document.getElementById('bond-coupon').value) || 4.0) / 100;
-            const ytm = (parseFloat(document.getElementById('bond-ytm').value) || 5.0) / 100;
-            const years = parseInt(document.getElementById('bond-years').value) || 5;
-            const freq = parseInt(document.getElementById('bond-freq').value) || 2;
+        // ==========================================
+        // 5. MODULE 3: FIXED INCOME & OPTIONS PAYOFF
+        // ==========================================
+        function runBondUpdate() {
+            const couponSlider = document.getElementById('b-coupon');
+            const ytmSlider = document.getElementById('b-ytm');
+            if (!couponSlider || !ytmSlider) return;
+
+            const coupon = parseFloat(couponSlider.value) / 100;
+            const ytm = parseFloat(ytmSlider.value) / 100;
+            const years = parseInt(document.getElementById('b-years').value) || 5;
+            const freq = parseInt(document.getElementById('b-freq').value) || 2;
             const par = 1000;
+
+            document.getElementById('lbl-bond-coupon').textContent = (coupon * 100).toFixed(2) + '%';
+            document.getElementById('lbl-bond-ytm').textContent = (ytm * 100).toFixed(2) + '%';
 
             const n = years * freq;
             const c = (par * coupon) / freq;
@@ -1044,34 +1559,166 @@
             const modDur = macDur / (1 + y);
             const convexity = convexitySum / (price * Math.pow(1 + y, 2));
 
-            document.getElementById('bond-price').textContent = price.toFixed(2) + ' บาท';
-            document.getElementById('bond-mac-dur').textContent = macDur.toFixed(2) + ' ปี';
-            document.getElementById('bond-mod-dur').textContent = modDur.toFixed(2) + ' ปี';
-            document.getElementById('bond-convexity').textContent = convexity.toFixed(2);
+            document.getElementById('out-b-price').textContent = price.toFixed(2) + ' ฿';
+            document.getElementById('out-b-mac').textContent = macDur.toFixed(2) + ' ปี';
+            document.getElementById('out-b-mod').textContent = modDur.toFixed(2) + ' ปี';
+            document.getElementById('out-b-cvx').textContent = convexity.toFixed(2);
+
+            renderBondConvexityChart(coupon, ytm, years, freq, par, price, modDur);
         }
 
-        // Options Payoff Chart
-        function renderOptionsPayoff() {
-            const canvas = document.getElementById('optionsPayoffChart');
+        function renderBondConvexityChart(coupon, currentYtm, years, freq, par, currentPrice, modDur) {
+            const canvas = document.getElementById('bondConvexityChart');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const strat = document.getElementById('options-strat').value;
-            const spot = parseFloat(document.getElementById('options-spot').value) || 100;
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(148, 163, 184, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+
+            const yields = [];
+            const actualPrices = [];
+            const durationTangent = [];
+
+            const n = years * freq;
+            const c = (par * coupon) / freq;
+
+            for (let r = 0.01; r <= 0.13; r += 0.005) {
+                yields.push((r * 100).toFixed(1) + '%');
+                const subY = r / freq;
+                let p = 0;
+                for (let t = 1; t <= n; t++) {
+                    const cf = c + (t === n ? par : 0);
+                    p += cf / Math.pow(1 + subY, t);
+                }
+                actualPrices.push(p);
+
+                // Linear Duration approximation: P_approx = P0 * [1 - D* * (y - y0)]
+                const pApprox = currentPrice * (1 - modDur * (r - currentYtm));
+                durationTangent.push(pApprox > 0 ? pApprox : null);
+            }
+
+            if (bondChartInstance) bondChartInstance.destroy();
+
+            bondChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: yields,
+                    datasets: [
+                        {
+                            label: 'Actual Price-Yield Curve (Convex)',
+                            data: actualPrices,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Duration Tangent Line',
+                            data: durationTangent,
+                            borderColor: '#38bdf8',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { color: textColor, font: { size: 10 } } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function runOptionsUpdate() {
+            const strat = document.getElementById('opt-strat').value;
+            const spot = parseFloat(document.getElementById('opt-spot').value) || 100;
+            const k1 = parseFloat(document.getElementById('opt-k1').value) || 95;
+            const p1 = parseFloat(document.getElementById('opt-p1').value) || 6.0;
+            const k2 = parseFloat(document.getElementById('opt-k2').value) || 105;
+            const p2 = parseFloat(document.getElementById('opt-p2').value) || 2.0;
 
             const strikes = [];
             const pnl = [];
-            for (let s = spot * 0.8; s <= spot * 1.2; s += spot * 0.02) {
-                strikes.push(s.toFixed(0));
+            const minS = Math.max(0, spot * 0.7);
+            const maxS = spot * 1.3;
+            const step = (maxS - minS) / 30;
+
+            let maxProfit = -Infinity;
+            let maxLoss = Infinity;
+            let be1 = null;
+            let be2 = null;
+
+            for (let s = minS; s <= maxS; s += step) {
+                strikes.push(s.toFixed(1));
+                let profit = 0;
+
                 if (strat === 'bull_call') {
-                    const longVal = Math.max(0, s - (spot - 2));
-                    const shortVal = Math.max(0, s - (spot + 8));
-                    pnl.push((longVal - shortVal - 3) * 100);
+                    // Long Call K1 (pay p1), Short Call K2 (receive p2)
+                    const netDebit = p1 - p2;
+                    profit = (Math.max(0, s - k1) - Math.max(0, s - k2) - netDebit) * 100;
+                    maxProfit = (k2 - k1 - netDebit) * 100;
+                    maxLoss = -netDebit * 100;
+                    be1 = k1 + netDebit;
+                } else if (strat === 'bear_put') {
+                    // Long Put K2 (pay p1), Short Put K1 (receive p2)
+                    const netDebit = p1 - p2;
+                    profit = (Math.max(0, k2 - s) - Math.max(0, k1 - s) - netDebit) * 100;
+                    maxProfit = (k2 - k1 - netDebit) * 100;
+                    maxLoss = -netDebit * 100;
+                    be1 = k2 - netDebit;
                 } else if (strat === 'straddle') {
-                    pnl.push((Math.max(0, s - spot) + Math.max(0, spot - s) - 6) * 100);
-                } else {
-                    pnl.push((s - spot - Math.max(0, s - (spot + 5)) + 3) * 100);
+                    // Long Call + Long Put at same strike k1 (cost = p1 + p2)
+                    const cost = p1 + p2;
+                    profit = (Math.max(0, s - k1) + Math.max(0, k1 - s) - cost) * 100;
+                    maxProfit = Infinity;
+                    maxLoss = -cost * 100;
+                    be1 = k1 - cost;
+                    be2 = k1 + cost;
+                } else if (strat === 'covered_call') {
+                    // Long Stock at spot, Short Call at k2 (receive p2)
+                    profit = ((s - spot) - Math.max(0, s - k2) + p2) * 100;
+                    maxProfit = (k2 - spot + p2) * 100;
+                    maxLoss = (-spot + p2) * 100;
+                    be1 = spot - p2;
+                } else if (strat === 'long_call') {
+                    profit = (Math.max(0, s - k1) - p1) * 100;
+                    maxProfit = Infinity;
+                    maxLoss = -p1 * 100;
+                    be1 = k1 + p1;
+                } else if (strat === 'long_put') {
+                    profit = (Math.max(0, k1 - s) - p1) * 100;
+                    maxProfit = (k1 - p1) * 100;
+                    maxLoss = -p1 * 100;
+                    be1 = k1 - p1;
                 }
+                pnl.push(profit);
             }
+
+            document.getElementById('out-opt-profit').textContent = maxProfit === Infinity ? 'ไม่จำกัด (Unlimited)' : `+$${maxProfit.toFixed(2)}`;
+            document.getElementById('out-opt-loss').textContent = `$${maxLoss.toFixed(2)}`;
+            document.getElementById('out-opt-be').textContent = be2 ? `$${be1.toFixed(2)}, $${be2.toFixed(2)}` : (be1 ? `$${be1.toFixed(2)}` : 'N/A');
+
+            renderOptionsChart(strikes, pnl);
+        }
+
+        function renderOptionsChart(strikes, pnl) {
+            const canvas = document.getElementById('optionsPayoffChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(148, 163, 184, 0.1)' : 'rgba(0, 0, 0, 0.05)';
 
             if (optionsChartInstance) optionsChartInstance.destroy();
 
@@ -1079,68 +1726,502 @@
                 type: 'line',
                 data: {
                     labels: strikes,
-                    datasets: [{
-                        label: 'P&L ($)',
-                        data: pnl,
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                        fill: true,
-                        tension: 0.1,
-                        borderWidth: 2
-                    }]
+                    datasets: [
+                        {
+                            label: 'P&L ($)',
+                            data: pnl,
+                            borderColor: '#10b981',
+                            borderWidth: 2.5,
+                            fill: {
+                                target: 'origin',
+                                above: 'rgba(16, 185, 129, 0.15)',
+                                below: 'rgba(244, 63, 94, 0.15)'
+                            },
+                            pointRadius: 0
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94a3b8' } },
-                        y: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94a3b8' } }
+                        x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }
                     }
                 }
             });
         }
 
-        // MPT Chart
-        function initMPTChart() {
-            const canvas = document.getElementById('mptChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            mptChartInstance = new Chart(ctx, {
+        // ==========================================
+        // 6. MODULE 4: MPT & EFFICIENT FRONTIER
+        // ==========================================
+        let weights = { eq: 0.50, bd: 0.30, gd: 0.20 };
+        function handleWeightChange(changedAsset) {
+            const eqVal = parseFloat(document.getElementById('slider-w-eq').value);
+            const bdVal = parseFloat(document.getElementById('slider-w-bd').value);
+            const gdVal = parseFloat(document.getElementById('slider-w-gd').value);
+
+            if (changedAsset === 'eq') {
+                const remainder = 100 - eqVal;
+                const prevSum = bdVal + gdVal;
+                const ratio = prevSum > 0 ? remainder / prevSum : 0.5;
+                weights.eq = eqVal / 100;
+                weights.bd = Math.round(bdVal * ratio) / 100;
+                weights.gd = (100 - Math.round(eqVal) - Math.round(weights.bd * 100)) / 100;
+            } else if (changedAsset === 'bd') {
+                const remainder = 100 - bdVal;
+                const prevSum = eqVal + gdVal;
+                const ratio = prevSum > 0 ? remainder / prevSum : 0.5;
+                weights.bd = bdVal / 100;
+                weights.eq = Math.round(eqVal * ratio) / 100;
+                weights.gd = (100 - Math.round(bdVal) - Math.round(weights.eq * 100)) / 100;
+            } else {
+                const remainder = 100 - gdVal;
+                const prevSum = eqVal + bdVal;
+                const ratio = prevSum > 0 ? remainder / prevSum : 0.5;
+                weights.gd = gdVal / 100;
+                weights.eq = Math.round(eqVal * ratio) / 100;
+                weights.bd = (100 - Math.round(gdVal) - Math.round(weights.eq * 100)) / 100;
+            }
+
+            // Sync slider positions
+            document.getElementById('slider-w-eq').value = Math.round(weights.eq * 100);
+            document.getElementById('slider-w-bd').value = Math.round(weights.bd * 100);
+            document.getElementById('slider-w-gd').value = Math.round(weights.gd * 100);
+
+            document.getElementById('lbl-w-eq').textContent = Math.round(weights.eq * 100) + '%';
+            document.getElementById('lbl-w-bd').textContent = Math.round(weights.bd * 100) + '%';
+            document.getElementById('lbl-w-gd').textContent = Math.round(weights.gd * 100) + '%';
+
+            document.getElementById('text-w-eq').textContent = Math.round(weights.eq * 100) + '%';
+            document.getElementById('text-w-bd').textContent = Math.round(weights.bd * 100) + '%';
+            document.getElementById('text-w-gd').textContent = Math.round(weights.gd * 100) + '%';
+
+            calculateAndRenderMPT();
+        }
+
+        function calculateAndRenderMPT() {
+            const rE = 0.12, sE = 0.18;
+            const rB = 0.045, sB = 0.05;
+            const rG = 0.07, sG = 0.12;
+            const rf = 0.025;
+
+            const wE = weights.eq;
+            const wB = weights.bd;
+            const wG = weights.gd;
+
+            // Correlations
+            const rhoEB = 0.15;
+            const rhoEG = -0.05;
+            const rhoBG = 0.20;
+
+            const covEB = rhoEB * sE * sB;
+            const covEG = rhoEG * sE * sG;
+            const covBG = rhoBG * sB * sG;
+
+            const expReturn = (wE * rE) + (wB * rB) + (wG * rG);
+            const variance = (wE * wE * sE * sE) +
+                             (wB * wB * sB * sB) +
+                             (wG * wG * sG * sG) +
+                             (2 * wE * wB * covEB) +
+                             (2 * wE * wG * covEG) +
+                             (2 * wB * wG * covBG);
+            const vol = Math.sqrt(Math.max(0, variance));
+            const sharpe = vol > 0 ? (expReturn - rf) / vol : 0;
+
+            document.getElementById('out-mpt-ret').textContent = (expReturn * 100).toFixed(2) + '%';
+            document.getElementById('out-mpt-vol').textContent = (vol * 100).toFixed(2) + '%';
+            document.getElementById('out-mpt-sharpe').textContent = sharpe.toFixed(2);
+
+            // Update Doughnut Chart
+            if (mptDoughnutChartInstance) {
+                mptDoughnutChartInstance.data.datasets[0].data = [
+                    Math.round(weights.eq * 100),
+                    Math.round(weights.bd * 100),
+                    Math.round(weights.gd * 100)
+                ];
+                mptDoughnutChartInstance.update();
+            }
+
+            // Update Frontier Point
+            if (mptFrontierChartInstance) {
+                mptFrontierChartInstance.data.datasets[1].data = [
+                    { x: +(vol * 100).toFixed(2), y: +(expReturn * 100).toFixed(2) }
+                ];
+                mptFrontierChartInstance.update();
+            }
+        }
+
+        function initMPTCharts() {
+            const doughnutCanvas = document.getElementById('mptDoughnutChart');
+            const frontierCanvas = document.getElementById('mptFrontierChart');
+            if (!doughnutCanvas || !frontierCanvas) return;
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(148, 163, 184, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+
+            // Doughnut Chart
+            if (mptDoughnutChartInstance) mptDoughnutChartInstance.destroy();
+            mptDoughnutChartInstance = new Chart(doughnutCanvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Equities (หุ้นสามัญ)', 'Govt Bonds (พันธบัตร)', 'Gold (ทองคำแท่ง 96.5%)'],
+                    labels: ['หุ้นสามัญ', 'พันธบัตร', 'ทองคำ'],
                     datasets: [{
                         data: [50, 30, 20],
                         backgroundColor: ['#0284c7', '#10b981', '#f59e0b'],
                         borderWidth: 2,
-                        borderColor: '#0f172a'
+                        borderColor: isDark ? '#0f172a' : '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '70%'
+                }
+            });
+
+            // Efficient Frontier Curve Simulation Points
+            const frontierPoints = [
+                { x: 4.8, y: 4.7 },
+                { x: 5.2, y: 5.5 },
+                { x: 6.0, y: 6.8 },
+                { x: 7.2, y: 8.0 },
+                { x: 8.8, y: 9.3 },
+                { x: 10.5, y: 10.4 },
+                { x: 13.0, y: 11.2 },
+                { x: 16.0, y: 11.8 },
+                { x: 18.0, y: 12.0 }
+            ];
+
+            if (mptFrontierChartInstance) mptFrontierChartInstance.destroy();
+            mptFrontierChartInstance = new Chart(frontierCanvas.getContext('2d'), {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Efficient Frontier Curve',
+                            data: frontierPoints,
+                            showLine: true,
+                            borderColor: '#6366f1',
+                            borderWidth: 2.5,
+                            tension: 0.3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'พอร์ตของคุณ (Current Portfolio)',
+                            data: [{ x: 9.82, y: 8.75 }],
+                            backgroundColor: '#f43f5e',
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            pointRadius: 7,
+                            pointHoverRadius: 9
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } }
+                        legend: { position: 'top', labels: { color: textColor, font: { size: 10 } } }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: { display: true, text: 'ความผันผวน Portfolio Volatility σp (%)', color: textColor, font: { size: 10 } },
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } },
+                            min: 3,
+                            max: 20
+                        },
+                        y: {
+                            title: { display: true, text: 'ผลตอบแทนคาดหวัง E(Rp) (%)', color: textColor, font: { size: 10 } },
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } },
+                            min: 3,
+                            max: 14
+                        }
                     }
                 }
             });
+
+            calculateAndRenderMPT();
         }
 
-        // SEPA & Sentiment Check
-        function scanSEPA() {
-            const t = document.getElementById('sepa-ticker-in').value.toUpperCase();
-            alert(`สแกนเกณฑ์ Minervini SEPA® และ Market Sentiment สำหรับ ${t} สำเร็จ!\nสถานะ: เข้าเกณฑ์ Stage 2 Uptrend | Sentiment ตลาด 82% Bullish`);
+        // ==========================================
+        // 7. MODULE 5: QBANK & MISTAKE NOTEBOOK
+        // ==========================================
+        const quizBank = [
+            {
+                id: 'q1',
+                category: 'bond',
+                categoryName: '📜 ตราสารหนี้ & Duration',
+                title: 'พันธบัตรรัฐบาลอายุ 5 ปี คูปอง 4.0% ต่อปี จ่ายดอกเบี้ยปีละ 2 ครั้ง ถ้า YTM เท่ากับ 5.0% ต่อปี พันธบัตรนี้จะมี Modified Duration (D*) เท่าใด และหากอัตราผลตอบแทนในตลาดเพิ่มขึ้น 0.50% ราคาพันธบัตรจะเปลี่ยนไปประมาณกี่เปอร์เซ็นต์?',
+                options: [
+                    { key: 'A', text: 'Modified Duration = 4.38 ปี และราคาพันธบัตรจะลดลงประมาณ -2.19%', correct: true },
+                    { key: 'B', text: 'Modified Duration = 5.00 ปี และราคาพันธบัตรจะลดลงประมาณ -2.50%', correct: false },
+                    { key: 'C', text: 'Modified Duration = 3.95 ปี และราคาพันธบัตรจะเพิ่มขึ้นประมาณ +1.98%', correct: false },
+                    { key: 'D', text: 'Modified Duration = 4.49 ปี และราคาพันธบัตรจะลดลงประมาณ -4.49%', correct: false }
+                ],
+                explanation: `<b>ขั้นตอนการคำนวณแบบ Step-by-Step CoT:</b><br>
+1. <b>สูตร Modified Duration:</b> \\[ D^* = \\frac{D_{mac}}{1 + \\frac{y}{m}} \\]
+โดยที่ Macaulay Duration ((D_{mac})) ของพันธบัตรนี้เท่ากับ 4.49 ปี, (y = 5.0\% = 0.05), และ (m = 2) ครั้ง/ปี<br>
+2. คำนวณได้: \\[ D^* = \\frac{4.49}{1 + \\frac{0.05}{2}} = \\frac{4.49}{1.025} \\approx 4.38 \\text{ ปี} \\]
+3. <b>ประมาณการการเปลี่ยนแปลงราคา (%ΔP):</b> \\[ \\%\\Delta P \\approx -D^* \\times \\Delta y = -4.38 \\times (+0.50\%) = -2.19\% \\]
+<b>สรุป:</b> ราคาพันธบัตรจะลดลงประมาณ -2.19% เมื่อดอกเบี้ยตลาดปรับเพิ่มขึ้น 0.50%`
+            },
+            {
+                id: 'q2',
+                category: 'tvm',
+                categoryName: '⏱️ TVM & Capital Budgeting',
+                title: 'บริษัทลงทุนในโครงการเครื่องจักรใหม่ 1,000,000 บาท คาดว่าจะสร้างกระแสเงินสดสุทธิปีละ 350,000 บาท เป็นเวลา 4 ปี หากต้นทุนเงินทุน (WACC) เท่ากับ 10% มูลค่าปัจจุบันสุทธิ (NPV) และการตัดสินใจคือข้อใด?',
+                options: [
+                    { key: 'A', text: 'NPV = +109,452 บาท ควรยอมรับโครงการ (Accept)', correct: true },
+                    { key: 'B', text: 'NPV = -52,300 บาท ควรปฏิเสธโครงการ (Reject)', correct: false },
+                    { key: 'C', text: 'NPV = +400,000 บาท ควรยอมรับโครงการ (Accept)', correct: false },
+                    { key: 'D', text: 'NPV = 0 บาท โครงการคุ้มทุนพอดี', correct: false }
+                ],
+                explanation: `<b>ขั้นตอนการคำนวณแบบ Step-by-Step CoT:</b><br>
+1. <b>สูตรมูลค่าปัจจุบันของเงินงวดเท่ากัน (Annuity PV):</b> \\[ PV = PMT \\times \\left[ \\frac{1 - (1+r)^{-n}}{r} \\right] \\]
+แทนค่า (PMT = 350,000), (r = 10\% = 0.10), (n = 4) ปี<br>
+2. คำนวณ PVIFA(10%, 4) = 3.169865<br>
+(PV = 350,000 \\times 3.169865 = 1,109,453) บาท<br>
+3. <b>คำนวณ NPV:</b> \\[ NPV = PV - \\text{เงินลงทุนเริ่มต้น} = 1,109,453 - 1,000,000 = +109,453 \\text{ บาท} \\]
+<b>สรุป:</b> เนื่องจาก NPV > 0 บริษัทจึงควรยอมรับโครงการ (Accept)`
+            },
+            {
+                id: 'q3',
+                category: 'equity',
+                categoryName: '📊 ประเมินมูลค่าหุ้น DCF',
+                title: 'บริษัท PTT จ่ายเงินปันผลล่าสุด (D0) เท่ากับ 2.00 บาทต่อหุ้น และคาดว่าเงินปันผลจะเติบโตคงที่ในอัตราร้อยละ 4 ต่อปีตลอดไป หากนักลงทุนต้องการอัตราผลตอบแทนจากการลงทุนในหุ้นนี้ร้อยละ 9 ต่อปี ราคาที่เหมาะสมตาม Gordon Growth Model คือเท่าใด?',
+                options: [
+                    { key: 'A', text: '41.60 บาทต่อหุ้น', correct: true },
+                    { key: 'B', text: '40.00 บาทต่อหุ้น', correct: false },
+                    { key: 'C', text: '50.00 บาทต่อหุ้น', correct: false },
+                    { key: 'D', text: '36.50 บาทต่อหุ้น', correct: false }
+                ],
+                explanation: `<b>ขั้นตอนการคำนวณแบบ Step-by-Step CoT:</b><br>
+1. <b>สูตร Gordon Growth Model (DDM):</b> \\[ P_0 = \\frac{D_1}{r - g} = \\frac{D_0 \\times (1+g)}{r - g} \\]
+2. คำนวณเงินปันผลปีถัดไป ((D_1)): (D_1 = 2.00 \\times (1 + 0.04) = 2.08) บาท<br>
+3. แทนค่าในสูตร: \\[ P_0 = \\frac{2.08}{0.09 - 0.04} = \\frac{2.08}{0.05} = 41.60 \\text{ บาท} \\]
+<b>สรุป:</b> ราคาหุ้นที่แท้จริงตามโมเดลคือ 41.60 บาทต่อหุ้น`
+            },
+            {
+                id: 'q4',
+                category: 'derivatives',
+                categoryName: '⚡ สัญญาอนุพันธ์ & Options',
+                title: 'นักลงทุนเปิดสถานะ Bull Call Spread โดยซื้อ Call Option Strike 100 บาท (จ่ายพรีเมียม 6 บาท) และขาย Call Option Strike 110 บาท (รับพรีเมียม 2 บาท) จุดคุ้มทุน (Breakeven Point) และกำไรสูงสุด (Max Profit) ของกลยุทธ์นี้คือข้อใด?',
+                options: [
+                    { key: 'A', text: 'จุดคุ้มทุน = 104 บาท, กำไรสูงสุด = 600 บาท ต่อ 100 หุ้น', correct: true },
+                    { key: 'B', text: 'จุดคุ้มทุน = 106 บาท, กำไรสูงสุด = 400 บาท ต่อ 100 หุ้น', correct: false },
+                    { key: 'C', text: 'จุดคุ้มทุน = 108 บาท, กำไรสูงสุด = 1,000 บาท ต่อ 100 หุ้น', correct: false },
+                    { key: 'D', text: 'จุดคุ้มทุน = 102 บาท, ขาดทุนสูงสุดไม่จำกัด', correct: false }
+                ],
+                explanation: `<b>ขั้นตอนการคำนวณแบบ Step-by-Step CoT:</b><br>
+1. <b>ต้นทุนสุทธิ (Net Premium Paid / Net Debit):</b> \\[ \\text{Net Debit} = 6 - 2 = 4 \\text{ บาทต่อหุ้น} \\]
+2. <b>จุดคุ้มทุน (Breakeven Point):</b> \\[ \\text{Breakeven} = K_1 + \\text{Net Debit} = 100 + 4 = 104 \\text{ บาท} \\]
+3. <b>กำไรสูงสุด (Max Profit):</b> เกิดขึ้นเมื่อราคาหุ้นขึ้นไปสูงกว่า (K_2) (110 บาท) \\[ \\text{Max Profit} = (K_2 - K_1 - \\text{Net Debit}) \\times 100 = (110 - 100 - 4) \\times 100 = 600 \\text{ บาท} \\]
+4. ขาดทุนสูงสุด (Max Loss) จำกัดที่ต้นทุนพรีเมียมสุทธิ = 400 บาท`
+            },
+            {
+                id: 'q5',
+                category: 'mpt',
+                categoryName: '🌐 พอร์ตโฟลิโอ & CAPM',
+                title: 'หุ้น A มีค่า Beta เท่ากับ 1.40 หากอัตราผลตอบแทนที่ปราศจากความเสี่ยง (Risk-free Rate: Rf) เท่ากับ 3.0% และอัตราผลตอบแทนที่คาดหวังของตลาด (E(Rm)) เท่ากับ 10.0% อัตราผลตอบแทนที่คาดหวังของหุ้น A ตามแบบจำลอง CAPM มีค่าเท่าใด?',
+                options: [
+                    { key: 'A', text: '12.80%', correct: true },
+                    { key: 'B', text: '14.00%', correct: false },
+                    { key: 'C', text: '10.50%', correct: false },
+                    { key: 'D', text: '9.80%', correct: false }
+                ],
+                explanation: `<b>ขั้นตอนการคำนวณแบบ Step-by-Step CoT:</b><br>
+1. <b>สูตร Capital Asset Pricing Model (CAPM):</b> \\[ E(R_i) = R_f + \\beta_i \\times [E(R_m) - R_f] \\]
+2. Market Risk Premium = (10.0\% - 3.0\% = 7.0\%\)<br>
+3. แทนค่า: \\[ E(R_A) = 3.0\% + 1.40 \\times (7.0\%) = 3.0\% + 9.80\% = 12.80\% \\]
+<b>สรุป:</b> อัตราผลตอบแทนที่คาดหวังของหุ้น A ตาม CAPM เท่ากับ 12.80%`
+            }
+        ];
+
+        let activeQuizCategory = 'all';
+        function filterQuiz(category) {
+            activeQuizCategory = category;
+            document.querySelectorAll('.qfilter-btn').forEach(b => {
+                b.classList.remove('bg-sky-600', 'text-white', 'shadow');
+                b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400');
+            });
+
+            const activeBtn = document.getElementById('qfilter-' + category);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-sky-600', 'text-white', 'shadow');
+                activeBtn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400');
+            }
+
+            renderQuizCards(category);
         }
 
-        // Exam Quiz Check
-        function checkExamQuiz() {
-            const selected = document.querySelector('input[name="quiz-opt"]:checked');
+        function renderQuizCards(category) {
+            const container = document.getElementById('quiz-cards-container');
+            if (!container) return;
+
+            let filtered = quizBank;
+            if (category === 'mistakes') {
+                filtered = quizBank.filter(q => mistakeNotebook.includes(q.id));
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-slate-800 text-emerald-500 mx-auto flex items-center justify-center">
+                                <i data-lucide="award" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100">ยอดเยี่ยมมาก! ไม่มีข้อที่ตอบผิดในสมุดทบทวน</h4>
+                            <p class="text-xs text-slate-400">เมื่อคุณตอบข้อสอบผิด ข้อนั้นจะถูกบันทึกมาที่นี่โดยอัตโนมัติเพื่อให้คุณฝึกซ้ำ</p>
+                        </div>`;
+                    lucide.createIcons();
+                    return;
+                }
+            } else if (category !== 'all') {
+                filtered = quizBank.filter(q => q.category === category);
+            }
+
+            let html = '';
+            filtered.forEach((q, idx) => {
+                const isSavedMistake = mistakeNotebook.includes(q.id);
+                html += `
+                    <div id="card-${q.id}" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm transition">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 text-xs font-bold rounded-lg border border-sky-500/20">
+                                ข้อที่ ${idx + 1} • ${q.categoryName}
+                            </span>
+                            <button onclick="toggleBookmarkMistake('${q.id}')" title="บุ๊กมาร์กข้อนี้" class="text-xs flex items-center gap-1 ${isSavedMistake ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'} transition">
+                                <i data-lucide="bookmark" class="w-4 h-4 ${isSavedMistake ? 'fill-rose-500' : ''}"></i>
+                                <span>${isSavedMistake ? 'บันทึกในสมุดข้อผิดแล้ว' : 'บันทึกไว้ทบทวน'}</span>
+                            </button>
+                        </div>
+
+                        <p class="text-sm font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
+                            ${q.title}
+                        </p>
+
+                        <div class="space-y-2 text-xs">
+                            ${q.options.map(opt => `
+                                <label class="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800/80 rounded-xl cursor-pointer border border-slate-200 dark:border-slate-800 transition">
+                                    <input type="radio" name="opt-${q.id}" value="${opt.key}" class="text-sky-500">
+                                    <span>${opt.key}. ${opt.text}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2">
+                            <button onclick="checkQuestionAnswer('${q.id}')" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition shadow">
+                                <i data-lucide="check" class="w-4 h-4"></i> ตรวจคำตอบ & ดูเฉลย CoT
+                            </button>
+                            <span id="feedback-${q.id}" class="text-xs font-bold"></span>
+                        </div>
+
+                        <!-- CoT Detailed Explanation Box (Hidden initially) -->
+                        <div id="expl-${q.id}" class="hidden mt-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-2 leading-relaxed">
+                            <div class="font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1">
+                                <i data-lucide="lightbulb" class="w-4 h-4"></i> คำอธิบายและขั้นตอนการคิดทางคณิตศาสตร์ (Chain-of-Thought):
+                            </div>
+                            <div>${q.explanation}</div>
+                        </div>
+                    </div>`;
+            });
+
+            container.innerHTML = html;
+            lucide.createIcons();
+
+            if (window.renderMathInElement) {
+                renderMathInElement(container, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
+        }
+
+        function checkQuestionAnswer(qId) {
+            const selected = document.querySelector(`input[name="opt-${qId}"]:checked`);
             if (!selected) {
                 alert("กรุณาเลือกคำตอบก่อนครับ");
                 return;
             }
-            document.getElementById('quiz-cot-box').classList.remove('hidden');
+
+            const q = quizBank.find(item => item.id === qId);
+            if (!q) return;
+
+            const chosenKey = selected.value;
+            const correctOpt = q.options.find(o => o.correct);
+            const isRight = chosenKey === correctOpt.key;
+
+            const feedbackEl = document.getElementById('feedback-' + qId);
+            const explEl = document.getElementById('expl-' + qId);
+
+            if (isRight) {
+                feedbackEl.textContent = '✅ ถูกต้องยอดเยี่ยม!';
+                feedbackEl.className = 'text-xs font-bold text-emerald-500';
+            } else {
+                feedbackEl.textContent = `❌ ยังไม่ถูกต้อง (คำตอบที่ถูกคือ ${correctOpt.key})`;
+                feedbackEl.className = 'text-xs font-bold text-rose-500';
+
+                // Automatically add to Mistake Notebook
+                if (!mistakeNotebook.includes(qId)) {
+                    mistakeNotebook.push(qId);
+                    localStorage.setItem('finstudy_mistakes', JSON.stringify(mistakeNotebook));
+                    updateMistakeBadge();
+                }
+            }
+
+            explEl.classList.remove('hidden');
+            lucide.createIcons();
+            if (window.renderMathInElement) {
+                renderMathInElement(explEl, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
+        }
+
+        function toggleBookmarkMistake(qId) {
+            if (mistakeNotebook.includes(qId)) {
+                mistakeNotebook = mistakeNotebook.filter(id => id !== qId);
+            } else {
+                mistakeNotebook.push(qId);
+            }
+            localStorage.setItem('finstudy_mistakes', JSON.stringify(mistakeNotebook));
+            updateMistakeBadge();
+            renderQuizCards(activeQuizCategory);
+        }
+
+        function updateMistakeBadge() {
+            const count = mistakeNotebook.length;
+            const badge1 = document.getElementById('mistake-count-badge');
+            const badge2 = document.getElementById('mistake-badge-count');
+
+            if (badge1) {
+                badge1.textContent = count;
+                if (count > 0) badge1.classList.remove('hidden');
+                else badge1.classList.add('hidden');
+            }
+            if (badge2) badge2.textContent = count;
+        }
+
+        function clearMistakeNotebook() {
+            if (confirm('คุณต้องการล้างข้อสอบในสมุดทบทวนข้อผิดทั้งหมดใช่หรือไม่?')) {
+                mistakeNotebook = [];
+                localStorage.setItem('finstudy_mistakes', JSON.stringify([]));
+                updateMistakeBadge();
+                renderQuizCards(activeQuizCategory);
+            }
         }
     </script>
 </body>
