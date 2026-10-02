@@ -681,12 +681,24 @@ function confirmAcceptTos() {
     localStorage.setItem('whodis_tos_accepted_guest', 'true');
   }
 
+  const cb = __whodisTosOnAccept;
+  __whodisTosOnAccept = null;
+
   toggleTosModal(false);
 
-  if (typeof __whodisTosOnAccept === 'function') {
-    const cb = __whodisTosOnAccept;
-    __whodisTosOnAccept = null;
-    cb();
+  if (typeof cb === 'function') {
+    try {
+      cb();
+    } catch (err) {
+      console.error('Error executing ToS onAccept callback:', err);
+      window.location.replace('index.html');
+    }
+  } else {
+    const isLoginPage = window.location.pathname.endsWith('login.html') || window.location.pathname.endsWith('login');
+    if (isLoginPage) {
+      const target = (user && (user.role || '').toLowerCase() === 'admin') ? 'admin_reports.html' : 'index.html';
+      window.location.replace(target);
+    }
   }
 }
 

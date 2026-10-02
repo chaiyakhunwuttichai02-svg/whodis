@@ -81,28 +81,28 @@
                 <!-- Card 1: รายงานทั้งหมด -->
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
                     <div class="text-xs text-slate-500 font-medium">รายงานทั้งหมด</div>
-                    <div id="stat-total" class="text-2xl font-bold mt-1 text-slate-900">...</div>
+                    <div id="stat-total" class="text-2xl font-bold mt-1 text-slate-900">0</div>
                     <div class="text-xs text-slate-400 mt-0.5">สะสมในระบบ Whodis</div>
                 </div>
 
                 <!-- Card 2: เดือนนี้ -->
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
                     <div class="text-xs text-slate-500 font-medium">เดือนนี้</div>
-                    <div id="stat-this-month" class="text-2xl font-bold mt-1 text-slate-900">...</div>
-                    <div id="stat-month-sub" class="text-xs mt-0.5 text-slate-400">เทียบกับเดือนก่อน</div>
+                    <div id="stat-this-month" class="text-2xl font-bold mt-1 text-slate-900">0</div>
+                    <div id="stat-month-sub" class="text-xs mt-0.5 text-slate-400">— 0% vs เดือนก่อน</div>
                 </div>
 
                 <!-- Card 3: หมวดสูงสุด -->
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-                    <div id="stat-top-cat-title" class="text-xs text-slate-500 font-medium truncate">Investment Scam</div>
-                    <div id="stat-top-cat-percent" class="text-2xl font-bold mt-1 text-red-600">...</div>
+                    <div id="stat-top-cat-title" class="text-xs text-slate-500 font-medium truncate">ยังไม่มีข้อมูล</div>
+                    <div id="stat-top-cat-percent" class="text-2xl font-bold mt-1 text-slate-400">0%</div>
                     <div class="text-xs text-slate-400 mt-0.5">สัดส่วนสูงสุด</div>
                 </div>
 
                 <!-- Card 4: แนวโน้มเพิ่มขึ้น -->
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
                     <div class="text-xs text-slate-500 font-medium">มูลค่าความเสียหาย</div>
-                    <div id="stat-damage" class="text-2xl font-bold mt-1 text-amber-600 truncate">...</div>
+                    <div id="stat-damage" class="text-2xl font-bold mt-1 text-amber-600 truncate">฿0</div>
                     <div class="text-xs text-slate-400 mt-0.5">ยอดเงินที่ถูกโกงรวม</div>
                 </div>
             </div>
@@ -117,6 +117,11 @@
                     </div>
                     <div class="h-64 relative flex items-center justify-center">
                         <canvas id="categoryDonutChart"></canvas>
+                        <div id="donut-empty-state" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                            <span class="material-symbols-outlined text-4xl text-slate-300 mb-1">pie_chart</span>
+                            <p class="text-sm font-medium text-slate-600">ยังไม่มีข้อมูลรายงานในระบบ</p>
+                            <p class="text-xs text-slate-400 mt-0.5">เมื่อมีผู้แจ้งเบาะแส กราฟสัดส่วนจะแสดงผลที่นี่โดยอัตโนมัติ</p>
+                        </div>
                     </div>
                     <div id="donut-legend-grid" class="grid grid-cols-2 gap-2 mt-4 max-h-[140px] overflow-y-auto pr-1">
                         <!-- Populated by JS -->
@@ -136,7 +141,7 @@
                         <span class="flex items-center gap-1">
                             <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> รายงานที่ยืนยันแล้ว
                         </span>
-                        <span id="trend-summary-text" class="text-slate-400">อัปเดตตามฐานข้อมูล D1</span>
+                        <span id="trend-summary-text" class="text-slate-400">อัปเดตตามฐานข้อมูล Cloudflare D1</span>
                     </div>
                 </div>
             </div>
@@ -172,7 +177,7 @@
 
     <!-- Scripts -->
     <script src="js/auth.js"></script>
-    <script src="js/header.js?v=tos_v2"></script>
+    <script src="js/header.js?v=tos_v3"></script>
     <script>
         Auth.requireAuth();
 
@@ -199,6 +204,22 @@
 
         const DEFAULT_COLORS = ["#dc2626", "#ea580c", "#eab308", "#a855f7", "#3b82f6", "#14b8a6", "#64748b", "#ec4899", "#6366f1"];
 
+        function getLast6Months() {
+            const thaiMonthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            const now = new Date();
+            const list = [];
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                list.push({
+                    key: `${y}-${m}`,
+                    label: thaiMonthNames[d.getMonth()]
+                });
+            }
+            return list;
+        }
+
         async function loadDashboardData() {
             try {
                 const res = await fetch('/api/stats');
@@ -206,146 +227,162 @@
                 if (!res.ok || !json.success) return;
 
                 const data = json.data || {};
-                const totalReports = data.total_reports || 0;
-                const thisMonthReports = data.this_month_reports || Math.max(1, Math.round(totalReports * 0.35));
-                const monthChange = data.month_change_percent || 18;
-                const totalDamage = data.total_damage || 0;
+                const totalReports = Number(data.total_reports || 0);
+                const thisMonthReports = Number(data.this_month_reports || 0);
+                const lastMonthReports = Number(data.last_month_reports || 0);
+                const monthChange = Number(data.month_change_percent || 0);
+                const totalDamage = Number(data.total_damage || 0);
 
                 // 1. Update 4 Key Stat Cards
-                document.getElementById('stat-total').textContent = totalReports > 0 ? totalReports.toLocaleString() : '0';
-                document.getElementById('stat-this-month').textContent = thisMonthReports > 0 ? thisMonthReports.toLocaleString() : '0';
+                document.getElementById('stat-total').textContent = totalReports.toLocaleString();
+                document.getElementById('stat-this-month').textContent = thisMonthReports.toLocaleString();
 
                 const monthSubEl = document.getElementById('stat-month-sub');
-                if (monthChange > 0) {
+                if (thisMonthReports === 0 && lastMonthReports === 0) {
+                    monthSubEl.innerHTML = `<span class="text-slate-400 font-semibold">— 0%</span> vs เดือนก่อน`;
+                } else if (monthChange > 0) {
                     monthSubEl.innerHTML = `<span class="text-red-600 font-bold">↑ ${Math.abs(monthChange)}%</span> vs เดือนก่อน`;
                 } else if (monthChange < 0) {
                     monthSubEl.innerHTML = `<span class="text-green-600 font-bold">↓ ${Math.abs(monthChange)}%</span> vs เดือนก่อน`;
                 } else {
-                    monthSubEl.innerHTML = `<span class="text-slate-400">คงที่</span> vs เดือนก่อน`;
+                    monthSubEl.innerHTML = `<span class="text-slate-400 font-semibold">— 0%</span> vs เดือนก่อน`;
                 }
 
                 document.getElementById('stat-damage').textContent = totalDamage > 0 ? `฿${totalDamage.toLocaleString()}` : '฿0';
 
-                // 2. Categories Breakdown
+                // 2. Categories Breakdown & Donut Chart
                 const rawCats = data.categories || {};
-                let catEntries = Object.entries(rawCats).sort((a, b) => b[1] - a[1]);
+                const catEntries = Object.entries(rawCats).filter(([_, count]) => count > 0).sort((a, b) => b[1] - a[1]);
 
-                // Fallback default distribution if DB has fewer reports
-                if (catEntries.length === 0) {
-                    catEntries = [
-                        ["Investment Scam", 32],
-                        ["Online Shopping Scam", 24],
-                        ["Loan Scam", 18],
-                        ["Romance Scam", 10],
-                        ["Crypto Scam", 8],
-                        ["Call Center Scam", 5],
-                        ["อื่น ๆ", 3]
-                    ];
+                const donutCanvas = document.getElementById('categoryDonutChart');
+                const donutEmpty = document.getElementById('donut-empty-state');
+                const donutLegend = document.getElementById('donut-legend-grid');
+
+                if (catEntries.length === 0 || totalReports === 0) {
+                    if (donutChartInstance) {
+                        donutChartInstance.destroy();
+                        donutChartInstance = null;
+                    }
+                    if (donutCanvas) donutCanvas.classList.add('hidden');
+                    if (donutEmpty) donutEmpty.classList.remove('hidden');
+                    if (donutLegend) donutLegend.innerHTML = '<div class="col-span-2 text-center py-3 text-xs text-slate-400">ยังไม่มีข้อมูลประเภทกลโกง</div>';
+
+                    document.getElementById('stat-top-cat-title').textContent = 'ยังไม่มีข้อมูล';
+                    const topPercentEl = document.getElementById('stat-top-cat-percent');
+                    topPercentEl.textContent = '0%';
+                    topPercentEl.className = 'text-2xl font-bold mt-1 text-slate-400';
+                } else {
+                    if (donutCanvas) donutCanvas.classList.remove('hidden');
+                    if (donutEmpty) donutEmpty.classList.add('hidden');
+
+                    const totalCases = catEntries.reduce((sum, item) => sum + item[1], 0) || 1;
+                    const topCategoryName = catEntries[0][0];
+                    const topCategoryPercent = Math.round((catEntries[0][1] / totalCases) * 100);
+
+                    document.getElementById('stat-top-cat-title').textContent = topCategoryName;
+                    const topPercentEl = document.getElementById('stat-top-cat-percent');
+                    topPercentEl.textContent = `${topCategoryPercent}%`;
+                    topPercentEl.className = 'text-2xl font-bold mt-1 text-red-600';
+
+                    const donutLabels = [];
+                    const donutValues = [];
+                    const donutColors = [];
+                    const legendHtml = [];
+
+                    catEntries.forEach(([name, count], idx) => {
+                        const percent = Math.round((count / totalCases) * 100);
+                        const meta = TYPE_META[name] || { emoji: "⚠️", color: DEFAULT_COLORS[idx % DEFAULT_COLORS.length] };
+                        const color = meta.color;
+
+                        donutLabels.push(name);
+                        donutValues.push(percent);
+                        donutColors.push(color);
+
+                        legendHtml.push(`
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${color}"></span>
+                                <span class="text-slate-600 flex-1 truncate" title="${name}">${meta.emoji} ${name}</span>
+                                <span class="font-bold text-slate-900">${percent}%</span>
+                            </div>
+                        `);
+                    });
+
+                    donutLegend.innerHTML = legendHtml.join('');
+                    renderDonutChart(donutLabels, donutValues, donutColors);
                 }
 
-                const totalCases = catEntries.reduce((sum, item) => sum + item[1], 0) || 1;
-                const topCategoryName = catEntries[0][0];
-                const topCategoryPercent = Math.round((catEntries[0][1] / totalCases) * 100);
-
-                document.getElementById('stat-top-cat-title').textContent = topCategoryName;
-                document.getElementById('stat-top-cat-percent').textContent = `${topCategoryPercent}%`;
-
-                // Render Donut Chart & Legend
-                const donutLabels = [];
-                const donutValues = [];
-                const donutColors = [];
-                const legendHtml = [];
-
-                catEntries.forEach(([name, count], idx) => {
-                    const percent = Math.round((count / totalCases) * 100);
-                    const meta = TYPE_META[name] || { emoji: "⚠️", color: DEFAULT_COLORS[idx % DEFAULT_COLORS.length] };
-                    const color = meta.color;
-
-                    donutLabels.push(name);
-                    donutValues.push(percent);
-                    donutColors.push(color);
-
-                    legendHtml.push(`
-                        <div class="flex items-center gap-2 text-xs">
-                            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${color}"></span>
-                            <span class="text-slate-600 flex-1 truncate" title="${name}">${meta.emoji} ${name}</span>
-                            <span class="font-bold text-slate-900">${percent}%</span>
-                        </div>
-                    `);
+                // 3. Render Monthly Bar Chart (Real 6 Calendar Months from D1)
+                const monthList = getLast6Months();
+                const trendMap = {};
+                (data.monthly_trend || []).forEach(row => {
+                    trendMap[row.month_label] = Number(row.count || 0);
                 });
 
-                document.getElementById('donut-legend-grid').innerHTML = legendHtml.join('');
-                renderDonutChart(donutLabels, donutValues, donutColors);
-
-                // Render Monthly Bar Chart
-                let monthlyTrend = data.monthly_trend || [];
-                const thaiMonths = ['มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.'];
-                let barLabels = [];
-                let barValues = [];
-
-                if (monthlyTrend.length >= 2) {
-                    barLabels = monthlyTrend.map(m => m.month_label);
-                    barValues = monthlyTrend.map(m => m.count);
-                } else {
-                    barLabels = thaiMonths;
-                    const base = Math.max(15, Math.round(totalReports / 5));
-                    barValues = [
-                        Math.round(base * 0.45),
-                        Math.round(base * 0.6),
-                        Math.round(base * 0.55),
-                        Math.round(base * 0.75),
-                        Math.round(base * 0.85),
-                        Math.max(base, totalReports)
-                    ];
-                }
+                const barLabels = monthList.map(m => m.label);
+                const barValues = monthList.map(m => trendMap[m.key] || 0);
 
                 renderBarChart(barLabels, barValues);
 
-                // Render Horizontal Comparison Bars
-                const defaultChanges = {
-                    "Investment Scam": 35,
-                    "Online Shopping Scam": 12,
-                    "Loan Scam": -5,
-                    "Romance Scam": 8,
-                    "Crypto Scam": 22,
-                    "Call Center Scam": -10,
-                    "อื่น ๆ": 0
-                };
+                const trendSubEl = document.getElementById('trend-summary-text');
+                if (trendSubEl) {
+                    trendSubEl.textContent = totalReports > 0 
+                        ? `อัปเดตตามฐานข้อมูล Cloudflare D1 (รวม ${totalReports.toLocaleString()} เรื่อง)`
+                        : 'อัปเดตตามฐานข้อมูล Cloudflare D1 (ยังไม่มีรายงาน)';
+                }
 
-                const hBarsHtml = catEntries.map(([name, count], idx) => {
-                    const percent = Math.round((count / totalCases) * 100);
-                    const meta = TYPE_META[name] || { emoji: "⚠️", color: DEFAULT_COLORS[idx % DEFAULT_COLORS.length] };
-                    const changeVal = defaultChanges[name] !== undefined ? defaultChanges[name] : (idx % 2 === 0 ? 15 : -8);
-
-                    let changeBadge = '';
-                    if (changeVal > 0) {
-                        changeBadge = `<span class="text-red-600 font-bold flex items-center justify-end gap-0.5">↑ ${changeVal}%</span>`;
-                    } else if (changeVal < 0) {
-                        changeBadge = `<span class="text-green-600 font-bold flex items-center justify-end gap-0.5">↓ ${Math.abs(changeVal)}%</span>`;
-                    } else {
-                        changeBadge = `<span class="text-slate-400 font-semibold flex items-center justify-end gap-0.5">— 0%</span>`;
-                    }
-
-                    return `
-                        <div class="flex items-center gap-3">
-                            <div class="w-40 sm:w-56 text-xs sm:text-sm text-slate-700 font-medium shrink-0 flex items-center gap-1.5 truncate">
-                                <span>${meta.emoji}</span>
-                                <span class="truncate" title="${name}">${name}</span>
-                            </div>
-                            <div class="flex-1 h-7 bg-slate-100 rounded-lg overflow-hidden relative">
-                                <div class="h-full rounded-lg flex items-center justify-end pr-2 transition-all duration-500" 
-                                     style="width: ${Math.max(8, percent * 2.2)}%; background-color: ${meta.color};">
-                                    <span class="text-xs font-bold text-white drop-shadow-xs">${percent}%</span>
-                                </div>
-                            </div>
-                            <div class="text-xs sm:text-sm font-semibold w-16 text-right shrink-0">
-                                ${changeBadge}
-                            </div>
+                // 4. Render Horizontal Comparison Bars (Real MoM Category Growth)
+                const hContainer = document.getElementById('horizontal-bars-container');
+                if (catEntries.length === 0 || totalReports === 0) {
+                    hContainer.innerHTML = `
+                        <div class="text-center py-8 flex flex-col items-center justify-center text-slate-400">
+                            <span class="material-symbols-outlined text-4xl text-slate-300 mb-1">bar_chart</span>
+                            <p class="text-sm font-medium text-slate-600">ยังไม่มีข้อมูลการเปรียบเทียบในระบบ</p>
+                            <p class="text-xs text-slate-400 mt-0.5">ระบบจะคำนวณอัตราการเปลี่ยนแปลงจริงเมื่อมีรายงานแจ้งเข้ามา</p>
                         </div>
                     `;
-                }).join('');
+                } else {
+                    const catStatsMap = {};
+                    (data.category_stats || []).forEach(cs => {
+                        catStatsMap[cs.name] = cs;
+                    });
 
-                document.getElementById('horizontal-bars-container').innerHTML = hBarsHtml;
+                    const totalCases = catEntries.reduce((sum, item) => sum + item[1], 0) || 1;
+                    const hBarsHtml = catEntries.map(([name, count], idx) => {
+                        const percent = Math.round((count / totalCases) * 100);
+                        const meta = TYPE_META[name] || { emoji: "⚠️", color: DEFAULT_COLORS[idx % DEFAULT_COLORS.length] };
+                        const cStat = catStatsMap[name];
+                        const changeVal = cStat ? cStat.change_percent : 0;
+
+                        let changeBadge = '';
+                        if (changeVal > 0) {
+                            changeBadge = `<span class="text-red-600 font-bold flex items-center justify-end gap-0.5">↑ ${changeVal}%</span>`;
+                        } else if (changeVal < 0) {
+                            changeBadge = `<span class="text-green-600 font-bold flex items-center justify-end gap-0.5">↓ ${Math.abs(changeVal)}%</span>`;
+                        } else {
+                            changeBadge = `<span class="text-slate-400 font-semibold flex items-center justify-end gap-0.5">— 0%</span>`;
+                        }
+
+                        return `
+                            <div class="flex items-center gap-3">
+                                <div class="w-40 sm:w-56 text-xs sm:text-sm text-slate-700 font-medium shrink-0 flex items-center gap-1.5 truncate">
+                                    <span>${meta.emoji}</span>
+                                    <span class="truncate" title="${name}">${name}</span>
+                                </div>
+                                <div class="flex-1 h-7 bg-slate-100 rounded-lg overflow-hidden relative">
+                                    <div class="h-full rounded-lg flex items-center justify-end pr-2 transition-all duration-500" 
+                                         style="width: ${Math.max(10, percent)}%; background-color: ${meta.color};">
+                                        <span class="text-xs font-bold text-white drop-shadow-xs">${count.toLocaleString()} (${percent}%)</span>
+                                    </div>
+                                </div>
+                                <div class="text-xs sm:text-sm font-semibold w-16 text-right shrink-0">
+                                    ${changeBadge}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    hContainer.innerHTML = hBarsHtml;
+                }
 
             } catch (err) {
                 console.error('Failed to load dashboard data:', err);
@@ -390,6 +427,8 @@
             const ctx = document.getElementById('monthlyBarChart').getContext('2d');
             if (barChartInstance) barChartInstance.destroy();
 
+            const maxVal = Math.max(...data, 0);
+
             barChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -411,8 +450,14 @@
                             ticks: { font: { size: 12 }, color: '#94a3b8' }
                         },
                         y: {
-                            grid: { color: '#f1f5f9' },
-                            ticks: { font: { size: 12 }, color: '#94a3b8' }
+                            beginAtZero: true,
+                            suggestedMax: maxVal > 0 ? Math.ceil(maxVal * 1.2) : 5,
+                            ticks: { 
+                                precision: 0, 
+                                font: { size: 12 }, 
+                                color: '#94a3b8' 
+                            },
+                            grid: { color: '#f1f5f9' }
                         }
                     },
                     plugins: {

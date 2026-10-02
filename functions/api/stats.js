@@ -33,7 +33,7 @@ export async function onRequestGet(context) {
     } catch (_) {}
 
     // 3. สถิติแยกตามประเภทกลโกงจริงจากตาราง reports
-    // ดึงทั้งจากคอลัมน์ category หรือดึงจาก [ประเภทกลโกง] ใน incident_details
+    // ดึงทั้งจากคอลัมน์ category หรือดึงจาก [ประเภทกลโกง] ใน incident_details พร้อมคำนวณเดือนนี้ vs เดือนก่อน
     const { results: categoryRows } = await db.prepare(
       `SELECT 
          CASE 
@@ -41,7 +41,9 @@ export async function onRequestGet(context) {
            WHEN incident_details LIKE '[%]%' THEN SUBSTR(incident_details, 2, INSTR(incident_details, ']') - 2)
            ELSE 'ทั่วไป / อื่นๆ'
          END as cat_name,
-         COUNT(*) as count
+         COUNT(*) as count,
+         SUM(CASE WHEN strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) as this_month_count,
+         SUM(CASE WHEN strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now', '-1 month') THEN 1 ELSE 0 END) as last_month_count
        FROM reports 
        WHERE status != 'rejected'
        GROUP BY cat_name
@@ -49,10 +51,28 @@ export async function onRequestGet(context) {
     ).all();
 
     const categoriesMap = {};
+    const categoryStats = [];
     if (categoryRows && categoryRows.length > 0) {
       categoryRows.forEach(row => {
         const name = (row.cat_name || 'ทั่วไป / อื่นๆ').trim();
         categoriesMap[name] = (categoriesMap[name] || 0) + row.count;
+
+        const thisM = Number(row.this_month_count || 0);
+        const lastM = Number(row.last_month_count || 0);
+        let chg = 0;
+        if (lastM > 0) {
+          chg = Math.round(((thisM - lastM) / lastM) * 100);
+        } else if (thisM > 0) {
+          chg = 100;
+        }
+
+        categoryStats.push({
+          name: name,
+          count: row.count,
+          this_month: thisM,
+          last_month: lastM,
+          change_percent: chg
+        });
       });
     }
 
@@ -88,6 +108,7 @@ export async function onRequestGet(context) {
         total_damage: totals.total_damage || 0,
         total_searches: totalSearches,
         categories: categoriesMap,
+        category_stats: categoryStats,
         this_month_reports: thisMonth,
         last_month_reports: lastMonth,
         month_change_percent: momChange,
