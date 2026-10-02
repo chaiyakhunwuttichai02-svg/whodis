@@ -83,11 +83,11 @@ function renderHeader() {
     { name: 'แจ้งมิจฉาชีพ', url: 'report.html', isPublic: false },
     { name: 'สถิติ Scam', url: 'stats.html', isPublic: false },
     { name: 'รู้จักการโกง', url: 'knowledge.html', isPublic: false },
-    { name: 'ถูกโกงแล้วทำไง', url: 'emergency.html', isPublic: false }
+    { name: 'แนวทางเมื่อถูกฉ้อโกง', url: 'emergency.html', isPublic: false }
   ];
 
   if (isAdmin) {
-    navItems.push({ name: '🛡️ จัดการแอดมิน', url: 'admin_reports.html', isPublic: false });
+    navItems.push({ name: '⚙️ หลังบ้าน', url: 'admin_reports.html', isPublic: false });
   }
 
   const navLinksHtml = navItems.map(item => {

@@ -48,7 +48,7 @@ include 'header.php';
         <!-- ส่วนค้นหาหลัก -->
         <div class="text-center flex flex-col items-center mt-4">
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-gray-200 text-muted-text text-[13px] font-semibold rounded-full mb-6 shadow-sm">
-                <span class="material-symbols-outlined text-[16px]">shield</span> Check Before You Pay
+                <img src="assets/logo.png" alt="Whodis" class="w-4 h-4 rounded object-cover"> Check Before You Pay
             </div>
             
             <h1 class="text-[40px] md:text-[56px] font-bold text-primary-text leading-tight mb-4">
@@ -88,7 +88,7 @@ include 'header.php';
                 <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
                     <div class="w-3 h-3 rounded-full bg-success"></div>
                     <span class="text-[14px] font-bold text-primary-text">Low Risk</span>
-                    <span class="text-[13px] text-muted-text hidden sm:inline">- ประวัติใส</span>
+                    <span class="text-[13px] text-muted-text hidden sm:inline">- ไม่พบรายงาน</span>
                 </div>
                 <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
                     <div class="w-3 h-3 rounded-full bg-warning"></div>
