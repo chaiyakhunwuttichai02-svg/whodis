@@ -20,7 +20,7 @@ include 'header.php';
                 <span class="material-symbols-outlined text-[16px]">warning</span> Emergency Flow
             </div>
             <h1 class="text-[32px] md:text-[40px] font-bold text-primary-text flex items-center gap-3 mb-2">
-                <span class="bg-danger text-white text-[20px] px-2.5 py-1 rounded-lg tracking-wider">SOS</span> ถูกโกงแล้วทำไง?
+                <span class="bg-danger text-white text-[20px] px-2.5 py-1 rounded-lg tracking-wider">SOS</span> แนวทางเมื่อถูกฉ้อโกง
             </h1>
             <p class="text-muted-text text-[15px]">ขั้นตอนช่วยเหลือเร่งด่วน ทำตามลำดับ อย่าตื่นเต้น</p>
         </div>

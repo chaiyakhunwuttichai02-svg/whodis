@@ -149,7 +149,7 @@ include 'header.php';
                 <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-red-100">
                     <span class="material-symbols-outlined text-danger">sos</span>
                 </div>
-                <h3 class="font-bold text-danger text-[16px] mb-1">ถูกโกงแล้วทำไง</h3>
+                <h3 class="font-bold text-danger text-[16px] mb-1">แนวทางเมื่อถูกฉ้อโกง</h3>
                 <p class="text-[12px] text-muted-text leading-relaxed">ขั้นตอนช่วยเหลือเร่งด่วน พร้อมเบอร์ฉุกเฉิน</p>
             </a>
         </div>

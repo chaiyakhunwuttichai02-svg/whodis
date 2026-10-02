@@ -79,7 +79,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="report.php" class="nav-link <?= ($current_page == 'report.php') ? 'active' : 'text-muted-text' ?>">แจ้งมิจฉาชีพ</a>
                 <a href="stats.php" class="nav-link <?= ($current_page == 'stats.php') ? 'active' : 'text-muted-text' ?>">สถิติ Scam</a>
                 <a href="knowledge.php" class="nav-link <?= ($current_page == 'knowledge.php') ? 'active' : 'text-muted-text' ?>">รู้จักการโกง</a>
-                <a href="emergency.php" class="nav-link <?= ($current_page == 'emergency.php') ? 'active' : 'text-muted-text' ?>">ถูกโกงแล้วทำไง</a>
+                <a href="emergency.php" class="nav-link <?= ($current_page == 'emergency.php') ? 'active' : 'text-muted-text' ?>">แนวทางเมื่อถูกฉ้อโกง</a>
+                <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'admin'): ?>
+                    <a href="admin_reports.php" class="nav-link <?= ($current_page == 'admin_reports.php') ? 'active' : 'text-muted-text' ?>">⚙️ หลังบ้าน</a>
+                <?php endif; ?>
             </nav>
 
             <div class="flex items-center gap-3">
