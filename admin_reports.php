@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id']) || strtolower(trim($_SESSION['role'] ?? '')) !=
 // ดึงข้อมูลแอดมินจากฐานข้อมูลจริง เพื่อมาแสดงผลมุมขวาบน
 // ==========================================
 $admin_name = 'Admin';
-$admin_email = 'admin@whodis.com';
+$admin_email = 'Whodisdetected@gmail.com';
 
 try {
     $stmt_admin = $pdo->prepare("SELECT * FROM users WHERE id = ?");
@@ -28,7 +28,7 @@ try {
 } catch (PDOException $e) {
     // สำรองข้อมูลจาก Session กรณี Database Error
     $admin_name = $_SESSION['username'] ?? $_SESSION['name'] ?? $_SESSION['firstname'] ?? 'Admin';
-    $admin_email = $_SESSION['email'] ?? 'admin@whodis.com';
+    $admin_email = $_SESSION['email'] ?? 'Whodisdetected@gmail.com';
 }
 
 // รับค่า view และ filter
@@ -389,7 +389,7 @@ function e(string $value): string {
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Support Email</label>
-                                <input type="email" value="support@whodis.com" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:outline-none">
+                                <input type="email" value="Whodisdetected@gmail.com" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:outline-none">
                             </div>
                             <div class="flex items-center justify-between pt-2">
                                 <div>

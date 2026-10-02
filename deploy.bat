@@ -29,8 +29,8 @@ echo   🎉 สำเร็จเรียบร้อย 100%! เว็บไ�
 echo   👉 https://whodis.pages.dev
 echo.
 echo   เข้าสู่ระบบ Admin ได้ที่: https://whodis.pages.dev/login.html
-echo   อีเมล: adminwhodis@gmail.com
-echo   รหัสผ่าน: adminwhodis159753
+echo   อีเมล: Whodisdetected@gmail.com
+echo   รหัสผ่าน: adminwhodis159753 (หรือรหัสผ่านที่คุณตั้งไว้)
 echo ====================================================================
 echo.
 pause

@@ -218,19 +218,140 @@ function renderSosWidget() {
   const container = document.createElement('div');
   container.id = 'whodis-sos-widget';
   container.innerHTML = `
-    <!-- Floating SOS Trigger Button (Sticky Viewport Fixed & Responsive Mobile FAB) -->
-    <button id="sos-trigger-btn" onclick="toggleSosModal(true)" 
-            class="group fixed z-[99999] flex items-center justify-center bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-800 text-white font-bold rounded-full shadow-[0_8px_30px_rgba(225,29,72,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/40 cursor-pointer w-13 h-13 sm:w-auto sm:h-auto sm:py-3 sm:px-5 gap-2.5"
-            style="bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)); right: max(1.25rem, env(safe-area-inset-right, 1.25rem));"
-            title="สายด่วนโทรอายัดบัญชีด่วนทุกธนาคาร 24 ชม.">
-      <!-- Pulsing Beacon Indicator -->
-      <span class="absolute -top-1 -right-1 sm:relative sm:top-auto sm:right-auto flex h-3.5 w-3.5 sm:h-2.5 sm:w-2.5">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-80"></span>
-        <span class="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-2.5 sm:w-2.5 bg-amber-300 border-2 border-red-600 sm:border-0"></span>
-      </span>
-      <span class="material-symbols-outlined text-[24px] sm:text-[20px] text-white">e911_emergency</span>
-      <span class="text-[13.5px] tracking-wide whitespace-nowrap hidden sm:inline">สายด่วนอายัดบัญชี</span>
-    </button>
+    <!-- Floating Action Buttons Stack (Contact Developer + Emergency SOS) -->
+    <div id="whodis-floating-actions" class="fixed z-[99999] flex flex-col items-end gap-2.5 sm:gap-3 pointer-events-none"
+         style="bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)); right: max(1.25rem, env(safe-area-inset-right, 1.25rem));">
+      
+      <!-- 1. Floating Contact Developer Trigger Button (Top) -->
+      <button id="contact-dev-trigger-btn" onclick="toggleContactDevModal(true)" 
+              class="btn-knockout pointer-events-auto group flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-full shadow-[0_8px_25px_rgba(15,23,42,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 border border-slate-700/60 cursor-pointer w-13 h-13 sm:w-auto sm:h-auto sm:py-2.5 sm:px-4.5 gap-2"
+              title="ติดต่อผู้พัฒนา Whodis (Whodisdetected@gmail.com)">
+        <span class="material-symbols-outlined text-[23px] sm:text-[19px] text-slate-200 group-hover:text-emerald-400 transition-colors">support_agent</span>
+        <span class="text-[13px] tracking-wide whitespace-nowrap hidden sm:inline text-slate-100">ติดต่อผู้พัฒนา</span>
+      </button>
+
+      <!-- 2. Floating SOS Trigger Button (Bottom) -->
+      <button id="sos-trigger-btn" onclick="toggleSosModal(true)" 
+              class="btn-knockout pointer-events-auto group flex items-center justify-center bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-800 text-white font-bold rounded-full shadow-[0_8px_30px_rgba(225,29,72,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-white/40 cursor-pointer w-13 h-13 sm:w-auto sm:h-auto sm:py-3 sm:px-5 gap-2.5"
+              title="สายด่วนโทรอายัดบัญชีด่วนทุกธนาคาร 24 ชม.">
+        <!-- Pulsing Beacon Indicator -->
+        <span class="absolute -top-1 -right-1 sm:relative sm:top-auto sm:right-auto flex h-3.5 w-3.5 sm:h-2.5 sm:w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-80"></span>
+          <span class="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-2.5 sm:w-2.5 bg-amber-300 border-2 border-red-600 sm:border-0"></span>
+        </span>
+        <span class="material-symbols-outlined text-[24px] sm:text-[20px] text-white">e911_emergency</span>
+        <span class="text-[13.5px] tracking-wide whitespace-nowrap hidden sm:inline">สายด่วนอายัดบัญชี</span>
+      </button>
+    </div>
+
+    <!-- Contact Developer Modal Backdrop & Dialog -->
+    <div id="contact-dev-modal" class="hidden fixed inset-0 z-[100000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200">
+      <div class="relative w-full sm:max-w-[480px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[88vh] overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-6 shrink-0 relative border-b border-slate-700/50">
+          <button onclick="toggleContactDevModal(false)" class="absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer" title="ปิดหน้าต่าง">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-emerald-300 text-xs font-semibold mb-2 border border-emerald-400/20">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> พร้อมรับฟังและช่วยเหลือ
+          </div>
+          <h3 class="text-[19px] sm:text-[21px] font-bold leading-snug flex items-center gap-2">
+            <span class="material-symbols-outlined text-[24px] text-emerald-400">support_agent</span> ติดต่อผู้พัฒนา Whodis
+          </h3>
+          <p class="text-slate-300 text-xs mt-1">ยินดีรับฟังข้อเสนอแนะ แจ้งปัญหาการใช้งาน หรือแลกเปลี่ยนเพื่อพัฒนาแพลตฟอร์ม</p>
+        </div>
+
+        <!-- Body Content (Scrollable) -->
+        <div class="p-5 overflow-y-auto space-y-4 flex-1">
+          
+          <!-- Primary Email Card -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 shadow-2xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px] text-slate-500">mail</span> อีเมลทางการของผู้พัฒนา
+              </span>
+              <span class="text-[10.5px] text-emerald-700 bg-emerald-100/70 font-bold px-2 py-0.5 rounded-full border border-emerald-200">Official Contact</span>
+            </div>
+            
+            <div class="bg-white border border-slate-200/90 rounded-xl p-3 flex items-center justify-between gap-2 shadow-2xs">
+              <div class="min-w-0 flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">alternate_email</span>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[10px] text-slate-400 font-medium">Developer & Admin Email</p>
+                  <p class="text-[13px] sm:text-[14px] font-mono font-bold text-slate-800 truncate select-all">Whodisdetected@gmail.com</p>
+                </div>
+              </div>
+              <button onclick="copyDevEmail()" class="btn-knockout px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shrink-0 flex items-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer" title="คัดลอกอีเมล">
+                <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                <span>คัดลอก</span>
+              </button>
+            </div>
+
+            <!-- Mailto direct action button -->
+            <a href="mailto:Whodisdetected@gmail.com?subject=%E0%B8%95%E0%B8%B4%E0%B8%94%E0%B8%85%E0%B9%88%E0%B8%AD%E0%B8%9C%E0%B8%B9%E0%B9%89%E0%B8%9E%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2%20Whodis" 
+               class="btn-knockout mt-3 w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-98">
+              <span class="material-symbols-outlined text-[18px]">send</span>
+              <span>เปิดแอปส่งอีเมลทันที (Mail App)</span>
+            </a>
+          </div>
+
+          <!-- Common Topics -->
+          <div class="space-y-2">
+            <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px] text-slate-500">list_alt</span> หัวข้อที่สามารถติดต่อได้
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+                <span class="text-lg">🐞</span>
+                <div>
+                  <p class="font-bold text-slate-800">แจ้งพบบั๊ก / ปัญหา</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">ระบบทำงานผิดปกติ หรือพบข้อผิดพลาดบนหน้าเว็บ</p>
+                </div>
+              </div>
+              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+                <span class="text-lg">💡</span>
+                <div>
+                  <p class="font-bold text-slate-800">เสนอแนะฟีเจอร์ใหม่</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">ไอเดียปรับปรุง หรือฟังก์ชันที่อยากให้มีใน Whodis</p>
+                </div>
+              </div>
+              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+                <span class="text-lg">🔍</span>
+                <div>
+                  <p class="font-bold text-slate-800">แจ้งเบาะแสมิจฉาชีพ</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">ส่งหลักฐาน หรือประสานงานตรวจสอบข้อมูลคนโกง</p>
+                </div>
+              </div>
+              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+                <span class="text-lg">🤝</span>
+                <div>
+                  <p class="font-bold text-slate-800">สนับสนุนโครงการ</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">ร่วมมือพัฒนาข้อมูล หรือแลกเปลี่ยนแนวทางป้องกันภัย</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Alert Callout -->
+          <div class="p-3 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-2.5 text-xs text-rose-800">
+            <span class="material-symbols-outlined text-rose-600 text-[20px] shrink-0 mt-0.5">error</span>
+            <div class="text-[11.5px] leading-relaxed">
+              <span class="font-bold text-rose-900">กรณีถูกหลอกโอนเงินฉุกเฉิน:</span> 
+              กรุณากดปุ่มสีแดง <strong>"สายด่วนอายัดบัญชี"</strong> ที่ด้านล่างทันที เพื่อโทรระงับบัญชีธนาคารปลายทางได้ทันเวลา (Golden Hour)
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="p-3 bg-slate-50 border-t border-slate-200 text-center shrink-0">
+          <p class="text-[11px] text-slate-500">ทีมงานจะตอบกลับทางอีเมลโดยเร็วที่สุด • ปกติภายใน 24-48 ชั่วโมง</p>
+        </div>
+      </div>
+    </div>
 
     <!-- SOS Modal Backdrop & Dialog -->
     <div id="sos-modal" class="hidden fixed inset-0 z-[100000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200">
@@ -274,15 +395,27 @@ function renderSosWidget() {
   document.body.appendChild(container);
   renderSosBankItems(SOS_BANKS);
 
-  // Close modal when clicking backdrop
+  // Close modals when clicking backdrop
   const modal = document.getElementById('sos-modal');
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) toggleSosModal(false);
-  });
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) toggleSosModal(false);
+    });
+  }
+
+  const devModal = document.getElementById('contact-dev-modal');
+  if (devModal) {
+    devModal.addEventListener('click', (e) => {
+      if (e.target === devModal) toggleContactDevModal(false);
+    });
+  }
 
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') toggleSosModal(false);
+    if (e.key === 'Escape') {
+      toggleSosModal(false);
+      toggleContactDevModal(false);
+    }
   });
 }
 
@@ -364,6 +497,62 @@ function toggleSosModal(show) {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
   }
+}
+
+function toggleContactDevModal(show) {
+  const modal = document.getElementById('contact-dev-modal');
+  if (!modal) return;
+  if (show) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  } else {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+function copyDevEmail() {
+  const email = 'Whodisdetected@gmail.com';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(email).then(() => {
+      showWhodisToast('คัดลอกอีเมล ' + email + ' สำเร็จแล้ว!');
+    }).catch(() => {
+      fallbackCopyEmail(email);
+    });
+  } else {
+    fallbackCopyEmail(email);
+  }
+}
+
+function fallbackCopyEmail(text) {
+  const temp = document.createElement('input');
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  try {
+    document.execCommand('copy');
+    showWhodisToast('คัดลอกอีเมล ' + text + ' สำเร็จแล้ว!');
+  } catch (err) {
+    prompt('คัดลอกอีเมลนี้:', text);
+  }
+  document.body.removeChild(temp);
+}
+
+function showWhodisToast(msg) {
+  let toast = document.getElementById('whodis-global-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'whodis-global-toast';
+    toast.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[200000] bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 pointer-events-none opacity-0 -translate-y-3 border border-slate-700/60';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400 text-[18px]">check_circle</span><span>${escapeHtml(msg)}</span>`;
+  toast.classList.remove('opacity-0', '-translate-y-3');
+  toast.classList.add('opacity-100', 'translate-y-0');
+  setTimeout(() => {
+    toast.classList.remove('opacity-100', 'translate-y-0');
+    toast.classList.add('opacity-0', '-translate-y-3');
+  }, 2600);
 }
 
 function filterSosBanks(query) {
@@ -583,7 +772,7 @@ function initKnockoutButtonEffect() {
   // 3. Pointerdown listener with delegation
   document.addEventListener('pointerdown', (e) => {
     const btn = e.target.closest(
-      '.btn-knockout, .btn-green-solid, button[type="submit"], #search-form button, #sos-trigger-btn, a.btn-green-solid, .whodis-ripple-target, a[href^="tel:"]'
+      '.btn-knockout, .btn-green-solid, button[type="submit"], #search-form button, #sos-trigger-btn, #contact-dev-trigger-btn, a.btn-green-solid, .whodis-ripple-target, a[href^="tel:"]'
     );
     if (!btn) return;
 

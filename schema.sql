@@ -45,11 +45,11 @@ CREATE TABLE IF NOT EXISTS password_resets (
 );
 
 -- 5. สร้างข้อมูลเริ่มต้นสำหรับบัญชี Admin
--- อีเมล: adminwhodis@gmail.com | รหัสผ่านเริ่มต้น: adminwhodis159753
+-- อีเมล: Whodisdetected@gmail.com | รหัสผ่านเริ่มต้น: adminwhodis159753
 INSERT OR IGNORE INTO users (username, email, password, role) 
 VALUES (
     'Admin', 
-    'adminwhodis@gmail.com', 
+    'Whodisdetected@gmail.com', 
     'adminwhodis159753', 
     'admin'
 );
