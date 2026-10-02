@@ -2,10 +2,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   renderHeader();
+  renderSosWidget();
   initKnockoutButtonEffect();
 });
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  renderHeader();
+  renderSosWidget();
   initKnockoutButtonEffect();
 }
 
@@ -222,12 +225,12 @@ function renderSosWidget() {
     <div id="whodis-floating-actions" class="fixed z-[99999] flex flex-col items-end gap-2.5 sm:gap-3 pointer-events-none"
          style="bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)); right: max(1.25rem, env(safe-area-inset-right, 1.25rem));">
       
-      <!-- 1. Floating Contact Developer Trigger Button (Top) -->
+      <!-- 1. Floating Contact Developer Trigger Button (Top: Icon-Only Circle FAB) -->
       <button id="contact-dev-trigger-btn" onclick="toggleContactDevModal(true)" 
-              class="btn-knockout pointer-events-auto group flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-full shadow-[0_8px_25px_rgba(15,23,42,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 border border-slate-700/60 cursor-pointer w-13 h-13 sm:w-auto sm:h-auto sm:py-2.5 sm:px-4.5 gap-2"
-              title="ติดต่อผู้พัฒนา Whodis (Whodisdetected@gmail.com)">
-        <span class="material-symbols-outlined text-[23px] sm:text-[19px] text-slate-200 group-hover:text-emerald-400 transition-colors">support_agent</span>
-        <span class="text-[13px] tracking-wide whitespace-nowrap hidden sm:inline text-slate-100">ติดต่อผู้พัฒนา</span>
+              class="btn-knockout pointer-events-auto group flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-[0_8px_25px_rgba(15,23,42,0.4)] transition-all duration-300 hover:scale-110 active:scale-95 border-2 border-slate-700/60 cursor-pointer w-12 h-12 sm:w-13 sm:h-13"
+              title="ติดต่อผู้พัฒนา (Whodisdetected@gmail.com)"
+              aria-label="ติดต่อผู้พัฒนา">
+        <span class="material-symbols-outlined text-[24px] sm:text-[26px] text-slate-200 group-hover:text-emerald-400 transition-colors">support_agent</span>
       </button>
 
       <!-- 2. Floating SOS Trigger Button (Bottom) -->
