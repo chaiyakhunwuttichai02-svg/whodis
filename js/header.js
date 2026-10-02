@@ -408,15 +408,12 @@ function renderSosWidget() {
           </div>
 
           <!-- ========================================== -->
-          <!-- 🇬🇧 ENGLISH VERSION (ฉบับภาษาอังกฤษ) -->
+          <!-- ENGLISH VERSION (ฉบับภาษาอังกฤษ) -->
           <!-- ========================================== -->
           <div class="space-y-4 pt-1">
-            <div class="flex items-center gap-2 pb-2.5 border-b border-slate-200">
-              <span class="text-xl">🇬🇧</span>
-              <div>
-                <h4 class="font-black text-slate-900 text-sm sm:text-base">Terms and Conditions of Use</h4>
-                <p class="text-[11px] text-slate-500 font-medium">English Version</p>
-              </div>
+            <div class="pb-2.5 border-b border-slate-200">
+              <h4 class="font-black text-slate-900 text-sm sm:text-base">Terms and Conditions of Use</h4>
+              <p class="text-[11px] text-slate-500 font-medium">English Version (ฉบับภาษาอังกฤษ)</p>
             </div>
 
             <div class="text-slate-700 leading-relaxed space-y-2">
@@ -522,15 +519,12 @@ function renderSosWidget() {
           <div class="my-6 border-t-2 border-dashed border-slate-300"></div>
 
           <!-- ========================================== -->
-          <!-- 🇹🇭 THAI VERSION (ฉบับภาษาไทย) -->
+          <!-- THAI VERSION (ฉบับภาษาไทย) -->
           <!-- ========================================== -->
           <div class="space-y-4 pt-1">
-            <div class="flex items-center gap-2 pb-2.5 border-b border-slate-200">
-              <span class="text-xl">🇹🇭</span>
-              <div>
-                <h4 class="font-black text-slate-900 text-sm sm:text-base">ข้อกำหนดและเงื่อนไขการใช้งานเบื้องต้น</h4>
-                <p class="text-[11px] text-slate-500 font-medium">ฉบับภาษาไทย (Thai Version)</p>
-              </div>
+            <div class="pb-2.5 border-b border-slate-200">
+              <h4 class="font-black text-slate-900 text-sm sm:text-base">ข้อกำหนดและเงื่อนไขการใช้งานเบื้องต้น</h4>
+              <p class="text-[11px] text-slate-500 font-medium">ฉบับภาษาไทย (Thai Version)</p>
             </div>
 
             <div class="text-slate-700 leading-relaxed space-y-2">
@@ -633,23 +627,25 @@ function renderSosWidget() {
           </div>
         </div>
 
-        <!-- Floating Scroll to Bottom Button (Consent Mode Only) -->
-        <button id="tos-floating-scroll-btn" type="button" onclick="scrollTosToBottom()" class="hidden absolute right-4 bottom-[170px] sm:bottom-[175px] z-20 py-2 px-3.5 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full text-xs font-bold shadow-xl backdrop-blur-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95">
-          <span>เลื่อนลงล่างสุดเพื่อยอมรับ</span>
+        <!-- Single Dark Floating Button: Scroll to Bottom (Consent Mode Only) -->
+        <button id="tos-floating-scroll-btn" type="button" onclick="scrollTosToBottom()" class="hidden absolute right-4 sm:right-6 bottom-[60px] sm:bottom-[65px] z-30 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs sm:text-[13px] font-bold shadow-2xl flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95 border border-slate-700/60">
+          <span>เลื่อนลงล่างสุด</span>
           <span class="material-symbols-outlined text-[16px]">arrow_downward</span>
         </button>
 
-        <!-- Footer / Acceptance Controls (Consent Mode) -->
-        <div id="tos-consent-controls" class="p-4 sm:p-5 bg-white border-t border-slate-200 shrink-0 space-y-2.5">
-          <div class="flex items-center justify-between pb-1">
-            <span class="text-[11px] text-slate-500 font-medium flex items-center gap-1">
-              <span class="material-symbols-outlined text-[15px] text-blue-600">verified</span>
-              กรุณาอ่านและยอมรับข้อกำหนดการใช้งาน
+        <!-- Prompt to Scroll to Bottom Bar (Consent Mode Before Reaching Bottom) -->
+        <div id="tos-scroll-prompt-bar" class="hidden p-3.5 sm:p-4 bg-slate-100/90 border-t border-slate-200 shrink-0 text-center flex items-center justify-center gap-2 text-slate-600 text-xs sm:text-[13px] font-medium">
+          <span class="material-symbols-outlined text-[18px] text-slate-500 animate-bounce">arrow_downward</span>
+          <span>กรุณาเลื่อนลงอ่านข้อกำหนดให้สุด เพื่อเปิดแถบกดยอมรับ</span>
+        </div>
+
+        <!-- Footer / Acceptance Controls (Consent Mode - Appears only after scrolled to bottom) -->
+        <div id="tos-consent-controls" class="hidden p-4 sm:p-5 bg-white border-t border-slate-200 shrink-0 space-y-2.5 transition-all">
+          <div class="flex items-center justify-between pb-0.5">
+            <span class="text-[11.5px] text-emerald-700 font-semibold flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              เลื่อนอ่านครบถ้วนแล้ว กรุณากดยอมรับเพื่อดำเนินการต่อ
             </span>
-            <button id="tos-scroll-bottom-btn" type="button" onclick="scrollTosToBottom()" class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-all shadow-2xs cursor-pointer">
-              <span>เลื่อนลงล่างสุด</span>
-              <span class="material-symbols-outlined text-[15px]">arrow_downward</span>
-            </button>
           </div>
 
           <label class="flex items-start gap-3 p-3 bg-slate-50 border border-slate-200/90 rounded-2xl cursor-pointer hover:bg-slate-100/70 transition-colors">
@@ -696,9 +692,7 @@ function renderSosWidget() {
   const tosModal = document.getElementById('whodis-tos-modal');
   if (tosModal) {
     tosModal.addEventListener('click', (e) => {
-      const consentControls = document.getElementById('tos-consent-controls');
-      const isConsentMode = consentControls && !consentControls.classList.contains('hidden');
-      if (e.target === tosModal && !isConsentMode) {
+      if (e.target === tosModal && !__whodisTosIsConsentMode) {
         toggleTosModal(false);
       }
     });
@@ -709,9 +703,7 @@ function renderSosWidget() {
     if (e.key === 'Escape') {
       toggleSosModal(false);
       toggleContactDevModal(false);
-      const consentControls = document.getElementById('tos-consent-controls');
-      const isConsentMode = consentControls && !consentControls.classList.contains('hidden');
-      if (!isConsentMode) {
+      if (!__whodisTosIsConsentMode) {
         toggleTosModal(false);
       }
     }
@@ -827,13 +819,22 @@ function toggleContactDevModal(show) {
 }
 
 let __whodisTosOnAccept = null;
+let __whodisTosReachedBottom = false;
+let __whodisTosIsConsentMode = false;
 
 function toggleTosModal(show, isConsentMode = false, onAccept = null) {
   const modal = document.getElementById('whodis-tos-modal');
   if (!modal) return;
   if (show) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
     __whodisTosOnAccept = onAccept;
+    __whodisTosIsConsentMode = isConsentMode;
+    __whodisTosReachedBottom = false;
+
     const consentControls = document.getElementById('tos-consent-controls');
+    const promptBar = document.getElementById('tos-scroll-prompt-bar');
     const readonlyControls = document.getElementById('tos-readonly-controls');
     const closeBtn = document.getElementById('tos-close-btn');
     const agreeCheckbox = document.getElementById('tos-agree-checkbox');
@@ -842,27 +843,32 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
     const scrollBody = document.getElementById('whodis-tos-scroll-body');
 
     if (scrollBody) scrollBody.scrollTop = 0;
+    if (agreeCheckbox) agreeCheckbox.checked = false;
+    if (acceptBtn) acceptBtn.disabled = true;
 
     if (isConsentMode) {
-      if (consentControls) consentControls.classList.remove('hidden');
-      if (readonlyControls) readonlyControls.classList.add('hidden');
       if (closeBtn) closeBtn.classList.add('hidden');
-      if (agreeCheckbox) agreeCheckbox.checked = false;
-      if (acceptBtn) acceptBtn.disabled = true;
-      if (floatingBtn) floatingBtn.classList.remove('hidden');
-    } else {
+      if (readonlyControls) readonlyControls.classList.add('hidden');
       if (consentControls) consentControls.classList.add('hidden');
-      if (readonlyControls) readonlyControls.classList.remove('hidden');
+      if (promptBar) promptBar.classList.remove('hidden');
+      if (floatingBtn) floatingBtn.classList.remove('hidden');
+
+      setTimeout(() => {
+        handleTosScroll();
+      }, 60);
+    } else {
       if (closeBtn) closeBtn.classList.remove('hidden');
+      if (readonlyControls) readonlyControls.classList.remove('hidden');
+      if (consentControls) consentControls.classList.add('hidden');
+      if (promptBar) promptBar.classList.add('hidden');
       if (floatingBtn) floatingBtn.classList.add('hidden');
     }
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
   } else {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
     __whodisTosOnAccept = null;
+    __whodisTosIsConsentMode = false;
+    __whodisTosReachedBottom = false;
     const floatingBtn = document.getElementById('tos-floating-scroll-btn');
     if (floatingBtn) floatingBtn.classList.add('hidden');
   }
@@ -872,20 +878,25 @@ function handleTosScroll() {
   const scrollBody = document.getElementById('whodis-tos-scroll-body');
   const floatingBtn = document.getElementById('tos-floating-scroll-btn');
   const consentControls = document.getElementById('tos-consent-controls');
-  if (!scrollBody || !floatingBtn || !consentControls) return;
+  const promptBar = document.getElementById('tos-scroll-prompt-bar');
+  if (!scrollBody) return;
 
-  const isConsent = !consentControls.classList.contains('hidden');
-  if (!isConsent) {
-    floatingBtn.classList.add('hidden');
+  if (!__whodisTosIsConsentMode) {
+    if (floatingBtn) floatingBtn.classList.add('hidden');
+    if (promptBar) promptBar.classList.add('hidden');
     return;
   }
 
-  // If scrolled to within 70px of bottom, hide floating button
   const distanceToBottom = scrollBody.scrollHeight - scrollBody.scrollTop - scrollBody.clientHeight;
-  if (distanceToBottom < 70) {
-    floatingBtn.classList.add('hidden');
-  } else {
-    floatingBtn.classList.remove('hidden');
+  if (distanceToBottom < 60) {
+    __whodisTosReachedBottom = true;
+    if (floatingBtn) floatingBtn.classList.add('hidden');
+    if (promptBar) promptBar.classList.add('hidden');
+    if (consentControls) consentControls.classList.remove('hidden');
+  } else if (!__whodisTosReachedBottom) {
+    if (floatingBtn) floatingBtn.classList.remove('hidden');
+    if (promptBar) promptBar.classList.remove('hidden');
+    if (consentControls) consentControls.classList.add('hidden');
   }
 }
 
@@ -893,20 +904,32 @@ function scrollTosToBottom() {
   const container = document.getElementById('whodis-tos-scroll-body');
   if (container) {
     container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    setTimeout(() => {
+      handleTosScroll();
+    }, 450);
   }
-  const floatingBtn = document.getElementById('tos-floating-scroll-btn');
-  if (floatingBtn) floatingBtn.classList.add('hidden');
 }
 
 function toggleTosAcceptBtn() {
   const checkbox = document.getElementById('tos-agree-checkbox');
   const btn = document.getElementById('tos-accept-btn');
   if (checkbox && btn) {
+    if (!__whodisTosReachedBottom) {
+      checkbox.checked = false;
+      btn.disabled = true;
+      alert('กรุณาเลื่อนอ่านข้อกำหนดลงมาให้สุดก่อนยอมรับ');
+      return;
+    }
     btn.disabled = !checkbox.checked;
   }
 }
 
 function confirmAcceptTos() {
+  if (!__whodisTosReachedBottom) {
+    alert('กรุณาเลื่อนอ่านข้อกำหนดลงมาให้สุดก่อนยอมรับ');
+    return;
+  }
+
   const user = (window.Auth && typeof window.Auth.getUser === 'function') ? window.Auth.getUser() : null;
   if (user && user.id) {
     localStorage.setItem('whodis_tos_accepted_' + user.id, 'true');
