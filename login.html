@@ -185,7 +185,7 @@
 
     <!-- Scripts -->
     <script src="js/auth.js"></script>
-    <script src="js/header.js?v=contact_v4"></script>
+    <script src="js/header.js?v=tos_v1"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const redirectParam = urlParams.get('redirect');
@@ -197,14 +197,32 @@
             if (noticeBox) noticeBox.classList.remove('hidden');
         }
 
+        function proceedAfterLogin(user) {
+            if (redirectParam && !redirectParam.includes('login') && !redirectParam.includes('register')) {
+                window.location.href = redirectParam;
+            } else if (user && (user.role || '').toLowerCase() === 'admin') {
+                window.location.href = 'admin_reports.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
         // ถ้าเข้าสู่ระบบอยู่แล้ว ให้เปลี่ยนเส้นทางตามบทบาทหรือหน้าที่ตั้งใจไป
         if (Auth.isLoggedIn()) {
-            if (redirectParam && !redirectParam.includes('login') && !redirectParam.includes('register')) {
-                window.location.replace(redirectParam);
-            } else if (Auth.isAdmin()) {
-                window.location.replace('admin_reports.html');
+            const currentUser = Auth.getUser();
+            const tosAccepted = currentUser ? localStorage.getItem('whodis_tos_accepted_' + currentUser.id) : null;
+            if (tosAccepted === 'true') {
+                proceedAfterLogin(currentUser);
             } else {
-                window.location.replace('index.html');
+                window.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        if (typeof toggleTosModal === 'function') {
+                            toggleTosModal(true, true, () => proceedAfterLogin(currentUser));
+                        } else {
+                            proceedAfterLogin(currentUser);
+                        }
+                    }, 60);
+                });
             }
         }
 
@@ -232,13 +250,16 @@
 
                 if (res.ok && data.success) {
                     Auth.setUser(data.user);
-                    // นำทางไปยังหน้าที่ตั้งใจเข้าแต่แรก (Seamless Redirect)
-                    if (redirectParam && !redirectParam.includes('login') && !redirectParam.includes('register')) {
-                        window.location.href = redirectParam;
-                    } else if (data.user.role === 'admin') {
-                        window.location.href = 'admin_reports.html';
+                    const tosAccepted = localStorage.getItem('whodis_tos_accepted_' + data.user.id);
+                    if (tosAccepted === 'true') {
+                        proceedAfterLogin(data.user);
                     } else {
-                        window.location.href = 'index.html';
+                        // แสดงข้อกำหนดและนโยบายความเป็นส่วนตัวเพื่อให้ผู้ใช้กดยอมรับก่อนเข้าใช้งานเว็บไซต์
+                        if (typeof toggleTosModal === 'function') {
+                            toggleTosModal(true, true, () => proceedAfterLogin(data.user));
+                        } else {
+                            proceedAfterLogin(data.user);
+                        }
                     }
                 } else {
                     alertBox.classList.remove('hidden');

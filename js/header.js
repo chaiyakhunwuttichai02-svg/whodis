@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHeader();
   renderSosWidget();
   initKnockoutButtonEffect();
+  initTosFooterLink();
 });
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
   renderHeader();
   renderSosWidget();
   initKnockoutButtonEffect();
+  initTosFooterLink();
 }
 
 function renderHeader() {
@@ -379,6 +381,101 @@ function renderSosWidget() {
         </div>
       </div>
     </div>
+
+    <!-- Terms of Service & Privacy Policy Modal Backdrop & Dialog -->
+    <div id="whodis-tos-modal" class="hidden fixed inset-0 z-[100000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200">
+      <div class="relative w-full sm:max-w-[580px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[88vh] overflow-hidden border border-slate-100">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-6 shrink-0 relative border-b border-slate-700/50">
+          <button id="tos-close-btn" onclick="toggleTosModal(false)" class="hidden absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer" title="ปิดหน้าต่าง">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-emerald-300 text-xs font-semibold mb-2 border border-emerald-400/20">
+            <span class="material-symbols-outlined text-[14px]">policy</span> นโยบายและข้อกำหนด (Terms & Privacy)
+          </div>
+          <h3 class="text-[17px] sm:text-[19px] font-bold leading-snug">
+            ข้อกำหนดและเงื่อนไขการใช้งาน และนโยบายความเป็นส่วนตัว
+          </h3>
+          <p class="text-slate-300 text-xs mt-0.5">(Terms of Service & Privacy Policy)</p>
+        </div>
+
+        <!-- Scrollable Terms Content -->
+        <div class="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-[13px] leading-relaxed text-slate-700 bg-slate-50/50 flex-1 divide-y divide-slate-200/70">
+          <div class="text-slate-800 font-medium">
+            ยินดีต้อนรับสู่เว็บไซต์ whodis กรุณาอ่านข้อกำหนดและเงื่อนไขเหล่านี้อย่างละเอียดก่อนเริ่มต้นใช้งาน การที่คุณเข้าถึงและใช้งานเว็บไซต์นี้ ถือว่าคุณได้ยอมรับและตกลงที่จะปฏิบัติตามข้อกำหนดและเงื่อนไขทั้งหมดด้านล่างนี้
+          </div>
+
+          <!-- 1. การเก็บรวบรวมและการให้ความยินยอมในการใช้ข้อมูล -->
+          <div class="pt-3.5 space-y-2">
+            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+              <span>1.</span> การเก็บรวบรวมและการให้ความยินยอมในการใช้ข้อมูล
+            </h4>
+            <div class="pl-3.5 space-y-2 border-l-2 border-slate-300">
+              <p><strong class="text-slate-900">ความยินยอมของผู้ใช้:</strong> ในการส่ง แจ้งเบาะแส หรือบันทึกข้อมูลใดๆ ลงในระบบของ whodis ผู้ใช้งานยินยอมให้เว็บไซต์จัดเก็บ ประมวลผล และแสดงผลข้อมูลดังกล่าวต่อสาธารณะหรือผู้ใช้งานรายอื่น เพื่อวัตถุประสงค์ในการตรวจสอบและเฝ้าระวัง</p>
+              <p><strong class="text-slate-900">ข้อมูลส่วนบุคคล:</strong> เว็บไซต์อาจมีการจัดเก็บข้อมูลการใช้งานเบื้องต้น (เช่น IP Address, คุกกี้ หรือข้อมูลที่ท่านระบุในระบบ) เพื่อนำมาพัฒนาและปรับปรุงการให้บริการ รวมถึงใช้เป็นหลักฐานทางคอมพิวเตอร์หากเกิดกรณีพิพาท</p>
+            </div>
+          </div>
+
+          <!-- 2. ข้อจำกัดและข้อสงวนสิทธิ์ความรับผิดชอบ -->
+          <div class="pt-3.5 space-y-2">
+            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+              <span>2.</span> ข้อจำกัดและข้อสงวนสิทธิ์ความรับผิดชอบ (Limitation of Liability / Disclaimer)
+            </h4>
+            <div class="pl-3.5 space-y-2 border-l-2 border-slate-300">
+              <p><strong class="text-slate-900">สถานะของเว็บไซต์:</strong> whodis เป็นเพียง "พื้นที่ตัวกลาง" ในการรวบรวมและแสดงผลข้อมูลที่ได้รับจากผู้ใช้งานหรือแหล่งข้อมูลภายนอกเท่านั้น ทางเว็บไซต์ไม่มีส่วนเกี่ยวข้องกับการกระทำใดๆ ที่ถูกระบุถึงในข้อมูล</p>
+              <p><strong class="text-slate-900">ความถูกต้องของข้อมูล:</strong> ทางเราไม่รับรองความถูกต้อง ความสมบูรณ์ หรือความเป็นจริงของข้อมูลที่ปรากฏบนเว็บไซต์ ข้อมูลที่ถูกแจ้งหรือรายงานเข้ามาเป็นความรับผิดชอบของผู้ที่นำเข้าข้อมูลนั้นๆ แต่เพียงผู้เดียว</p>
+              <p><strong class="text-slate-900">การปฏิเสธความรับผิด:</strong> whodis รวมถึงผู้พัฒนา ผู้ดูแลระบบ และผู้ที่เกี่ยวข้อง ขอปฏิเสธความรับผิดชอบต่อความเสียหายใดๆ ทั้งทางตรงและทางอ้อม (รวมถึงการเสียชื่อเสียง การสูญเสียทรัพย์สิน หรือการถูกดำเนินคดีทางกฎหมาย) ที่เกิดจากการนำข้อมูลบนเว็บไซต์นี้ไปใช้ การตัดสินใจเชื่อข้อมูล หรือการรายงานข้อมูลที่เป็นเท็จ</p>
+            </div>
+          </div>
+
+          <!-- 3. หน้าที่และความรับผิดชอบของผู้ใช้งาน -->
+          <div class="pt-3.5 space-y-2">
+            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+              <span>3.</span> หน้าที่และความรับผิดชอบของผู้ใช้งาน
+            </h4>
+            <div class="pl-3.5 space-y-1.5 border-l-2 border-slate-300">
+              <p>• ผู้ใช้งานต้องให้ข้อมูลที่เป็นความจริง และมีหลักฐานอ้างอิงที่สามารถตรวจสอบได้</p>
+              <p>• ห้ามมิให้ผู้ใช้งานเจตนานำเข้าข้อมูลอันเป็นเท็จเพื่อกลั่นแกล้ง หมิ่นประมาท หรือสร้างความเสื่อมเสียแก่บุคคลที่สาม หากตรวจสอบพบ ทางเว็บไซต์จะให้ความร่วมมือกับเจ้าหน้าที่พนักงานตามกฎหมายอย่างถึงที่สุด</p>
+              <p>• ผู้ใช้งานต้องรับผิดชอบต่อผลกระทบทางกฎหมายใดๆ ที่เกิดจากการแจ้งข้อมูลของตนเองแต่เพียงผู้เดียว</p>
+            </div>
+          </div>
+
+          <!-- 4. สิทธิ์ในการจัดการเนื้อหา -->
+          <div class="pt-3.5 space-y-2">
+            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+              <span>4.</span> สิทธิ์ในการจัดการเนื้อหา
+            </h4>
+            <div class="pl-3.5 border-l-2 border-slate-300">
+              <p>ทางเว็บไซต์สงวนสิทธิ์อย่างเด็ดขาดในการ ซ่อน ลบ แก้ไข หรือระงับการแสดงผลข้อมูลใดๆ ก็ตามที่พิจารณาแล้วว่าไม่เหมาะสม ขัดต่อกฎหมาย หรือมีการร้องเรียนที่สมเหตุสมผล โดยไม่จำเป็นต้องแจ้งให้ทราบล่วงหน้า</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer / Acceptance Controls (Consent Mode) -->
+        <div id="tos-consent-controls" class="p-4 sm:p-5 bg-white border-t border-slate-200 shrink-0 space-y-3">
+          <label class="flex items-start gap-3 p-3 bg-slate-50 border border-slate-200/90 rounded-2xl cursor-pointer hover:bg-slate-100/70 transition-colors">
+            <input type="checkbox" id="tos-agree-checkbox" onchange="toggleTosAcceptBtn()" class="w-4 h-4 mt-0.5 accent-slate-900 rounded cursor-pointer">
+            <span class="text-xs sm:text-[13px] font-semibold text-slate-800 leading-snug">
+              ฉันได้อ่าน ทำความเข้าใจ และยอมรับข้อกำหนด เงื่อนไข และนโยบายความเป็นส่วนตัวทั้งหมดของ whodis
+            </span>
+          </label>
+          <button id="tos-accept-btn" onclick="confirmAcceptTos()" disabled 
+                  class="btn-knockout w-full py-3 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
+            <span>ยอมรับและเข้าสู่เว็บไซต์</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+        </div>
+
+        <!-- Footer for Read-Only Mode (Close Button) -->
+        <div id="tos-readonly-controls" class="hidden p-4 bg-white border-t border-slate-200 text-center shrink-0">
+          <button onclick="toggleTosModal(false)" class="btn-knockout w-full sm:w-auto px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs sm:text-sm transition-all cursor-pointer">
+            ปิดหน้าต่าง
+          </button>
+        </div>
+
+      </div>
+    </div>
   `;
 
   document.body.appendChild(container);
@@ -399,13 +496,45 @@ function renderSosWidget() {
     });
   }
 
+  const tosModal = document.getElementById('whodis-tos-modal');
+  if (tosModal) {
+    tosModal.addEventListener('click', (e) => {
+      const consentControls = document.getElementById('tos-consent-controls');
+      const isConsentMode = consentControls && !consentControls.classList.contains('hidden');
+      if (e.target === tosModal && !isConsentMode) {
+        toggleTosModal(false);
+      }
+    });
+  }
+
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       toggleSosModal(false);
       toggleContactDevModal(false);
+      const consentControls = document.getElementById('tos-consent-controls');
+      const isConsentMode = consentControls && !consentControls.classList.contains('hidden');
+      if (!isConsentMode) {
+        toggleTosModal(false);
+      }
     }
   });
+
+  initTosFooterLink();
+
+  // If user is logged in but hasn't accepted ToS yet (and not currently on login.html), show consent modal
+  setTimeout(() => {
+    try {
+      const user = (window.Auth && typeof window.Auth.getUser === 'function') ? window.Auth.getUser() : null;
+      if (user && user.id) {
+        const isAccepted = localStorage.getItem('whodis_tos_accepted_' + user.id);
+        const path = window.location.pathname.toLowerCase();
+        if (isAccepted !== 'true' && !path.includes('login')) {
+          toggleTosModal(true, true);
+        }
+      }
+    } catch (e) {}
+  }, 120);
 }
 
 function renderSosBankItems(banks) {
@@ -498,6 +627,82 @@ function toggleContactDevModal(show) {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
   }
+}
+
+let __whodisTosOnAccept = null;
+
+function toggleTosModal(show, isConsentMode = false, onAccept = null) {
+  const modal = document.getElementById('whodis-tos-modal');
+  if (!modal) return;
+  if (show) {
+    __whodisTosOnAccept = onAccept;
+    const consentControls = document.getElementById('tos-consent-controls');
+    const readonlyControls = document.getElementById('tos-readonly-controls');
+    const closeBtn = document.getElementById('tos-close-btn');
+    const agreeCheckbox = document.getElementById('tos-agree-checkbox');
+    const acceptBtn = document.getElementById('tos-accept-btn');
+
+    if (isConsentMode) {
+      if (consentControls) consentControls.classList.remove('hidden');
+      if (readonlyControls) readonlyControls.classList.add('hidden');
+      if (closeBtn) closeBtn.classList.add('hidden');
+      if (agreeCheckbox) agreeCheckbox.checked = false;
+      if (acceptBtn) acceptBtn.disabled = true;
+    } else {
+      if (consentControls) consentControls.classList.add('hidden');
+      if (readonlyControls) readonlyControls.classList.remove('hidden');
+      if (closeBtn) closeBtn.classList.remove('hidden');
+    }
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  } else {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    __whodisTosOnAccept = null;
+  }
+}
+
+function toggleTosAcceptBtn() {
+  const checkbox = document.getElementById('tos-agree-checkbox');
+  const btn = document.getElementById('tos-accept-btn');
+  if (checkbox && btn) {
+    btn.disabled = !checkbox.checked;
+  }
+}
+
+function confirmAcceptTos() {
+  const user = (window.Auth && typeof window.Auth.getUser === 'function') ? window.Auth.getUser() : null;
+  if (user && user.id) {
+    localStorage.setItem('whodis_tos_accepted_' + user.id, 'true');
+  } else {
+    localStorage.setItem('whodis_tos_accepted_guest', 'true');
+  }
+
+  toggleTosModal(false);
+
+  if (typeof __whodisTosOnAccept === 'function') {
+    const cb = __whodisTosOnAccept;
+    __whodisTosOnAccept = null;
+    cb();
+  }
+}
+
+function initTosFooterLink() {
+  if (document.getElementById('whodis-tos-footer-link')) return;
+  const footerContainer = document.querySelector('footer > div') || document.querySelector('footer');
+  if (!footerContainer) return;
+
+  const linkDiv = document.createElement('div');
+  linkDiv.id = 'whodis-tos-footer-link';
+  linkDiv.className = 'mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-center gap-4 text-[11.5px] text-muted-text';
+  linkDiv.innerHTML = `
+    <button type="button" onclick="toggleTosModal(true, false)" class="hover:text-primary-text hover:underline transition-colors cursor-pointer inline-flex items-center gap-1 font-medium text-slate-500 hover:text-slate-900">
+      <span class="material-symbols-outlined text-[15px] text-slate-400">gavel</span>
+      <span>ข้อกำหนดและนโยบายความเป็นส่วนตัว (Terms of Service & Privacy Policy)</span>
+    </button>
+  `;
+  footerContainer.appendChild(linkDiv);
 }
 
 function copyDevEmail() {
