@@ -314,7 +314,7 @@ function renderSosWidget() {
               <div class="p-3 bg-white border border-slate-200/90 rounded-xl flex items-start gap-2.5 shadow-2xs">
                 <span class="text-lg shrink-0">🐞</span>
                 <div>
-                  <p class="font-bold text-slate-800">แจ้งพบบั๊ก / ปัญหา</p>
+                  <p class="font-bold text-slate-800">แจ้งพบปัญหา</p>
                   <p class="text-[11px] text-slate-500 mt-0.5">ระบบทำงานผิดปกติ หรือพบข้อผิดพลาดบนหน้าเว็บ</p>
                 </div>
               </div>

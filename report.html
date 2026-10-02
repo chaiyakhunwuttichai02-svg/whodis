@@ -214,28 +214,27 @@
                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-slate-400 focus:outline-none resize-none transition-colors"></textarea>
                         </div>
                         <div>
-                            <label class="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">แนบหลักฐาน (สลิปโอนเงิน / Screenshot แชต)</label>
-                            <div id="upload-box" onclick="document.getElementById('evidence_file').click()" 
-                                 class="border-2 border-dashed border-slate-300 hover:border-slate-900 bg-slate-50/50 hover:bg-slate-50 rounded-2xl p-6 text-center transition-colors cursor-pointer">
-                                <input type="file" id="evidence_file" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleFileSelect(event)">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-xs sm:text-sm font-medium text-slate-700">แนบหลักฐาน (สลิปโอนเงิน / Screenshot แชต)</label>
+                                <span id="evidence-count-badge" class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">แนบแล้ว 0/5 ภาพ</span>
+                            </div>
+
+                            <!-- Upload Box Dropzone (Up to 5 images) -->
+                            <div id="upload-box" onclick="document.getElementById('evidence_files').click()" 
+                                 class="border-2 border-dashed border-slate-300 hover:border-slate-900 bg-slate-50/50 hover:bg-slate-50 rounded-2xl p-5 text-center transition-colors cursor-pointer">
+                                <input type="file" id="evidence_files" accept="image/jpeg, image/png, image/webp" multiple class="hidden" onchange="handleFilesSelect(event)">
                                 <div class="flex flex-col items-center justify-center gap-1.5">
                                     <div class="w-10 h-10 rounded-full bg-white shadow-xs flex items-center justify-center border border-slate-200 text-slate-600">
                                         <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
                                     </div>
-                                    <p class="text-xs sm:text-sm font-bold text-slate-700">คลิกเพื่อเลือกรูปภาพหลักฐาน</p>
-                                    <p class="text-[11px] text-slate-400">รองรับ JPG, PNG (ระบบจะบีบอัดภาพให้อัตโนมัติ)</p>
+                                    <p class="text-xs sm:text-sm font-bold text-slate-700">คลิกเพื่อเลือกรูปภาพหลักฐาน (แนบได้สูงสุด 5 ภาพ)</p>
+                                    <p class="text-[11px] text-slate-400">รองรับ JPG, PNG, WEBP (เลือกได้พร้อมกันหลายภาพ ระบบย่อขนาดให้อัตโนมัติ)</p>
                                 </div>
                             </div>
-                            <!-- Preview Card -->
-                            <div id="image-preview-card" class="hidden mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-2.5 min-w-0">
-                                    <img id="preview-img" src="" alt="Preview" class="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0">
-                                    <div class="min-w-0">
-                                        <p id="preview-filename" class="text-xs font-bold text-slate-800 truncate">image.jpg</p>
-                                        <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">พร้อมส่ง</span>
-                                    </div>
-                                </div>
-                                <button type="button" onclick="removeSelectedImage()" class="text-xs text-red-500 hover:text-red-700 font-bold px-2 py-1">ลบรูป</button>
+
+                            <!-- Multiple Images Preview Grid -->
+                            <div id="evidence-preview-grid" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <!-- Populated by JS -->
                             </div>
                         </div>
                     </div>
@@ -267,6 +266,15 @@
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
                                 <span class="text-slate-500">วันที่เกิดเหตุ:</span>
                                 <span id="summary-date" class="font-bold text-slate-900">-</span>
+                            </div>
+                            <div class="py-1 border-b border-slate-200/60">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-slate-500">รูปภาพหลักฐาน:</span>
+                                    <span id="summary-evidence-count" class="font-bold text-slate-900">0 ภาพ</span>
+                                </div>
+                                <div id="summary-evidence-preview" class="grid grid-cols-5 gap-2 py-1 hidden">
+                                    <!-- Mini thumbnails -->
+                                </div>
                             </div>
                             <div class="py-1">
                                 <span class="text-slate-500 block mb-1">รายละเอียดเหตุการณ์:</span>
@@ -475,6 +483,24 @@
                 document.getElementById('summary-amount').textContent = '฿' + Number(amount).toLocaleString('th-TH') + ' บาท';
                 document.getElementById('summary-date').textContent = date;
                 document.getElementById('summary-details').textContent = details;
+
+                // Evidence Summary in Step 4
+                const summaryEvCount = document.getElementById('summary-evidence-count');
+                const summaryEvGrid = document.getElementById('summary-evidence-preview');
+                if (summaryEvCount) {
+                    summaryEvCount.textContent = evidenceList.length > 0 ? `${evidenceList.length} ภาพ` : 'ไม่ได้แนบภาพ';
+                }
+                if (summaryEvGrid) {
+                    if (evidenceList.length > 0) {
+                        summaryEvGrid.classList.remove('hidden');
+                        summaryEvGrid.innerHTML = evidenceList.map((item, idx) => `
+                            <img src="${item.base64}" alt="Thumb ${idx + 1}" class="w-full aspect-square rounded-lg object-cover border border-slate-200 shadow-2xs">
+                        `).join('');
+                    } else {
+                        summaryEvGrid.classList.add('hidden');
+                        summaryEvGrid.innerHTML = '';
+                    }
+                }
             }
 
             if (currentStep < 4) {
@@ -491,28 +517,97 @@
             }
         }
 
-        // Image Handling with Canvas Compression
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        // Multi-image Handling (Up to 5 images with Client-Side Canvas Compression)
+        let evidenceList = []; // Array of { base64, name, size }
 
-            compressImage(file).then(base64 => {
-                compressedEvidenceBase64 = base64;
-                document.getElementById('preview-img').src = base64;
-                document.getElementById('preview-filename').textContent = file.name;
-                document.getElementById('upload-box').classList.add('hidden');
-                document.getElementById('image-preview-card').classList.remove('hidden');
-            }).catch(err => {
-                console.error(err);
-                alert('ไม่สามารถประมวลผลไฟล์รูปภาพได้');
-            });
+        async function handleFilesSelect(e) {
+            const files = Array.from(e.target.files || []);
+            if (!files.length) return;
+
+            const remainingSlots = 5 - evidenceList.length;
+            if (remainingSlots <= 0) {
+                alert('คุณแนบรูปภาพครบ 5 ภาพแล้ว หากต้องการเปลี่ยนกรุณากดลบภาพเดิมออกก่อน');
+                e.target.value = '';
+                return;
+            }
+
+            if (files.length > remainingSlots) {
+                alert(`คุณสามารถแนบภาพเพิ่มได้อีกเพียง ${remainingSlots} ภาพเท่านั้น (ระบบจะเลือกเฉพาะ ${remainingSlots} ภาพแรก)`);
+            }
+
+            const filesToProcess = files.slice(0, remainingSlots);
+
+            for (const file of filesToProcess) {
+                try {
+                    const base64 = await compressImage(file);
+                    evidenceList.push({
+                        base64: base64,
+                        name: file.name,
+                        size: (file.size / 1024).toFixed(0) + ' KB'
+                    });
+                } catch (err) {
+                    console.error('Error compressing image:', err);
+                }
+            }
+
+            e.target.value = '';
+            renderEvidencePreview();
         }
 
-        function removeSelectedImage() {
-            compressedEvidenceBase64 = null;
-            document.getElementById('evidence_file').value = '';
-            document.getElementById('upload-box').classList.remove('hidden');
-            document.getElementById('image-preview-card').classList.add('hidden');
+        function removeEvidenceImage(index) {
+            evidenceList.splice(index, 1);
+            renderEvidencePreview();
+        }
+
+        function renderEvidencePreview() {
+            const badge = document.getElementById('evidence-count-badge');
+            const uploadBox = document.getElementById('upload-box');
+            const grid = document.getElementById('evidence-preview-grid');
+
+            if (badge) {
+                badge.textContent = `แนบแล้ว ${evidenceList.length}/5 ภาพ`;
+                if (evidenceList.length >= 5) {
+                    badge.className = 'text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full';
+                } else if (evidenceList.length > 0) {
+                    badge.className = 'text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full';
+                } else {
+                    badge.className = 'text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full';
+                }
+            }
+
+            if (uploadBox) {
+                if (evidenceList.length >= 5) {
+                    uploadBox.classList.add('hidden');
+                } else {
+                    uploadBox.classList.remove('hidden');
+                }
+            }
+
+            if (!grid) return;
+
+            if (evidenceList.length === 0) {
+                grid.innerHTML = '';
+                return;
+            }
+
+            grid.innerHTML = evidenceList.map((item, idx) => `
+                <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-3 shadow-2xs">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <img src="${item.base64}" alt="Preview ${idx + 1}" class="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0">
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-slate-800 truncate" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</p>
+                            <div class="flex items-center gap-1.5 mt-0.5">
+                                <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded">ภาพที่ ${idx + 1}</span>
+                                <span class="text-[10px] text-slate-400">${item.size}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="removeEvidenceImage(${idx})" class="text-xs text-red-500 hover:text-red-700 font-bold p-1.5 rounded-lg hover:bg-red-50 transition-colors shrink-0 flex items-center gap-0.5" title="ลบรูปนี้">
+                        <span class="material-symbols-outlined text-[16px]">delete</span>
+                        <span class="hidden sm:inline">ลบ</span>
+                    </button>
+                </div>
+            `).join('');
         }
 
         function compressImage(file) {
@@ -523,8 +618,8 @@
                     const img = new Image();
                     img.src = e.target.result;
                     img.onload = () => {
-                        const maxWidth = 1200;
-                        const maxHeight = 1200;
+                        const maxWidth = 900;
+                        const maxHeight = 900;
                         let width = img.width;
                         let height = img.height;
 
@@ -545,7 +640,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.82));
+                        resolve(canvas.toDataURL('image/jpeg', 0.75));
                     };
                     img.onerror = reject;
                 };
@@ -561,6 +656,11 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = `กำลังส่งข้อมูล... <span class="material-symbols-outlined animate-spin text-[16px]">sync</span>`;
 
+            // Prepare evidence payload: array of Base64 strings or single JSON
+            const evidencePayload = evidenceList.length > 0 
+                ? JSON.stringify(evidenceList.map(item => item.base64)) 
+                : null;
+
             const payload = {
                 userId: user ? user.id : null,
                 scamType: selectedScamType,
@@ -571,7 +671,7 @@
                 incidentDate: document.getElementById('incident_date').value,
                 claimAmount: document.getElementById('claim_amount').value,
                 incidentDetails: document.getElementById('incident_details').value.trim(),
-                evidenceFile: compressedEvidenceBase64
+                evidenceFile: evidencePayload
             };
 
             try {
@@ -605,7 +705,8 @@
             if (otherWrapper) otherWrapper.classList.add('hidden');
             const otherInput = document.getElementById('other_bank_name');
             if (otherInput) otherInput.value = '';
-            removeSelectedImage();
+            evidenceList = [];
+            renderEvidencePreview();
             renderScamTypes();
             updateStepUI();
             document.getElementById('success-wrapper').classList.add('hidden');
