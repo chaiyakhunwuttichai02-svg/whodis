@@ -78,7 +78,7 @@ include 'header.php';
             <span class="font-bold text-[14px] text-primary-text">Whodis</span>
         </div>
         <p class="text-[12px] text-muted-text">Check Before You Pay — เช็กก่อนโอนทุกครั้ง ป้องกันดีกว่าแก้</p>
-        <p class="text-[11px] text-gray-400 mt-2">ต้นแบบเพื่อการสาธิต - ข้อมูลจำลอง - ไม่ใช่การยืนยันตัวตนทางการ</p>
+        <p class="text-[11px] text-gray-400 mt-2">ระบบประมวลผลสัญญาณความเสี่ยงจากข้อมูลผู้ใช้งาน — มิใช่การชี้ขาดทางกฎหมาย โปรดใช้วิจารณญาณก่อนทำธุรกรรม</p>
     </div>
 </footer>
 

@@ -401,62 +401,257 @@ function renderSosWidget() {
         </div>
 
         <!-- Scrollable Terms Content -->
-        <div class="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-[13px] leading-relaxed text-slate-700 bg-slate-50/50 flex-1 divide-y divide-slate-200/70">
-          <div class="text-slate-800 font-medium">
-            ยินดีต้อนรับสู่ <strong class="font-bold text-slate-900">whodis</strong> กรุณาอ่านข้อกำหนด เงื่อนไขการใช้งาน และนโยบายความเป็นส่วนตัวอย่างละเอียดก่อนเข้าสู่ระบบและเริ่มใช้งาน การที่ท่านเข้าถึง ใช้งาน นำเข้า หรือส่งข้อมูลเข้ามายังเว็บไซต์ ถือว่าท่านได้รับทราบ ทำความเข้าใจ และตกลงยินยอมผูกพันตามข้อตกลงและเงื่อนไขทั้งหมดด้านล่างนี้โดยสมบูรณ์
+        <div id="whodis-tos-scroll-body" onscroll="handleTosScroll()" class="p-5 sm:p-6 overflow-y-auto space-y-5 text-xs sm:text-[13px] leading-relaxed text-slate-700 bg-slate-50/50 flex-1">
+          <!-- Language Precedence Clause -->
+          <div class="p-3.5 bg-blue-50 border border-blue-200/90 rounded-2xl text-[12px] text-blue-950 leading-relaxed font-medium shadow-2xs">
+            <span class="font-bold">⚠️ Language Precedence:</span> In the event of any inconsistency between the English and Thai versions of these Terms, the Thai version shall prevail. / ในกรณีที่มีข้อความขัดแย้งกันระหว่างข้อกำหนดฉบับภาษาไทยและภาษาอังกฤษ ให้ยึดถือฉบับภาษาไทยเป็นหลัก
           </div>
 
-          <!-- 1. วัตถุประสงค์ การเก็บรวบรวม และการประมวลผลข้อมูล -->
-          <div class="pt-3.5 space-y-2">
-            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
-              <span>1.</span> วัตถุประสงค์ การเก็บรวบรวม และการประมวลผลข้อมูล (Data Collection & Processing)
-            </h4>
-            <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600">
-              <p>• วัตถุประสงค์เพื่อประโยชน์สาธารณะ: การจัดทำฐานข้อมูลนี้มีขึ้นเพื่อประโยชน์สาธารณะในการเฝ้าระวัง แจ้งเตือน และป้องกันภัยจากการหลอกลวงหรือฉ้อโกงทางออนไลน์ในสังคม</p>
-              <p>• ความยินยอมในการเปิดเผยข้อมูล: ผู้ใช้งานรับทราบและยินยอมโดยชัดแจ้งให้ whodis จัดเก็บ ประมวลผล และเปิดเผยข้อมูลเบาะแส (รวมถึงชื่อ-นามสกุลที่เกี่ยวข้องกับธุรกรรม, เลขที่บัญชีธนาคาร, วอลเล็ต, หมายเลขโทรศัพท์, บัญชีสื่อสังคมออนไลน์, รูปภาพสลิปธุรกรรม, ภาพถ่ายหน้าจอการสนทนา และพฤติการณ์) ต่อสาธารณะและผู้ใช้งานอื่น เพื่อการตรวจสอบความปลอดภัย</p>
-              <p>• ข้อมูลทางเทคนิคและประวัติการเข้าใช้งาน: ระบบมีการบันทึกข้อมูลจราจรทางคอมพิวเตอร์เบื้องต้น ได้แก่ หมายเลข IP Address, ข้อมูลอุปกรณ์/เบราว์เซอร์, บันทึกวันและเวลาที่ทำรายการ (Timestamps) รวมถึงคุกกี้ (Cookies) เพื่อรักษาเสถียรภาพความปลอดภัยของระบบ และใช้เป็นหลักฐานยืนยันความโปร่งใสตาม พ.ร.บ. ว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์</p>
+          <!-- ========================================== -->
+          <!-- 🇬🇧 ENGLISH VERSION (ฉบับภาษาอังกฤษ) -->
+          <!-- ========================================== -->
+          <div class="space-y-4 pt-1">
+            <div class="flex items-center gap-2 pb-2.5 border-b border-slate-200">
+              <span class="text-xl">🇬🇧</span>
+              <div>
+                <h4 class="font-black text-slate-900 text-sm sm:text-base">Terms and Conditions of Use</h4>
+                <p class="text-[11px] text-slate-500 font-medium">English Version</p>
+              </div>
+            </div>
+
+            <div class="text-slate-700 leading-relaxed space-y-2">
+              <p>Throughout this Website, the term <strong class="font-semibold text-slate-900">"User"</strong> refers to any person who accesses, uses, registers with, or submits content to this Website, whether directly or indirectly.</p>
+              <p>The term <strong class="font-semibold text-slate-900">"Service Provider"</strong> refers to <strong class="font-bold text-slate-900">whodis</strong>, which operates this platform as a user-generated content system.</p>
+              <p>This Website operates as a risk information platform. It is not a governmental authority, court of law, law enforcement agency, or dispute resolution body. The Website does not make legal determinations, judgments, or findings of guilt against any individual or entity.</p>
+              <p>Use of this Website must comply with the following terms and conditions. By accessing or using this Website, Users acknowledge and agree to be legally bound by these Terms. If Users do not agree, they must immediately cease using the Website.</p>
+            </div>
+
+            <!-- EN 1. User Responsibilities -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>1.</span> User Responsibilities
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• Users must submit information that is accurate, truthful, and supported by sufficient evidence. If the Service Provider determines that a User has submitted false, misleading, or fraudulent information, the Service Provider may suspend, restrict, or terminate the User's access and remove content without prior notice.</p>
+                <p>• Users are solely responsible for all content they submit. The Service Provider shall not be liable for any content submitted by Users under any circumstance.</p>
+                <p>• Users must not use this Website for unlawful purposes, to defame others, or to cause harm for personal gain. Reporting in good faith for legitimate public interest is permitted.</p>
+                <p>• Users represent and warrant that submitted information does not infringe on any intellectual property rights, privacy rights, or applicable laws.</p>
+                <p>• By submitting content, Users grant whodis a non-exclusive, worldwide, royalty-free, perpetual license to store, reproduce, display, analyze, process, and publish such content to operate the Website.</p>
+                <p>• Users agree to indemnify and hold harmless the Service Provider from any claims, damages, liabilities, or legal expenses arising from their submitted content or violation of these Terms.</p>
+                <p>• If Users violate applicable Thai law (including the Computer Crime Act), the Service Provider reserves the right to disclose User information to competent authorities.</p>
+              </div>
+            </div>
+
+            <!-- EN 2. Service Provider Rights and Limitations -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>2.</span> Service Provider Rights and Limitations
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• whodis provides this user-generated reporting platform free of charge.</p>
+                <p>• The Service Provider reserves the right to modify, suspend, or discontinue any part of the Website without prior notice.</p>
+                <p>• The Service Provider has no obligation to monitor all submitted content and does not assume responsibility for actively reviewing each submission prior to publication.</p>
+                <p>• The Service Provider does not endorse, verify, or adopt any statements made by Users. All opinions and allegations are solely those of the respective Users.</p>
+                <p>• The Service Provider reserves the right to remove, restrict, or modify any content that violates these Terms or lacks sufficient supporting evidence at its sole discretion.</p>
+              </div>
+            </div>
+
+            <!-- EN 3. Intellectual Property -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>3.</span> Intellectual Property
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• All Website content, including software, databases, algorithms, trademarks, logos, and system architecture, is the intellectual property of whodis.</p>
+                <p>• Users may not reproduce, copy, extract, scrape (including bulk data extraction), distribute, or commercially exploit any portion of the Website without prior written permission.</p>
+              </div>
+            </div>
+
+            <!-- EN 4. Dispute Resolution & Reimbursement -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>4.</span> Dispute Resolution & Reimbursement
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• The Service Provider is not involved in any transactions. Transactions are strictly between the User and the seller/party. The Service Provider is not responsible for any damages arising from such transactions.</p>
+                <p>• If a reported party wishes to take responsibility for damages to have their name removed, whodis will only facilitate the exchange of necessary contact information for direct resolution.</p>
+                <p>• Once Users have received appropriate compensation (e.g., a refund or the product), it is the User's responsibility to request the removal of their report from the system.</p>
+              </div>
+            </div>
+
+            <!-- EN 5. Disclaimer and Limitation of Liability -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>5.</span> Disclaimer and Limitation of Liability
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• All information on this Website is user-generated and is provided on an "as-is" and "as-available" basis. The Service Provider makes no representations or warranties regarding accuracy, completeness, or reliability.</p>
+                <p>• The Service Provider shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising from the use of the Website or reliance on submitted content.</p>
+                <p>• Information on the Website constitutes "Risk Signals". Any use of this information should be subject to the user's own discretion and risk assessment.</p>
+              </div>
+            </div>
+
+            <!-- EN 6. Governing Law & Privacy Policy (PDPA) -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>6.</span> Governing Law & Privacy Policy (PDPA)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• These Terms shall be governed by and construed in accordance with the laws of the Kingdom of Thailand.</p>
+                <p>• By accepting these Terms, Users also agree to comply with the Personal Data Protection Act (PDPA) Policy of the Website, acknowledging that data is collected for verification and legal compliance purposes.</p>
+              </div>
+            </div>
+
+            <!-- EN 7. Notice and Content Removal (Complaint) -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>7.</span> Notice and Content Removal (Complaint)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• If any individual believes that content published on this Website violates their legal rights, is false, or defamatory, they may submit a written complaint with supporting evidence through the designated contact channel.</p>
+                <p>• Complaints must be submitted in good faith. The Service Provider reserves the right to restrict or remove content pending investigation.</p>
+                <p class="font-semibold text-slate-800 pt-1">
+                  Contact Administrator / File a Complaint: 
+                  <a href="mailto:Whodisdetected@gmail.com" class="text-blue-600 hover:underline font-mono font-bold">Whodisdetected@gmail.com</a>
+                </p>
+              </div>
             </div>
           </div>
 
-          <!-- 2. ข้อจำกัดความรับผิดชอบและการสงวนสิทธิ์ทางกฎหมาย -->
-          <div class="pt-3.5 space-y-2">
-            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
-              <span>2.</span> ข้อจำกัดความรับผิดชอบและการสงวนสิทธิ์ทางกฎหมาย (Limitation of Liability & Disclaimer)
-            </h4>
-            <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600">
-              <p>• สถานะการเป็นผู้ให้บริการพื้นที่ตัวกลาง: whodis ทำหน้าที่เป็นเพียงแพลตฟอร์มกลางในการแบ่งปันและแลกเปลี่ยนข้อมูลเตือนภัยระหว่างภาคประชาชนเท่านั้น มิได้มีสถานะเป็นคู่สัญญา ตัวแทน หรือมีส่วนร่วมรู้เห็นกับการกระทำใดๆ ของบุคคลหรือนิติบุคคลที่ปรากฏในรายงาน</p>
-              <p>• การไม่รับประกันความถูกต้องของข้อมูล: แม้ระบบจะมีกระบวนการตรวจสอบเบื้องต้น แต่ข้อมูลเกิดจากการนำเข้าโดยผู้ใช้งานอิสระ ทางเว็บไซต์มิได้รับประกันความถูกต้อง ความแท้จริง ความสมบูรณ์ หรือข้อเท็จจริงของข้อมูลทุกกรณี ผู้ใช้งานต้องใช้วิจารณญาณส่วนบุคคลอย่างรอบคอบก่อนตัดสินใจทำธุรกรรมใดๆ</p>
-              <p>• การปฏิเสธความรับผิดชอบอย่างเด็ดขาด: whodis ตลอดจนผู้พัฒนา ผู้ดูแลระบบ และทีมงาน ขอปฏิเสธความรับผิดชอบต่อความสูญเสีย ความเสียหาย ทั้งทางตรง ทางอ้อม หรือค่าเสียหายต่อเนื่อง (รวมถึงการสูญเสียทรัพย์สิน การเสียโอกาสทางธุรกิจ ความเสียหายต่อชื่อเสียง หรือข้อพิพาททางคดีความ) ที่เกิดขึ้นจากการนำข้อมูลบนเว็บไซต์ไปใช้งาน อ้างอิง หรือการรายงานข้อมูล</p>
-            </div>
-          </div>
+          <!-- Divider between EN and TH -->
+          <div class="my-6 border-t-2 border-dashed border-slate-300"></div>
 
-          <!-- 3. หน้าที่ ความซื่อสัตย์ และความรับผิดชอบตามกฎหมายของผู้ใช้งาน -->
-          <div class="pt-3.5 space-y-2">
-            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
-              <span>3.</span> หน้าที่ ความซื่อสัตย์ และความรับผิดชอบตามกฎหมายของผู้ใช้งาน (User Responsibilities & Accountability)
-            </h4>
-            <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600">
-              <p>• พันธกรณีในการให้ข้อมูลจริงและมีหลักฐาน: ผู้ใช้งานตกลงและรับรองว่าจะให้ข้อมูลที่เป็นความจริง มีมูลความจริงจากการติดต่อหรือทำธุรกรรม และมีพยานหลักฐานประกอบที่ตรวจสอบได้ เช่น สลิปโอนเงิน บันทึกการสนทนา หรือใบแจ้งความ</p>
-              <p>• ข้อห้ามการกลั่นแกล้งและแจ้งข้อมูลเท็จ: ห้ามมิให้นำเข้าข้อมูลเท็จ ข้อมูลที่บิดเบือน หรือใช้ระบบเป็นเครื่องมือในการทวงหนี้ส่วนตัว กลั่นแกล้ง หมิ่นประมาท หรือทำลายชื่อเสียงของผู้อื่นโดยมิชอบ หากตรวจพบ ทางเว็บไซต์จะระงับการใช้งานทันที และพร้อมส่งมอบข้อมูลทางเทคนิคทั้งหมดให้แก่เจ้าหน้าที่ตำรวจเพื่อดำเนินคดีตามกฎหมายอย่างถึงที่สุด</p>
-              <p>• ความรับผิดชอบตามกฎหมายส่วนบุคคล: ผู้ใช้งานตกลงว่าตนเองเป็นผู้รับผิดชอบต่อผลกระทบทางกฎหมายทุกประการ ทั้งทางแพ่งและทางอาญา จากข้อมูลที่ตนเองเป็นผู้นำเข้าแต่เพียงผู้เดียว และจะไม่เรียกร้องความรับผิดใดๆ ต่อเว็บไซต์และผู้พัฒนา</p>
+          <!-- ========================================== -->
+          <!-- 🇹🇭 THAI VERSION (ฉบับภาษาไทย) -->
+          <!-- ========================================== -->
+          <div class="space-y-4 pt-1">
+            <div class="flex items-center gap-2 pb-2.5 border-b border-slate-200">
+              <span class="text-xl">🇹🇭</span>
+              <div>
+                <h4 class="font-black text-slate-900 text-sm sm:text-base">ข้อกำหนดและเงื่อนไขการใช้งานเบื้องต้น</h4>
+                <p class="text-[11px] text-slate-500 font-medium">ฉบับภาษาไทย (Thai Version)</p>
+              </div>
             </div>
-          </div>
 
-          <!-- 4. สิทธิ์ในการกำกับดูแลเนื้อหาและกระบวนการยื่นคำร้องโต้แย้ง -->
-          <div class="pt-3.5 space-y-2">
-            <h4 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
-              <span>4.</span> สิทธิ์ในการกำกับดูแลเนื้อหาและกระบวนการยื่นคำร้องโต้แย้ง (Content Moderation & Dispute Resolution)
-            </h4>
-            <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600">
-              <p>• สิทธิ์เด็ดขาดในการจัดการเนื้อหา: เว็บไซต์สงวนสิทธิ์เด็ดขาดแต่เพียงผู้เดียวในการตรวจสอบ คัดกรอง ซ่อน ลบ แก้ไข หรือระงับการแสดงผลข้อมูล รายงาน หรือบัญชีผู้ใช้งานใดๆ ที่เห็นว่าไม่เหมาะสม มีข้อพิพาท หรือขัดต่อกฎหมาย โดยไม่ต้องแจ้งให้ทราบล่วงหน้า</p>
-              <p>• สิทธิในการยื่นคำร้องโต้แย้งสำหรับผู้ถูกพาดพิง: กรณีบุคคลใดเห็นว่าข้อมูลที่ปรากฏไม่ถูกต้อง คลาดเคลื่อน หรือได้รับการแก้ไขเยียวยาความเสียหายเรียบร้อยแล้ว สามารถติดต่อผู้พัฒนาผ่านช่องทางติดต่อเพื่อแสดงหลักฐานความบริสุทธิ์ใจ (เช่น สลิปโอนเงินคืน, บันทึกการถอนแจ้งความ) เพื่อให้ทีมงานตรวจสอบและพิจารณาปรับปรุงหรือนำข้อมูลออกจากระบบ</p>
-              <p>• การปรับปรุงข้อกำหนด: เว็บไซต์ขอสงวนสิทธิ์ในการปรับปรุงแก้ไขข้อกำหนดนี้ได้ตลอดเวลาเพื่อให้สอดคล้องกับข้อกฎหมายและการให้บริการ โดยจะมีผลบังคับใช้ทันทีเมื่อเผยแพร่บนเว็บไซต์</p>
+            <div class="text-slate-700 leading-relaxed space-y-2">
+              <p>ตลอดเว็บไซต์นี้ คำว่า <strong class="font-semibold text-slate-900">"ผู้ใช้บริการ"</strong> หมายถึงบุคคลใดๆ ที่เข้าถึง ใช้งาน สมัครสมาชิก หรือส่งข้อมูลเข้าสู่ระบบของเว็บไซต์นี้ ไม่ว่าทางตรงหรือทางอ้อม</p>
+              <p>คำว่า <strong class="font-semibold text-slate-900">"ผู้ให้บริการ"</strong> หมายถึงเว็บไซต์ <strong class="font-bold text-slate-900">whodis</strong> ซึ่งเป็นผู้พัฒนา ดูแล และให้บริการแพลตฟอร์มในลักษณะระบบข้อมูลที่สร้างโดยผู้ใช้งาน (User-generated Content Platform)</p>
+              <p>เว็บไซต์นี้เป็นแพลตฟอร์มสำหรับการรวบรวมและแสดงข้อมูลที่ผู้ใช้บริการเป็นผู้นำเข้าสู่ระบบ โดยมีวัตถุประสงค์เพื่อเป็นระบบสัญญาณความเสี่ยง (Risk Information Platform) เว็บไซต์ whodis มิใช่หน่วยงานของรัฐ มิใช่ศาล มิใช่องค์กรบังคับใช้กฎหมาย และมิได้มีอำนาจในการตัดสินข้อพิพาทหรือชี้ขาดความผิดของบุคคลใด</p>
+              <p>การใช้เว็บไซต์นี้ต้องเป็นไปตามข้อตกลงและเงื่อนไขการใช้บริการต่อไปนี้ การเข้าถึงหรือใช้งานเว็บไซต์ถือว่าผู้ใช้บริการยอมรับข้อกำหนดและเงื่อนไขทั้งหมด หากผู้ใช้บริการไม่ยอมรับข้อตกลง ผู้ใช้บริการต้องยุติการใช้เว็บไซต์นี้ทันที</p>
+            </div>
+
+            <!-- TH 1. หน้าที่และความรับผิดชอบของผู้ใช้บริการ -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>1.</span> หน้าที่และความรับผิดชอบของผู้ใช้บริการ (User Responsibilities)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• ผู้ใช้บริการต้องนำเข้าข้อมูลที่สุจริต ถูกต้อง เป็นความจริง และมีข้อมูลหลักฐานประกอบที่เพียงพอ หากผู้ให้บริการตรวจสอบพบว่าผู้ใช้บริการให้ข้อมูลอันเป็นเท็จ บิดเบือน หรือไม่สุจริต ผู้ให้บริการสามารถระงับการให้บริการ ลบข้อมูล หรือปิดบัญชีผู้ใช้ได้ทันทีโดยไม่ต้องแจ้งล่วงหน้า</p>
+                <p>• ผู้ใช้บริการต้องรับผิดชอบต่อข้อมูลที่นำเข้าสู่ระบบแต่เพียงผู้เดียว ทางผู้ให้บริการไม่รับผิดชอบต่อข้อมูล รูปภาพ หรือเนื้อหาใดๆ ที่ผู้ใช้บริการนำเข้า ไม่ว่าในกรณีใดๆ</p>
+                <p>• ผู้ใช้บริการต้องไม่ใช้เว็บไซต์นี้ในทางที่ผิดกฎหมาย เพื่อหมิ่นประมาทผู้อื่น หรือทำให้ผู้อื่นเสียหายเพื่อผลประโยชน์ส่วนตัว การนำเข้าข้อมูลอนุญาตเฉพาะการแจ้งเตือนภัยเพื่อประโยชน์สาธารณะโดยสุจริตเท่านั้น</p>
+                <p>• ผู้ใช้บริการรับรองว่าข้อมูลที่นำเข้ามานั้นเป็นของตน หรือได้รับความยินยอมจากบุคคลที่เกี่ยวข้องแล้ว และไม่ละเมิดสิทธิในทรัพย์สินทางปัญญา สิทธิส่วนบุคคล หรือกฎหมายใดๆ</p>
+                <p>• ผู้ใช้บริการตกลงให้สิทธิแก่ whodis แบบไม่จำกัดเขตพื้นที่ ไม่จำกัดระยะเวลา และไม่มีค่าตอบแทน (Non-exclusive, worldwide, royalty-free license) ในการจัดเก็บ แสดงผล ทำซ้ำ วิเคราะห์ ดัดแปลง และเผยแพร่ข้อมูลที่นำเข้าสู่ระบบ เพื่อวัตถุประสงค์ในการให้บริการของเว็บไซต์</p>
+                <p>• หากผู้ใช้บริการก่อให้เกิดความเสียหาย การฟ้องร้อง หรือข้อพิพาททางกฎหมาย ผู้ใช้บริการตกลงชดใช้ค่าเสียหายและค่าใช้จ่ายทางกฎหมายทั้งหมดที่เกิดขึ้นแก่ผู้ให้บริการ (Indemnification)</p>
+                <p>• หากละเมิดข้อตกลงหรือกระทำผิดกฎหมาย (รวมถึง พ.ร.บ. คอมพิวเตอร์) ผู้ให้บริการสงวนสิทธิ์ในการลบข้อมูล ปิดบัญชี และเปิดเผยข้อมูลแก่หน่วยงานที่มีอำนาจตามกฎหมาย</p>
+              </div>
+            </div>
+
+            <!-- TH 2. สิทธิและข้อจำกัดของผู้ให้บริการ -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>2.</span> สิทธิและข้อจำกัดของผู้ให้บริการ (Service Provider)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• whodis ให้บริการแพลตฟอร์มสำหรับการสร้างและค้นหาข้อมูลโดยไม่คิดค่าบริการ</p>
+                <p>• ผู้ให้บริการสงวนสิทธิ์ในการเปลี่ยนแปลง แก้ไข ระงับ หรือยกเลิกการให้บริการส่วนใดส่วนหนึ่งของเว็บไซต์ได้ตลอดเวลาโดยไม่ต้องแจ้งให้ทราบล่วงหน้า</p>
+                <p>• เว็บไซต์อาจมีระบบตรวจสอบข้อมูลทั้งโดยทีมงานและระบบอัตโนมัติ (AI) เพื่อปรับรูปแบบข้อมูลให้ถูกต้องทางเทคนิค ซึ่งมิได้เป็นการรับรองความถูกต้องของเนื้อหา และผู้ให้บริการไม่รับประกันผลการวิเคราะห์ของระบบดังกล่าว</p>
+                <p>• ผู้ให้บริการไม่มีหน้าที่ในการตรวจสอบหรือกลั่นกรองข้อมูลทุกชิ้นก่อนการเผยแพร่ และผู้ให้บริการมิได้ให้การรับรอง เห็นชอบ หรือยืนยันความถูกต้องของข้อกล่าวหาใดๆ ที่ผู้ใช้บริการนำเข้าสู่ระบบ</p>
+                <p>• ผู้ให้บริการสงวนสิทธิ์ในการลบ ระงับ หรือแก้ไขข้อมูลที่ไม่เป็นไปตามเงื่อนไข หรือขาดหลักฐานที่เพียงพอ โดยเป็นไปตามดุลพินิจของผู้ให้บริการแต่เพียงผู้เดียว</p>
+              </div>
+            </div>
+
+            <!-- TH 3. ทรัพย์สินทางปัญญา -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>3.</span> ทรัพย์สินทางปัญญา (Intellectual Property)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• เนื้อหา ซอฟต์แวร์ ฐานข้อมูล อัลกอริทึม เครื่องหมายการค้า โลโก้ และองค์ประกอบทั้งหมดของเว็บไซต์ whodis เป็นทรัพย์สินทางปัญญาของผู้ให้บริการ</p>
+                <p>• ห้ามมิให้ผู้ใดทำซ้ำ คัดลอก ดึงข้อมูลจำนวนมาก (Automated scraping) หรือนำไปใช้ในเชิงพาณิชย์โดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร</p>
+              </div>
+            </div>
+
+            <!-- TH 4. การรับผิดชอบความเสียหายและระงับข้อพิพาท -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>4.</span> การรับผิดชอบความเสียหายและระงับข้อพิพาท (Dispute & Reimbursement)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• ผู้ให้บริการ ไม่มีส่วนเกี่ยวข้องกับการทำธุรกรรมใดๆ ทั้งสิ้น ธุรกรรมเป็นเรื่องระหว่างผู้ซื้อและผู้ขาย หากเกิดความเสียหาย ผู้ใช้บริการต้องติดต่อคู่กรณีโดยตรง</p>
+                <p>• หากผู้ถูกรายงาน (ผู้ขาย/คู่กรณี) ต้องการรับผิดชอบความเสียหายเพื่อขอลบประวัติออกจากระบบ whodis จะเป็นเพียงช่องทางอำนวยความสะดวกในการให้ข้อมูลการติดต่อที่จำเป็นเพื่อการไกล่เกลี่ยเท่านั้น</p>
+                <p>• เมื่อผู้เสียหายได้รับการชดใช้ตามสมควรแล้ว (เช่น ได้เงินคืน หรือได้รับสินค้า) ผู้เสียหายมีหน้าที่และความรับผิดชอบในการลบรายงานของตนเองออกจากระบบ</p>
+              </div>
+            </div>
+
+            <!-- TH 5. การปฏิเสธความรับผิดและข้อจำกัดความรับผิด -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>5.</span> การปฏิเสธความรับผิดและข้อจำกัดความรับผิด (Disclaimer and Limitation of Liability)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• ข้อมูลบนเว็บไซต์เป็นข้อมูลที่สร้างโดยผู้ใช้งานและให้บริการแบบ "ตามสภาพที่เป็นอยู่ (As-is)" และ "เท่าที่มีอยู่ (As-available)" ผู้ให้บริการไม่รับรองหรือรับประกันความถูกต้อง ความสมบูรณ์ ความน่าเชื่อถือ หรือความเป็นปัจจุบันของข้อมูล</p>
+                <p>• ผู้ให้บริการจะไม่รับผิดชอบต่อความสูญเสียหรือความเสียหายใดๆ ไม่ว่าทางตรง ทางอ้อม หรือความเสียหายต่อเนื่อง ที่เกิดจากการใช้เว็บไซต์นี้ หรือจากการเชื่อถือข้อมูลที่ปรากฏบนเว็บไซต์</p>
+                <p>• ข้อมูลบนเว็บไซต์เป็นเพียง "สัญญาณความเสี่ยง (Risk Signals)" การนำข้อมูลไปใช้ตัดสินใจควรอยู่ภายใต้ดุลพินิจและความเสี่ยงของผู้ใช้งานเอง</p>
+              </div>
+            </div>
+
+            <!-- TH 6. กฎหมายที่บังคับใช้และการจัดการข้อมูลส่วนบุคคล -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>6.</span> กฎหมายที่บังคับใช้และการจัดการข้อมูลส่วนบุคคล (Governing Law & PDPA)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• ข้อกำหนดและเงื่อนไขนี้อยู่ภายใต้การบังคับใช้และการตีความตามกฎหมายแห่งราชอาณาจักรไทย</p>
+                <p>• การยอมรับข้อตกลงนี้ หมายถึงผู้ใช้บริการยินยอมตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA) ของทางเว็บไซต์ โดยเว็บไซต์จะเก็บรวบรวมข้อมูลเท่าที่จำเป็นเพื่อการยืนยันตัวตนและป้องกันการกระทำผิดทางกฎหมาย</p>
+              </div>
+            </div>
+
+            <!-- TH 7. การแจ้งเตือนและการลบเนื้อหา -->
+            <div class="pt-3 space-y-2">
+              <h5 class="font-bold text-slate-900 text-[13.5px] flex items-center gap-1.5">
+                <span>7.</span> การแจ้งเตือนและการลบเนื้อหา (Notice and Content Removal / Complaint)
+              </h5>
+              <div class="pl-3.5 space-y-2 border-l-2 border-slate-300 text-slate-600 text-xs sm:text-[12.5px]">
+                <p>• หากบุคคลใดพบว่าเนื้อหาบนเว็บไซต์ละเมิดสิทธิ์ของตน ไม่เป็นความจริง หรือเป็นการหมิ่นประมาท สามารถยื่นคำร้องเป็นลายลักษณ์อักษรพร้อมหลักฐานประกอบ ผ่านช่องทางติดต่อของเว็บไซต์</p>
+                <p>• คำร้องต้องกระทำโดยสุจริต การพิจารณาลบเนื้อหาจะเป็นไปตามดุลพินิจของผู้ให้บริการในระหว่างการตรวจสอบ</p>
+                <p class="font-semibold text-slate-800 pt-1">
+                  ติดต่อผู้ดูแลระบบ / ร้องเรียนได้ที่: 
+                  <a href="mailto:Whodisdetected@gmail.com" class="text-blue-600 hover:underline font-mono font-bold">Whodisdetected@gmail.com</a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- Floating Scroll to Bottom Button (Consent Mode Only) -->
+        <button id="tos-floating-scroll-btn" type="button" onclick="scrollTosToBottom()" class="hidden absolute right-4 bottom-[170px] sm:bottom-[175px] z-20 py-2 px-3.5 bg-slate-900/90 hover:bg-slate-900 text-white rounded-full text-xs font-bold shadow-xl backdrop-blur-xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95">
+          <span>เลื่อนลงล่างสุดเพื่อยอมรับ</span>
+          <span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+        </button>
+
         <!-- Footer / Acceptance Controls (Consent Mode) -->
-        <div id="tos-consent-controls" class="p-4 sm:p-5 bg-white border-t border-slate-200 shrink-0 space-y-3">
+        <div id="tos-consent-controls" class="p-4 sm:p-5 bg-white border-t border-slate-200 shrink-0 space-y-2.5">
+          <div class="flex items-center justify-between pb-1">
+            <span class="text-[11px] text-slate-500 font-medium flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px] text-blue-600">verified</span>
+              กรุณาอ่านและยอมรับข้อกำหนดการใช้งาน
+            </span>
+            <button id="tos-scroll-bottom-btn" type="button" onclick="scrollTosToBottom()" class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-all shadow-2xs cursor-pointer">
+              <span>เลื่อนลงล่างสุด</span>
+              <span class="material-symbols-outlined text-[15px]">arrow_downward</span>
+            </button>
+          </div>
+
           <label class="flex items-start gap-3 p-3 bg-slate-50 border border-slate-200/90 rounded-2xl cursor-pointer hover:bg-slate-100/70 transition-colors">
             <input type="checkbox" id="tos-agree-checkbox" onchange="toggleTosAcceptBtn()" class="w-4 h-4 mt-0.5 accent-slate-900 rounded cursor-pointer">
             <span class="text-xs sm:text-[13px] font-semibold text-slate-800 leading-snug">
@@ -643,6 +838,10 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
     const closeBtn = document.getElementById('tos-close-btn');
     const agreeCheckbox = document.getElementById('tos-agree-checkbox');
     const acceptBtn = document.getElementById('tos-accept-btn');
+    const floatingBtn = document.getElementById('tos-floating-scroll-btn');
+    const scrollBody = document.getElementById('whodis-tos-scroll-body');
+
+    if (scrollBody) scrollBody.scrollTop = 0;
 
     if (isConsentMode) {
       if (consentControls) consentControls.classList.remove('hidden');
@@ -650,10 +849,12 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
       if (closeBtn) closeBtn.classList.add('hidden');
       if (agreeCheckbox) agreeCheckbox.checked = false;
       if (acceptBtn) acceptBtn.disabled = true;
+      if (floatingBtn) floatingBtn.classList.remove('hidden');
     } else {
       if (consentControls) consentControls.classList.add('hidden');
       if (readonlyControls) readonlyControls.classList.remove('hidden');
       if (closeBtn) closeBtn.classList.remove('hidden');
+      if (floatingBtn) floatingBtn.classList.add('hidden');
     }
 
     modal.classList.remove('hidden');
@@ -662,7 +863,39 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
     __whodisTosOnAccept = null;
+    const floatingBtn = document.getElementById('tos-floating-scroll-btn');
+    if (floatingBtn) floatingBtn.classList.add('hidden');
   }
+}
+
+function handleTosScroll() {
+  const scrollBody = document.getElementById('whodis-tos-scroll-body');
+  const floatingBtn = document.getElementById('tos-floating-scroll-btn');
+  const consentControls = document.getElementById('tos-consent-controls');
+  if (!scrollBody || !floatingBtn || !consentControls) return;
+
+  const isConsent = !consentControls.classList.contains('hidden');
+  if (!isConsent) {
+    floatingBtn.classList.add('hidden');
+    return;
+  }
+
+  // If scrolled to within 70px of bottom, hide floating button
+  const distanceToBottom = scrollBody.scrollHeight - scrollBody.scrollTop - scrollBody.clientHeight;
+  if (distanceToBottom < 70) {
+    floatingBtn.classList.add('hidden');
+  } else {
+    floatingBtn.classList.remove('hidden');
+  }
+}
+
+function scrollTosToBottom() {
+  const container = document.getElementById('whodis-tos-scroll-body');
+  if (container) {
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  }
+  const floatingBtn = document.getElementById('tos-floating-scroll-btn');
+  if (floatingBtn) floatingBtn.classList.add('hidden');
 }
 
 function toggleTosAcceptBtn() {
