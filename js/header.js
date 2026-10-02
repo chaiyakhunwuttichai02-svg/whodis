@@ -303,49 +303,33 @@ function renderSosWidget() {
             </a>
           </div>
 
-          <!-- Common Topics -->
+          <!-- Common Topics (3 Topics) -->
           <div class="space-y-2">
             <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <span class="material-symbols-outlined text-[16px] text-slate-500">list_alt</span> หัวข้อที่สามารถติดต่อได้
             </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
-                <span class="text-lg">🐞</span>
+            <div class="space-y-2 text-xs">
+              <div class="p-3 bg-white border border-slate-200/90 rounded-xl flex items-start gap-2.5 shadow-2xs">
+                <span class="text-lg shrink-0">🐞</span>
                 <div>
                   <p class="font-bold text-slate-800">แจ้งพบบั๊ก / ปัญหา</p>
                   <p class="text-[11px] text-slate-500 mt-0.5">ระบบทำงานผิดปกติ หรือพบข้อผิดพลาดบนหน้าเว็บ</p>
                 </div>
               </div>
-              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
-                <span class="text-lg">💡</span>
+              <div class="p-3 bg-white border border-slate-200/90 rounded-xl flex items-start gap-2.5 shadow-2xs">
+                <span class="text-lg shrink-0">💡</span>
                 <div>
                   <p class="font-bold text-slate-800">เสนอแนะฟีเจอร์ใหม่</p>
                   <p class="text-[11px] text-slate-500 mt-0.5">ไอเดียปรับปรุง หรือฟังก์ชันที่อยากให้มีใน Whodis</p>
                 </div>
               </div>
-              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
-                <span class="text-lg">🔍</span>
-                <div>
-                  <p class="font-bold text-slate-800">แจ้งเบาะแสมิจฉาชีพ</p>
-                  <p class="text-[11px] text-slate-500 mt-0.5">ส่งหลักฐาน หรือประสานงานตรวจสอบข้อมูลคนโกง</p>
-                </div>
-              </div>
-              <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
-                <span class="text-lg">🤝</span>
+              <div class="p-3 bg-white border border-slate-200/90 rounded-xl flex items-start gap-2.5 shadow-2xs">
+                <span class="text-lg shrink-0">🤝</span>
                 <div>
                   <p class="font-bold text-slate-800">สนับสนุนโครงการ</p>
                   <p class="text-[11px] text-slate-500 mt-0.5">ร่วมมือพัฒนาข้อมูล หรือแลกเปลี่ยนแนวทางป้องกันภัย</p>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Emergency Alert Callout -->
-          <div class="p-3 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-2.5 text-xs text-rose-800">
-            <span class="material-symbols-outlined text-rose-600 text-[20px] shrink-0 mt-0.5">error</span>
-            <div class="text-[11.5px] leading-relaxed">
-              <span class="font-bold text-rose-900">กรณีถูกหลอกโอนเงินฉุกเฉิน:</span> 
-              กรุณากดปุ่มสีแดง <strong>"สายด่วนอายัดบัญชี"</strong> ที่ด้านล่างทันที เพื่อโทรระงับบัญชีธนาคารปลายทางได้ทันเวลา (Golden Hour)
             </div>
           </div>
 
