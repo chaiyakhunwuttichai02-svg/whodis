@@ -136,6 +136,9 @@ function renderHeader() {
         </button>
       </div>
     `;
+  } else if (cleanCurrent === 'login') {
+    userActionHtml = '';
+    mobileUserHtml = '';
   } else {
     userActionHtml = `
       <a href="login.html" class="btn-green-solid">
@@ -156,7 +159,7 @@ function renderHeader() {
       <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2.5 group">
           <img src="assets/logo.png" alt="Whodis" class="w-8 h-8 rounded-xl object-cover shadow-2xs group-hover:scale-105 transition-transform">
-          <span class="text-[18px] font-bold text-primary-text tracking-tight">Whodis</span>
+          <span class="text-[18px] font-bold text-[#012b65] tracking-tight">Whodis</span>
         </a>
         
         <nav class="hidden lg:flex items-center gap-1">

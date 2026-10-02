@@ -70,7 +70,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
             <a href="index.php" class="flex items-center gap-2.5 group">
                 <img src="assets/logo.png" alt="Whodis" class="w-8 h-8 rounded-xl object-cover shadow-2xs group-hover:scale-105 transition-transform">
-                <span class="text-[18px] font-bold text-primary-text tracking-tight">Whodis</span>
+                <span class="text-[18px] font-bold text-[#012b65] tracking-tight">Whodis</span>
             </a>
             
             <nav class="hidden lg:flex items-center gap-1">
@@ -89,7 +89,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <span class="text-[13px] font-medium hidden md:inline">สวัสดี, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?></span>
                     <a href="logout.php" class="text-muted-text hover:text-danger flex items-center" title="ออกจากระบบ"><span class="material-symbols-outlined text-[20px]">logout</span></a>
-                <?php else: ?>
+                <?php elseif ($current_page !== 'login.php'): ?>
                     <!-- ปุ่มเข้าสู่ระบบ: สีเขียวทึบตลอดเวลา และเข้มขึ้นเมื่อชี้ -->
                     <a href="login.php" class="btn-green-solid">
                         เข้าสู่ระบบ

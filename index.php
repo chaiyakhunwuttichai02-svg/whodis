@@ -47,7 +47,7 @@ include 'header.php';
         
         <!-- ส่วนค้นหาหลัก -->
         <div class="text-center flex flex-col items-center mt-4">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-gray-200 text-muted-text text-[13px] font-semibold rounded-full mb-6 shadow-sm">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#012b65] border border-[#012b65] text-white text-[13px] font-semibold rounded-full mb-6 shadow-sm">
                 <img src="assets/logo.png" alt="Whodis" class="w-4 h-4 rounded object-cover"> Check Before You Pay
             </div>
             
@@ -83,7 +83,7 @@ include 'header.php';
 
         <!-- ระดับความเสี่ยง -->
         <div class="border-t border-gray-200 pt-10 text-center">
-            <h3 class="text-[13px] text-muted-text font-bold mb-5 tracking-wider">ระดับความเสี่ยงที่ใช้ทั่วทั้งแพลตฟอร์ม</h3>
+            <h3 class="text-[13px] text-muted-text font-bold mb-5 tracking-wider">ระดับความเสี่ยง</h3>
             <div class="flex flex-wrap justify-center gap-4">
                 <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
                     <div class="w-3 h-3 rounded-full bg-success"></div>
