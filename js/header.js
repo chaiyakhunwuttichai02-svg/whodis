@@ -1,6 +1,7 @@
 // js/header.js - Navigation Header Component ที่คงสไตล์เดิม 100%
 
 document.addEventListener('DOMContentLoaded', () => {
+  initFavicon();
   renderHeader();
   renderSosWidget();
   initKnockoutButtonEffect();
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  initFavicon();
   renderHeader();
   renderSosWidget();
   initKnockoutButtonEffect();
@@ -152,11 +154,9 @@ function renderHeader() {
   placeholder.innerHTML = `
     <header class="w-full bg-card-bg border-b border-gray-100 sticky top-0 z-50">
       <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="index.html" class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-primary-text text-white rounded-full flex items-center justify-center">
-            <span class="material-symbols-outlined text-[18px]">verified_user</span>
-          </div>
-          <span class="text-[18px] font-bold text-primary-text">Whodis</span>
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <img src="assets/logo.png" alt="Whodis" class="w-8 h-8 rounded-xl object-cover shadow-2xs group-hover:scale-105 transition-transform">
+          <span class="text-[18px] font-bold text-primary-text tracking-tight">Whodis</span>
         </a>
         
         <nav class="hidden lg:flex items-center gap-1">
@@ -955,6 +955,19 @@ function confirmAcceptTos() {
       const target = (user && (user.role || '').toLowerCase() === 'admin') ? 'admin_reports.html' : 'index.html';
       window.location.replace(target);
     }
+  }
+}
+
+function initFavicon() {
+  let favicon = document.querySelector("link[rel*='icon']");
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/png';
+    favicon.href = 'assets/logo.png';
+    document.head.appendChild(favicon);
+  } else {
+    favicon.href = 'assets/logo.png';
   }
 }
 

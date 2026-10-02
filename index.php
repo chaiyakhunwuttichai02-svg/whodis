@@ -237,8 +237,8 @@ include 'header.php';
 <!-- Footer ส่วนล่างสุด -->
 <footer class="w-full pb-8 pt-4 border-t border-gray-200">
     <div class="max-w-[1000px] mx-auto px-4 text-center">
-        <div class="flex items-center justify-center gap-1 mb-2">
-            <span class="material-symbols-outlined text-[16px] text-primary-text">verified_user</span>
+        <div class="flex items-center justify-center gap-2 mb-2">
+            <img src="assets/logo.png" alt="Whodis" class="w-5 h-5 rounded-md object-cover shadow-2xs">
             <span class="font-bold text-[14px] text-primary-text">Whodis</span>
         </div>
         <p class="text-[12px] text-muted-text">Check Before You Pay — เช็กก่อนโอนทุกครั้ง ป้องกันดีกว่าแก้</p>
