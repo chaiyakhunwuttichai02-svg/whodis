@@ -64,11 +64,14 @@
             display: flex;
             overflow: hidden;
             user-select: none;
+            min-width: 0 !important;
+            flex-shrink: 1 !important;
         }
         .marquee-content {
             display: flex;
             white-space: nowrap;
             animation: marquee 35s linear infinite;
+            flex-shrink: 0;
         }
         .marquee-track:hover .marquee-content {
             animation-play-state: paused;

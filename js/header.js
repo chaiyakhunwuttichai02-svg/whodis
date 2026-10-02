@@ -26,6 +26,8 @@ function renderHeader() {
       html, body {
         background-color: #ffffff !important;
         font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
       }
 
       .bg-base-bg {
@@ -243,7 +245,7 @@ function renderSosWidget() {
           <span class="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-2.5 sm:w-2.5 bg-amber-300 border-2 border-red-600 sm:border-0"></span>
         </span>
         <span class="material-symbols-outlined text-[24px] sm:text-[20px] text-white">e911_emergency</span>
-        <span class="text-[13.5px] tracking-wide whitespace-nowrap hidden sm:inline">สายด่วนอายัดบัญชี</span>
+        <span class="sos-btn-text text-[13.5px] tracking-wide whitespace-nowrap hidden sm:inline">สายด่วนอายัดบัญชี</span>
       </button>
     </div>
 
@@ -643,16 +645,88 @@ function initKnockoutButtonEffect() {
         transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.2s ease !important;
       }
 
-      /* Dedicated Viewport Fixed Position for SOS Trigger Button */
-      #sos-trigger-btn {
+      /* Viewport Fixed Stack Container for Action Buttons (Contact Dev + SOS) */
+      #whodis-floating-actions {
         position: fixed !important;
         bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)) !important;
         right: max(1.25rem, env(safe-area-inset-right, 1.25rem)) !important;
         z-index: 999999 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 12px !important;
+        pointer-events: none !important;
+      }
+      #whodis-floating-actions > * {
+        pointer-events: auto !important;
+      }
+
+      /* Contact Developer Trigger Button (Circle Icon FAB) */
+      #contact-dev-trigger-btn {
+        width: 50px !important;
+        height: 50px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+        border-radius: 9999px !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
+        border: 2px solid rgba(255, 255, 255, 0.25) !important;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.45) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease !important;
+      }
+      #contact-dev-trigger-btn:hover {
+        transform: scale(1.08) !important;
+        background: #1e293b !important;
+        box-shadow: 0 6px 24px rgba(15, 23, 42, 0.6) !important;
+      }
+      #contact-dev-trigger-btn:active {
+        transform: scale(0.95) !important;
+      }
+
+      /* SOS Trigger Button */
+      #sos-trigger-btn {
+        position: relative !important;
+        bottom: auto !important;
+        right: auto !important;
+        z-index: 1 !important;
         overflow: hidden !important;
         isolation: isolate;
         -webkit-mask-image: -webkit-radial-gradient(white, black);
         transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.2s ease !important;
+      }
+
+      @media (max-width: 639px) {
+        #whodis-floating-actions {
+          bottom: max(1rem, env(safe-area-inset-bottom, 1rem)) !important;
+          right: max(1rem, env(safe-area-inset-right, 1rem)) !important;
+          gap: 10px !important;
+        }
+        #contact-dev-trigger-btn {
+          width: 48px !important;
+          height: 48px !important;
+          min-width: 48px !important;
+          min-height: 48px !important;
+        }
+        #sos-trigger-btn {
+          width: 48px !important;
+          height: 48px !important;
+          min-width: 48px !important;
+          min-height: 48px !important;
+          padding: 0 !important;
+        }
+        #sos-trigger-btn .sos-btn-text {
+          display: none !important;
+        }
+      }
+
+      @media (min-width: 640px) {
+        #sos-trigger-btn .sos-btn-text {
+          display: inline !important;
+        }
       }
 
       /* Subtle Cyber Silver Glow & Micro-Lift on Hover (Monochrome - No Green) */
