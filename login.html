@@ -218,7 +218,9 @@
                 window.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         if (typeof toggleTosModal === 'function') {
-                            toggleTosModal(true, true, () => proceedAfterLogin(currentUser));
+                            toggleTosModal(true, true, () => proceedAfterLogin(currentUser), () => {
+                                localStorage.removeItem('whodis_user');
+                            });
                         } else {
                             proceedAfterLogin(currentUser);
                         }
@@ -257,7 +259,9 @@
                     } else {
                         // แสดงข้อกำหนดและนโยบายความเป็นส่วนตัวเพื่อให้ผู้ใช้กดยอมรับก่อนเข้าใช้งานเว็บไซต์
                         if (typeof toggleTosModal === 'function') {
-                            toggleTosModal(true, true, () => proceedAfterLogin(data.user));
+                            toggleTosModal(true, true, () => proceedAfterLogin(data.user), () => {
+                                localStorage.removeItem('whodis_user');
+                            });
                         } else {
                             proceedAfterLogin(data.user);
                         }

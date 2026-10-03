@@ -391,7 +391,7 @@ function renderSosWidget() {
         
         <!-- Header -->
         <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-6 shrink-0 relative border-b border-slate-700/50">
-          <button id="tos-close-btn" onclick="toggleTosModal(false)" class="hidden absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer" title="ปิดหน้าต่าง">
+          <button id="tos-close-btn" onclick="toggleTosModal(false)" class="absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer" title="ปิดหน้าต่าง">
             <span class="material-symbols-outlined text-[20px]">close</span>
           </button>
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-emerald-300 text-xs font-semibold mb-2 border border-emerald-400/20">
@@ -695,7 +695,7 @@ function renderSosWidget() {
   const tosModal = document.getElementById('whodis-tos-modal');
   if (tosModal) {
     tosModal.addEventListener('click', (e) => {
-      if (e.target === tosModal && !__whodisTosIsConsentMode) {
+      if (e.target === tosModal) {
         toggleTosModal(false);
       }
     });
@@ -706,9 +706,7 @@ function renderSosWidget() {
     if (e.key === 'Escape') {
       toggleSosModal(false);
       toggleContactDevModal(false);
-      if (!__whodisTosIsConsentMode) {
-        toggleTosModal(false);
-      }
+      toggleTosModal(false);
     }
   });
 
@@ -822,10 +820,11 @@ function toggleContactDevModal(show) {
 }
 
 let __whodisTosOnAccept = null;
+let __whodisTosOnCancel = null;
 let __whodisTosReachedBottom = false;
 let __whodisTosIsConsentMode = false;
 
-function toggleTosModal(show, isConsentMode = false, onAccept = null) {
+function toggleTosModal(show, isConsentMode = false, onAccept = null, onCancel = null) {
   const modal = document.getElementById('whodis-tos-modal');
   if (!modal) return;
   if (show) {
@@ -833,6 +832,7 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
     document.body.style.overflow = 'hidden';
 
     __whodisTosOnAccept = onAccept;
+    __whodisTosOnCancel = onCancel;
     __whodisTosIsConsentMode = isConsentMode;
     __whodisTosReachedBottom = false;
 
@@ -849,8 +849,10 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
     if (agreeCheckbox) agreeCheckbox.checked = false;
     if (acceptBtn) acceptBtn.disabled = true;
 
+    // ปุ่มกากบาท [X] แสดงเสมอทุกโหมด เพื่อให้ผู้ใช้กดปิดกลับสู่หน้าเดิมได้ตลอดเวลา
+    if (closeBtn) closeBtn.classList.remove('hidden');
+
     if (isConsentMode) {
-      if (closeBtn) closeBtn.classList.add('hidden');
       if (readonlyControls) readonlyControls.classList.add('hidden');
       if (consentControls) consentControls.classList.add('hidden');
       if (promptBar) promptBar.classList.remove('hidden');
@@ -860,20 +862,32 @@ function toggleTosModal(show, isConsentMode = false, onAccept = null) {
         handleTosScroll();
       }, 60);
     } else {
-      if (closeBtn) closeBtn.classList.remove('hidden');
       if (readonlyControls) readonlyControls.classList.remove('hidden');
       if (consentControls) consentControls.classList.add('hidden');
       if (promptBar) promptBar.classList.add('hidden');
       if (floatingBtn) floatingBtn.classList.add('hidden');
     }
   } else {
+    const wasConsent = __whodisTosIsConsentMode;
+    const cancelCb = __whodisTosOnCancel;
+
     modal.classList.add('hidden');
     document.body.style.overflow = '';
     __whodisTosOnAccept = null;
+    __whodisTosOnCancel = null;
     __whodisTosIsConsentMode = false;
     __whodisTosReachedBottom = false;
     const floatingBtn = document.getElementById('tos-floating-scroll-btn');
     if (floatingBtn) floatingBtn.classList.add('hidden');
+
+    // หากผู้ใช้ปิดหน้าต่างในโหมดขอความยินยอม (Consent Mode) ให้เรียก onCancel
+    if (wasConsent && typeof cancelCb === 'function') {
+      try {
+        cancelCb();
+      } catch (err) {
+        console.error('Error executing ToS onCancel callback:', err);
+      }
+    }
   }
 }
 
@@ -942,6 +956,8 @@ function confirmAcceptTos() {
 
   const cb = __whodisTosOnAccept;
   __whodisTosOnAccept = null;
+  __whodisTosOnCancel = null;
+  __whodisTosIsConsentMode = false;
 
   toggleTosModal(false);
 
