@@ -89,7 +89,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <nav class="hidden lg:flex items-center gap-1">
                 <a href="index.php" class="nav-link <?= ($current_page == 'index.php' || $current_page == '') ? 'active' : 'text-muted-text' ?>">เช็กก่อนโอน</a>
                 <a href="checker.php" class="nav-link <?= ($current_page == 'checker.php') ? 'active' : 'text-muted-text' ?>">Scam Checker</a>
-                <a href="report.php" class="nav-link <?= ($current_page == 'report.php') ? 'active' : 'text-muted-text' ?>">แจ้งมิจฉาชีพ</a>
+                <a href="report.php" class="nav-link <?= ($current_page == 'report.php') ? 'active' : 'text-muted-text' ?>">แจ้งเบาะแส</a>
                 <a href="stats.php" class="nav-link <?= ($current_page == 'stats.php') ? 'active' : 'text-muted-text' ?>">สถิติ Scam</a>
                 <a href="knowledge.php" class="nav-link <?= ($current_page == 'knowledge.php') ? 'active' : 'text-muted-text' ?>">รู้จักการโกง</a>
                 <a href="emergency.php" class="nav-link <?= ($current_page == 'emergency.php') ? 'active' : 'text-muted-text' ?>">แนวทางเมื่อถูกฉ้อโกง</a>

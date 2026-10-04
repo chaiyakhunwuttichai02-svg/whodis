@@ -84,8 +84,8 @@ include 'header.php';
     <div class="max-w-[800px] mx-auto px-4">
         
         <div class="text-center mb-8">
-            <h1 class="text-[32px] md:text-[36px] font-bold text-primary-text mb-2">แจ้งมิจฉาชีพ</h1>
-            <p class="text-muted-text text-[15px]">รายงานเพื่อเตือนคนอื่น ทุกรายงานผ่านการกลั่นกรองก่อนเผยแพร่</p>
+            <h1 class="text-[32px] md:text-[36px] font-bold text-primary-text mb-2">แจ้งเบาะแส</h1>
+            <p class="text-muted-text text-[15px]">รายงานพฤติกรรมต้องสงสัย ช่วยสร้างสังคมออนไลน์ที่ปลอดภัย</p>
         </div>
 
         <?php if ($successMessage !== ''): ?>

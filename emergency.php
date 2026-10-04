@@ -106,10 +106,10 @@ include 'header.php';
                     <div>
                         <span class="text-[11px] font-bold text-muted-text uppercase tracking-wider">ขั้นที่ 5</span>
                         <h3 class="text-[17px] font-bold text-primary-text mb-1">รายงานลง Whodis</h3>
-                        <p class="text-[14px] text-muted-text">เพิ่มข้อมูลมิจฉาชีพลงแพลตฟอร์ม เพื่อเตือนคนอื่นไม่ให้โดนต่อ</p>
+                        <p class="text-[14px] text-muted-text">เพิ่มข้อมูลเบาะแสลงแพลตฟอร์ม เพื่อเตือนภัยและสร้างความตระหนักรู้แก่สังคม</p>
                     </div>
                 </div>
-                <a href="report.php" class="bg-primary-text hover:bg-gray-800 text-white text-[13px] font-bold px-4 py-2 rounded-xl whitespace-nowrap self-end sm:self-center transition-colors">รายงานเลย</a>
+                <a href="report.php" class="bg-primary-text hover:bg-gray-800 text-white text-[13px] font-bold px-4 py-2 rounded-xl whitespace-nowrap self-end sm:self-center transition-colors">แจ้งเบาะแสเลย</a>
             </div>
 
         </div>

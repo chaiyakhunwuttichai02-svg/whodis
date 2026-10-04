@@ -281,7 +281,19 @@ function renderHeader() {
       html.dark .border-gray-300,
       html.dark .border-slate-100,
       html.dark .border-slate-200,
-      html.dark .border-slate-300,
+      html.dark .border-slate-300 {
+        border-color: #334155 !important;
+      }
+
+      /* Dark Mode Hover Contrast */
+      html.dark .hover\:bg-slate-50:hover,
+      html.dark .hover\:bg-gray-50:hover,
+      html.dark .hover\:bg-slate-100:hover,
+      html.dark .hover\:bg-gray-100:hover {
+        background-color: #334155 !important;
+        color: #f8fafc !important;
+      }
+
       /* Dark Mode Footer */
       html.dark footer,
       html.dark footer.bg-white,
@@ -524,7 +536,7 @@ function renderHeader() {
   const navItems = [
     { name: 'เช็กก่อนโอน', url: 'index.html', isPublic: true },
     { name: 'Scam Checker', url: 'checker.html', isPublic: true },
-    { name: 'แจ้งมิจฉาชีพ', url: 'report.html', isPublic: false },
+    { name: 'แจ้งเบาะแส', url: 'report.html', isPublic: false },
     { name: 'สถิติ Scam', url: 'stats.html', isPublic: false },
     { name: 'รู้จักการโกง', url: 'knowledge.html', isPublic: false },
     { name: 'แนวทางเมื่อถูกฉ้อโกง', url: 'emergency.html', isPublic: false }

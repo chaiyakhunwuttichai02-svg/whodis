@@ -128,7 +128,7 @@ include 'header.php';
                 <div class="w-12 h-12 bg-[#012b65] text-white rounded-full flex items-center justify-center mb-4 shadow-2xs group-hover:scale-105 transition-transform">
                     <span class="material-symbols-outlined text-white">campaign</span>
                 </div>
-                <h3 class="font-bold text-[16px] mb-1">แจ้งมิจฉาชีพ</h3>
+                <h3 class="font-bold text-[16px] mb-1">แจ้งเบาะแส</h3>
                 <p class="text-[12px] text-muted-text leading-relaxed">ฟอร์มรายงานแบบ Step-by-step พร้อมแนบหลักฐาน</p>
             </a>
             <a href="stats.php" class="bg-white border border-gray-100 p-6 rounded-2xl hover:shadow-soft transition-all group">
