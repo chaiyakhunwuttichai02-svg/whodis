@@ -104,6 +104,23 @@ function renderHeader() {
     styleEl.id = 'whodis-nav-custom-style';
     styleEl.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+      .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined' !important;
+        font-weight: normal !important;
+        font-style: normal !important;
+        display: inline-block !important;
+        line-height: 1 !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        word-wrap: normal !important;
+        white-space: nowrap !important;
+        direction: ltr !important;
+        -webkit-font-smoothing: antialiased !important;
+        text-rendering: optimizeLegibility !important;
+        font-feature-settings: 'liga' 1 !important;
+      }
 
       html, body {
         background-color: #ffffff;
@@ -179,10 +196,12 @@ function renderHeader() {
         border-bottom-color: #1e293b !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
       }
-      html.dark header a.group span.text-\[\#012b65\],
+      /* Header & Footer Whodis brand in Dark Mode */
+      html.dark .whodis-brand-title,
       html.dark header a.group span,
-      html.dark footer span.text-\[\#012b65\],
-      html.dark span.text-\[\#012b65\] {
+      html.dark footer a span,
+      html.dark footer span,
+      html.dark [class*="text-[#012b65]"] {
         color: #60a5fa !important;
       }
       html.dark .nav-link {
@@ -490,7 +509,7 @@ function renderHeader() {
       <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2.5 group">
           <img src="assets/logo.png" alt="Whodis" class="w-8 h-8 rounded-xl object-cover shadow-2xs group-hover:scale-105 transition-transform">
-          <span class="text-[18px] font-bold text-[#012b65] tracking-tight">Whodis</span>
+          <span class="whodis-brand-title text-[18px] font-bold text-[#012b65] tracking-tight">Whodis</span>
         </a>
         
         <nav class="hidden lg:flex items-center gap-1">
