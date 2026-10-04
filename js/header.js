@@ -285,13 +285,75 @@ function renderHeader() {
         border-color: #334155 !important;
       }
 
-      /* Dark Mode Hover Contrast */
-      html.dark .hover\:bg-slate-50:hover,
-      html.dark .hover\:bg-gray-50:hover,
-      html.dark .hover\:bg-slate-100:hover,
-      html.dark .hover\:bg-gray-100:hover {
+      /* Dark Mode Hover Contrast (Properly Escaped for JS Template String) */
+      html.dark .hover\\:bg-slate-50:hover,
+      html.dark .hover\\:bg-gray-50:hover,
+      html.dark .hover\\:bg-slate-100:hover,
+      html.dark .hover\\:bg-gray-100:hover,
+      html.dark button[onclick*="toggleAccordion"]:hover {
         background-color: #334155 !important;
-        color: #f8fafc !important;
+        color: #ffffff !important;
+      }
+      html.dark .hover\\:bg-slate-50:hover *,
+      html.dark .hover\\:bg-gray-50:hover *,
+      html.dark .hover\\:bg-slate-100:hover *,
+      html.dark .hover\\:bg-gray-100:hover *,
+      html.dark button[onclick*="toggleAccordion"]:hover * {
+        color: #ffffff !important;
+      }
+
+      /* Dark Mode Primary Action Buttons (Whodis Blue #2563eb) */
+      html.dark button.bg-primary-text,
+      html.dark a.bg-primary-text,
+      html.dark button.bg-slate-900:not([onclick*="selectScamType"]),
+      html.dark a.bg-slate-900,
+      html.dark #loginBtn,
+      html.dark #registerBtn,
+      html.dark #submitResetBtn,
+      html.dark #quiz-intro-box button,
+      html.dark button[onclick*="analyzeWithAI"] {
+        background-color: #2563eb !important;
+        border: 1px solid #3b82f6 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+      }
+      html.dark button.bg-primary-text:hover,
+      html.dark a.bg-primary-text:hover,
+      html.dark button.bg-slate-900:hover,
+      html.dark a.bg-slate-900:hover,
+      html.dark #loginBtn:hover,
+      html.dark #registerBtn:hover,
+      html.dark #submitResetBtn:hover,
+      html.dark #quiz-intro-box button:hover,
+      html.dark button[onclick*="analyzeWithAI"]:hover {
+        background-color: #1d4ed8 !important;
+        border-color: #60a5fa !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45) !important;
+      }
+
+      /* Emergency 1441 Call Button (Stays Pure White with Vibrant Red Text) */
+      html.dark a[href="tel:1441"].bg-white,
+      html.dark a[href="tel:1441"].bg-white:hover {
+        background-color: #ffffff !important;
+        color: #dc2626 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      /* Dark Mode Secondary & Chip Buttons */
+      html.dark #prevBtn,
+      html.dark button[onclick*="fillAndCheck"],
+      html.dark button[onclick*="resetReportForm"] {
+        background-color: #1e293b !important;
+        border: 1px solid #475569 !important;
+        color: #e2e8f0 !important;
+      }
+      html.dark #prevBtn:hover,
+      html.dark button[onclick*="fillAndCheck"]:hover,
+      html.dark button[onclick*="resetReportForm"]:hover {
+        background-color: #334155 !important;
+        border-color: #64748b !important;
+        color: #ffffff !important;
       }
 
       /* Dark Mode Footer */

@@ -72,6 +72,26 @@
         .btn-green-solid:hover {
             background-color: #059669;
         }
+
+        /* Dark Mode Accordion Hover & Surface Fixes */
+        html.dark #knowledge-accordion-container > div {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        html.dark #knowledge-accordion-container button[onclick*="toggleAccordion"] {
+            background-color: transparent !important;
+        }
+        html.dark #knowledge-accordion-container button[onclick*="toggleAccordion"]:hover {
+            background-color: #334155 !important;
+        }
+        html.dark #knowledge-accordion-container button[onclick*="toggleAccordion"]:hover h3,
+        html.dark #knowledge-accordion-container button[onclick*="toggleAccordion"]:hover p,
+        html.dark #knowledge-accordion-container button[onclick*="toggleAccordion"]:hover span {
+            color: #ffffff !important;
+        }
+        html.dark #knowledge-accordion-container .bg-slate-100 {
+            background-color: #0f172a !important;
+        }
     </style>
 </head>
 <body class="font-sans text-primary-text bg-white antialiased min-h-screen flex flex-col">
@@ -95,7 +115,7 @@
             <div class="space-y-3.5 mb-12" id="knowledge-accordion-container">
                 <!-- 1. Investment Scam -->
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs transition-all duration-200">
-                    <button type="button" onclick="toggleAccordion('acc-investment')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 transition-colors">
+                    <button type="button" onclick="toggleAccordion('acc-investment')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors">
                         <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl shrink-0">
                             📈
                         </div>
@@ -156,7 +176,7 @@
 
                 <!-- 2. Job Scam -->
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs transition-all duration-200">
-                    <button type="button" onclick="toggleAccordion('acc-job')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 transition-colors">
+                    <button type="button" onclick="toggleAccordion('acc-job')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors">
                         <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl shrink-0">
                             💼
                         </div>
@@ -217,7 +237,7 @@
 
                 <!-- 3. Phishing -->
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs transition-all duration-200">
-                    <button type="button" onclick="toggleAccordion('acc-phishing')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 transition-colors">
+                    <button type="button" onclick="toggleAccordion('acc-phishing')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors">
                         <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl shrink-0">
                             🎣
                         </div>
@@ -278,7 +298,7 @@
 
                 <!-- 4. Romance Scam -->
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs transition-all duration-200">
-                    <button type="button" onclick="toggleAccordion('acc-romance')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 transition-colors">
+                    <button type="button" onclick="toggleAccordion('acc-romance')" class="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors">
                         <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl shrink-0">
                             💔
                         </div>
