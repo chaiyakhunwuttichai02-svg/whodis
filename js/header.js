@@ -367,21 +367,93 @@ function renderHeader() {
       html.dark #contact-dev-modal > div {
         background-color: #0f172a !important;
         border-color: #334155 !important;
-        color: #e2e8f0 !important;
+        color: #f1f5f9 !important;
       }
       html.dark #whodis-tos-scroll-body {
+        background-color: #0b1120 !important;
+        color: #cbd5e1 !important;
+      }
+      html.dark #whodis-tos-scroll-body * {
         color: #cbd5e1 !important;
       }
       html.dark #whodis-tos-scroll-body h1,
       html.dark #whodis-tos-scroll-body h2,
       html.dark #whodis-tos-scroll-body h3,
-      html.dark #whodis-tos-scroll-body strong {
+      html.dark #whodis-tos-scroll-body h4,
+      html.dark #whodis-tos-scroll-body h5,
+      html.dark #whodis-tos-scroll-body strong,
+      html.dark #whodis-tos-scroll-body b {
         color: #f8fafc !important;
+      }
+      html.dark #whodis-tos-scroll-body .bg-blue-50 {
+        background-color: #172554 !important;
+        border-color: #1e40af !important;
+      }
+      html.dark #whodis-tos-scroll-body .bg-blue-50,
+      html.dark #whodis-tos-scroll-body .bg-blue-50 * {
+        color: #bfdbfe !important;
+      }
+      html.dark #whodis-tos-scroll-body .border-slate-200,
+      html.dark #whodis-tos-scroll-body .border-slate-300 {
+        border-color: #334155 !important;
+      }
+      html.dark #whodis-tos-scroll-body p,
+      html.dark #whodis-tos-scroll-body span,
+      html.dark #whodis-tos-scroll-body li {
+        color: #cbd5e1 !important;
       }
       html.dark #tos-scroll-prompt-bar,
       html.dark #tos-consent-controls,
       html.dark #tos-readonly-controls {
         background-color: #1e293b !important;
+        border-color: #334155 !important;
+      }
+
+      /* Dark Mode Alert & Status Boxes */
+      html.dark .bg-emerald-50, html.dark .bg-green-50 {
+        background-color: rgba(6, 78, 59, 0.35) !important;
+        color: #a7f3d0 !important;
+        border-color: rgba(16, 185, 129, 0.3) !important;
+      }
+      html.dark .bg-emerald-50 *, html.dark .bg-green-50 * {
+        color: #d1fae5 !important;
+      }
+      html.dark .bg-yellow-50, html.dark .bg-amber-50 {
+        background-color: rgba(120, 53, 15, 0.35) !important;
+        color: #fde68a !important;
+        border-color: rgba(245, 158, 11, 0.3) !important;
+      }
+      html.dark .bg-yellow-50 *, html.dark .bg-amber-50 * {
+        color: #fef3c7 !important;
+      }
+      html.dark .bg-red-50, html.dark .bg-rose-50 {
+        background-color: rgba(127, 29, 29, 0.35) !important;
+        color: #fca5a5 !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+      }
+      html.dark .bg-red-50 *, html.dark .bg-rose-50 * {
+        color: #fee2e2 !important;
+      }
+      html.dark .bg-purple-100 {
+        background-color: rgba(88, 28, 135, 0.4) !important;
+        color: #e9d5ff !important;
+        border-color: rgba(168, 85, 247, 0.4) !important;
+      }
+      html.dark .bg-purple-100 * {
+        color: #f3e8ff !important;
+      }
+
+      /* Dark Mode Live Alert Cards */
+      html.dark #live-reports-container > div {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f8fafc !important;
+      }
+      html.dark #live-reports-container p.line-clamp-2,
+      html.dark #live-reports-container .bg-gray-50\/80,
+      html.dark #live-reports-container .bg-gray-50 {
+        background-color: #0f172a !important;
+        color: #cbd5e1 !important;
         border-color: #334155 !important;
       }
 
@@ -469,18 +541,40 @@ function renderHeader() {
   let mobileUserHtml = '';
 
   if (user) {
+    const adminBadge = isAdmin 
+      ? `<a href="admin_reports.html" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-semibold shadow-2xs transition-all hover:scale-105 shrink-0" title="เข้าสู่ระบบจัดการหลังบ้าน (เฉพาะแอดมิน)">
+           <span>⚙️ หลังบ้าน</span>
+         </a>`
+      : '';
+
     userActionHtml = `
-      <span class="text-[13px] font-medium hidden md:inline">สวัสดี, ${escapeHtml(user.username)}</span>
-      <button onclick="Auth.logout()" class="text-muted-text hover:text-danger flex items-center transition-colors" title="ออกจากระบบ">
-        <span class="material-symbols-outlined text-[20px]">logout</span>
-      </button>
-    `;
-    mobileUserHtml = `
-      <div class="pt-4 mt-2 border-t border-gray-100 flex items-center justify-between">
-        <span class="text-sm font-medium text-gray-800">👤 ${escapeHtml(user.username)}</span>
-        <button onclick="Auth.logout()" class="text-xs text-danger font-semibold flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">logout</span> ออกจากระบบ
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+          <span class="max-w-[120px] truncate">👤 ${escapeHtml(user.username)}</span>
+          ${isAdmin ? '<span class="text-[11px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold shrink-0">(แอดมิน)</span>' : ''}
+        </div>
+        ${adminBadge}
+        <button onclick="Auth.logout()" class="p-1.5 text-muted-text hover:text-danger rounded-full hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center transition-colors" title="ออกจากระบบ">
+          <span class="material-symbols-outlined text-[20px]">logout</span>
         </button>
+      </div>
+    `;
+
+    mobileUserHtml = `
+      <div class="pt-4 mt-2 border-t border-gray-100 dark:border-slate-800 space-y-2">
+        <div class="flex items-center justify-between px-1">
+          <span class="text-sm font-semibold text-gray-800 dark:text-slate-200">
+            👤 ${escapeHtml(user.username)} ${isAdmin ? '<span class="text-xs text-amber-600 dark:text-amber-400 font-bold">(แอดมิน)</span>' : ''}
+          </span>
+          <button onclick="Auth.logout()" class="text-xs text-danger font-semibold flex items-center gap-1 hover:underline">
+            <span class="material-symbols-outlined text-[16px]">logout</span> ออกจากระบบ
+          </button>
+        </div>
+        ${isAdmin ? `
+          <a href="admin_reports.html" class="block w-full text-center py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-xs transition-colors shadow-2xs">
+            ⚙️ จัดการระบบหลังบ้าน
+          </a>
+        ` : ''}
       </div>
     `;
   } else if (cleanCurrent === 'login') {
@@ -493,8 +587,8 @@ function renderHeader() {
       </a>
     `;
     mobileUserHtml = `
-      <div class="pt-4 mt-2 border-t border-gray-100">
-        <a href="login.html" class="block w-full text-center py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold text-sm">
+      <div class="pt-4 mt-2 border-t border-gray-100 dark:border-slate-800">
+        <a href="login.html" class="block w-full text-center py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold text-sm shadow-2xs transition-colors">
           เข้าสู่ระบบ
         </a>
       </div>
@@ -503,7 +597,7 @@ function renderHeader() {
 
   const isDark = document.documentElement.classList.contains('dark');
   const themeToggleHtml = `
-    <button type="button" id="theme-toggle-btn" onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center cursor-pointer shadow-2xs group" title="สลับโหมดมืด / สว่าง (Dark / Light Mode)" aria-label="Toggle Dark Mode">
+    <button type="button" id="theme-toggle-btn" onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center cursor-pointer shadow-2xs group shrink-0" title="สลับโหมดมืด / สว่าง (Dark / Light Mode)" aria-label="Toggle Dark Mode">
       <span class="theme-icon-moon material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-12 ${isDark ? 'hidden' : ''}">dark_mode</span>
       <span class="theme-icon-sun material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-45 ${isDark ? '' : 'hidden'}">light_mode</span>
     </button>
@@ -511,28 +605,31 @@ function renderHeader() {
 
   placeholder.innerHTML = `
     <header class="w-full bg-card-bg border-b border-gray-100 sticky top-0 z-50">
-      <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="index.html" class="flex items-center gap-2.5 group">
+      <div class="max-w-[1280px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
+        <!-- Logo Area (ชิดซ้ายสวยงาม มีระยะห่างกำลังดี) -->
+        <a href="index.html" class="flex items-center gap-2.5 group shrink-0">
           <img src="assets/logo.png" alt="Whodis" class="w-8 h-8 rounded-xl object-cover shadow-2xs group-hover:scale-105 transition-transform">
           <span class="whodis-brand-title text-[18px] font-bold text-[#012b65] tracking-tight">Whodis</span>
         </a>
         
-        <nav class="hidden lg:flex items-center gap-1">
+        <!-- Center Nav Items (แสดงผลตั้งแต่หน้าจอขนาดกลางขึ้นไป ไม่หาย) -->
+        <nav class="hidden md:flex items-center gap-0.5 lg:gap-1">
           ${navLinksHtml}
         </nav>
 
-        <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Right User Actions (ชิดขวาพอดี ไม่ชิดจนติดขอบจอ) -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
           ${themeToggleHtml}
           ${userActionHtml}
-          <!-- Mobile Menu Button -->
-          <button id="mobile-menu-btn" class="lg:hidden p-1.5 text-gray-600 hover:text-gray-900 focus:outline-none">
+          <!-- Mobile Menu Button (แสดงเฉพาะหน้าจอมือถือเล็กกว่า md) -->
+          <button id="mobile-menu-btn" class="md:hidden p-1.5 text-gray-600 hover:text-gray-900 focus:outline-none">
             <span class="material-symbols-outlined text-[26px]">menu</span>
           </button>
         </div>
       </div>
 
-      <!-- Mobile Dropdown -->
-      <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-gray-200 px-4 py-3 space-y-1 shadow-md">
+      <!-- Mobile Dropdown (หน้าจอมือถือ) -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 py-3 space-y-1 shadow-md">
         ${mobileNavLinksHtml}
         <div class="pt-3 mt-2 border-t border-gray-100 flex items-center justify-between px-1">
           <span class="text-xs font-semibold text-gray-500">ธีมหน้าจอ</span>
