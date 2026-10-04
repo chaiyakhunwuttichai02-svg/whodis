@@ -175,6 +175,10 @@ function renderHeader() {
         color: #0f172a;
         transform: scale(1.04);
       }
+      .theme-icon-moon.hidden,
+      .theme-icon-sun.hidden {
+        display: none !important;
+      }
 
       /* ================= DARK MODE THEME (Deep Slate & Dark Navy) ================= */
       html.dark,
@@ -501,10 +505,6 @@ function renderHeader() {
     { name: 'รู้จักการโกง', url: 'knowledge.html', isPublic: false },
     { name: 'แนวทางเมื่อถูกฉ้อโกง', url: 'emergency.html', isPublic: false }
   ];
-
-  if (isAdmin) {
-    navItems.push({ name: '⚙️ หลังบ้าน', url: 'admin_reports.html', isPublic: false });
-  }
 
   const navLinksHtml = navItems.map(item => {
     const cleanItem = item.url.replace(/\.html$/, '').replace(/\.php$/, '').toLowerCase();
