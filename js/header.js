@@ -1,7 +1,21 @@
-// js/header.js - Navigation Header Component ที่คงสไตล์เดิม 100%
+// js/header.js - Navigation Header Component ที่คงสไตล์เดิม 100% พร้อม Dark Mode / Night Mode
+
+// Theme Bootstrap ทันทีที่ไฟล์ถูกโหลด เพื่อป้องกันหน้ากระพริบขาว (Zero FOUC)
+(function initThemeBootstrap() {
+  try {
+    const savedTheme = localStorage.getItem('whodis_theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  } catch (e) {}
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
   initFavicon();
+  initTheme();
   renderHeader();
   renderSosWidget();
   initKnockoutButtonEffect();
@@ -10,17 +24,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
   initFavicon();
+  initTheme();
   renderHeader();
   renderSosWidget();
   initKnockoutButtonEffect();
   initTosFooterLink();
 }
 
+function initTheme() {
+  try {
+    const savedTheme = localStorage.getItem('whodis_theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    updateThemeIcons(isDark);
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'whodis_theme') {
+        const dark = e.newValue === 'dark';
+        document.documentElement.classList.toggle('dark', dark);
+        updateThemeIcons(dark);
+      }
+    });
+  } catch (e) {}
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  try {
+    localStorage.setItem('whodis_theme', isDark ? 'dark' : 'light');
+  } catch (e) {}
+  updateThemeIcons(isDark);
+}
+
+function updateThemeIcons(isDark) {
+  const buttons = document.querySelectorAll('.theme-toggle-btn');
+  buttons.forEach(btn => {
+    const moon = btn.querySelector('.theme-icon-moon');
+    const sun = btn.querySelector('.theme-icon-sun');
+    if (moon && sun) {
+      if (isDark) {
+        moon.classList.add('hidden');
+        sun.classList.remove('hidden');
+      } else {
+        moon.classList.remove('hidden');
+        sun.classList.add('hidden');
+      }
+    }
+  });
+
+  const mobileMoon = document.querySelector('#mobile-menu .theme-icon-moon');
+  const mobileSun = document.querySelector('#mobile-menu .theme-icon-sun');
+  const mobileLabel = document.getElementById('mobile-theme-label');
+  if (mobileMoon && mobileSun) {
+    if (isDark) {
+      mobileMoon.classList.add('hidden');
+      mobileSun.classList.remove('hidden');
+    } else {
+      mobileMoon.classList.remove('hidden');
+      mobileSun.classList.add('hidden');
+    }
+  }
+  if (mobileLabel) {
+    mobileLabel.textContent = isDark ? 'โหมดสว่าง' : 'โหมดมืด';
+  }
+}
+
 function renderHeader() {
   const placeholder = document.getElementById('header-placeholder');
   if (!placeholder) return;
 
-  // ฝังสไตล์ Global: ฟอนต์ไทยมีหัว (Sarabun), พื้นหลังขาวล้วน (#ffffff), แถบเมนู Hover/Active
+  // ฝังสไตล์ Global: ฟอนต์ไทยมีหัว (Sarabun), พื้นหลัง, แถบเมนู, และธีม Dark Mode (Deep Slate)
   if (!document.getElementById('whodis-nav-custom-style')) {
     const styleEl = document.createElement('style');
     styleEl.id = 'whodis-nav-custom-style';
@@ -28,14 +106,15 @@ function renderHeader() {
       @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
       html, body {
-        background-color: #ffffff !important;
+        background-color: #ffffff;
         font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
         overflow-x: hidden !important;
         max-width: 100vw !important;
+        transition: background-color 0.25s ease, color 0.25s ease;
       }
 
       .bg-base-bg {
-        background-color: #ffffff !important;
+        background-color: #ffffff;
       }
 
       .nav-link {
@@ -63,6 +142,250 @@ function renderHeader() {
       .nav-link.active:hover {
         background-color: #000000 !important;
         color: #ffffff !important;
+      }
+
+      /* Theme Toggle Button Style */
+      .theme-toggle-btn {
+        background-color: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .theme-toggle-btn:hover {
+        background-color: #e2e8f0;
+        color: #0f172a;
+        transform: scale(1.04);
+      }
+
+      /* ================= DARK MODE THEME (Deep Slate & Dark Navy) ================= */
+      html.dark,
+      html.dark body,
+      html.dark body.bg-white,
+      html.dark body.bg-base-bg {
+        background-color: #0b1120 !important;
+        color: #f8fafc !important;
+      }
+
+      html.dark .bg-base-bg,
+      html.dark main,
+      html.dark main.bg-white,
+      html.dark body > main {
+        background-color: #0b1120 !important;
+      }
+
+      /* Dark Mode Header & Nav */
+      html.dark header {
+        background-color: #0f172a !important;
+        border-bottom-color: #1e293b !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+      }
+      html.dark header a.group span.text-\[\#012b65\],
+      html.dark header a.group span,
+      html.dark footer span.text-\[\#012b65\],
+      html.dark span.text-\[\#012b65\] {
+        color: #60a5fa !important;
+      }
+      html.dark .nav-link {
+        color: #94a3b8 !important;
+      }
+      html.dark .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #ffffff !important;
+      }
+      html.dark .nav-link.active {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35) !important;
+      }
+      html.dark #mobile-menu {
+        background-color: #0f172a !important;
+        border-color: #1e293b !important;
+      }
+      html.dark #mobile-menu a {
+        color: #cbd5e1 !important;
+      }
+      html.dark #mobile-menu a:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #ffffff !important;
+      }
+      html.dark #mobile-menu a.bg-black {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+      }
+      html.dark #mobile-menu-btn {
+        color: #cbd5e1 !important;
+      }
+
+      /* Dark Mode Theme Toggle Button */
+      html.dark .theme-toggle-btn {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #fbbf24 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+      }
+      html.dark .theme-toggle-btn:hover {
+        background-color: #334155 !important;
+        color: #f59e0b !important;
+        transform: scale(1.05);
+      }
+
+      /* Dark Mode Cards & Surfaces (exclude body, main, footer) */
+      html.dark .bg-card-bg:not(body):not(main),
+      html.dark .bg-white:not(body):not(main):not(footer) {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+      }
+      html.dark .bg-gray-50,
+      html.dark .bg-slate-50 {
+        background-color: #0f172a !important;
+      }
+      html.dark .bg-gray-100,
+      html.dark .bg-slate-100 {
+        background-color: #1e293b !important;
+      }
+      html.dark .bg-gray-200,
+      html.dark .bg-slate-200 {
+        background-color: #334155 !important;
+      }
+
+      /* Dark Mode Borders & Dividers */
+      html.dark .border-gray-100,
+      html.dark .border-gray-200,
+      html.dark .border-gray-300,
+      html.dark .border-slate-100,
+      html.dark .border-slate-200,
+      html.dark .border-slate-300,
+      html.dark footer {
+        border-color: #334155 !important;
+      }
+
+      /* Dark Mode Typography */
+      html.dark .text-primary-text,
+      html.dark .text-slate-900,
+      html.dark .text-slate-800,
+      html.dark .text-gray-900,
+      html.dark .text-gray-800 {
+        color: #f8fafc !important;
+      }
+      html.dark .text-muted-text,
+      html.dark .text-slate-500,
+      html.dark .text-gray-600,
+      html.dark .text-gray-500 {
+        color: #94a3b8 !important;
+      }
+      html.dark .text-slate-400,
+      html.dark .text-gray-400 {
+        color: #64748b !important;
+      }
+      html.dark .text-slate-700,
+      html.dark .text-gray-700 {
+        color: #cbd5e1 !important;
+      }
+
+      /* Dark Mode Inputs, Textarea, Select */
+      html.dark input[type="text"],
+      html.dark input[type="email"],
+      html.dark input[type="password"],
+      html.dark input[type="number"],
+      html.dark input[type="tel"],
+      html.dark input[type="url"],
+      html.dark textarea,
+      html.dark select {
+        background-color: #0f172a !important;
+        border-color: #334155 !important;
+        color: #f8fafc !important;
+      }
+      html.dark input:focus,
+      html.dark textarea:focus,
+      html.dark select:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+        outline: none !important;
+      }
+      html.dark input::placeholder,
+      html.dark textarea::placeholder {
+        color: #64748b !important;
+      }
+
+      /* Search Bars on Index & Checker */
+      html.dark #search-form input,
+      html.dark #results-view input {
+        background-color: transparent !important;
+        color: #f8fafc !important;
+      }
+      html.dark .btn-knockout,
+      html.dark button.bg-primary-text,
+      html.dark button.bg-slate-900,
+      html.dark button#loginBtn {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+      }
+      html.dark .btn-knockout:hover,
+      html.dark button.bg-primary-text:hover,
+      html.dark button.bg-slate-900:hover,
+      html.dark button#loginBtn:hover {
+        background-color: #2563eb !important;
+      }
+
+      /* Feature Cards Hover & Shadows in Dark Mode */
+      html.dark .shadow-sm,
+      html.dark .shadow-xs,
+      html.dark .shadow-\[0_8px_30px_rgb\(0\,0\,0\,0\.04\)\] {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+      }
+      html.dark a.group.hover\:shadow-md:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45) !important;
+        border-color: #3b82f6 !important;
+      }
+
+      /* ToS & Modals in Dark Mode */
+      html.dark #whodis-tos-modal > div,
+      html.dark #contact-dev-modal > div {
+        background-color: #0f172a !important;
+        border-color: #334155 !important;
+        color: #e2e8f0 !important;
+      }
+      html.dark #whodis-tos-scroll-body {
+        color: #cbd5e1 !important;
+      }
+      html.dark #whodis-tos-scroll-body h1,
+      html.dark #whodis-tos-scroll-body h2,
+      html.dark #whodis-tos-scroll-body h3,
+      html.dark #whodis-tos-scroll-body strong {
+        color: #f8fafc !important;
+      }
+      html.dark #tos-scroll-prompt-bar,
+      html.dark #tos-consent-controls,
+      html.dark #tos-readonly-controls {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+      }
+
+      /* Tables & Lists in Dark Mode */
+      html.dark table {
+        color: #e2e8f0 !important;
+      }
+      html.dark table th {
+        background-color: #0f172a !important;
+        color: #94a3b8 !important;
+        border-color: #334155 !important;
+      }
+      html.dark table td {
+        border-color: #334155 !important;
+      }
+      html.dark table tr:hover td {
+        background-color: #243247 !important;
+      }
+
+      /* Emergency Hotline Button in Banner */
+      html.dark a[href="tel:1441"] {
+        background-color: #ffffff !important;
+        color: #dc2626 !important;
+      }
+
+      /* Footer brand in Dark Mode */
+      html.dark footer span.text-\[\#012b65\] {
+        color: #60a5fa !important;
       }
     `;
     document.head.appendChild(styleEl);
@@ -154,6 +477,14 @@ function renderHeader() {
     `;
   }
 
+  const isDark = document.documentElement.classList.contains('dark');
+  const themeToggleHtml = `
+    <button type="button" id="theme-toggle-btn" onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center cursor-pointer shadow-2xs group" title="สลับโหมดมืด / สว่าง (Dark / Light Mode)" aria-label="Toggle Dark Mode">
+      <span class="theme-icon-moon material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-12 ${isDark ? 'hidden' : ''}">dark_mode</span>
+      <span class="theme-icon-sun material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-45 ${isDark ? '' : 'hidden'}">light_mode</span>
+    </button>
+  `;
+
   placeholder.innerHTML = `
     <header class="w-full bg-card-bg border-b border-gray-100 sticky top-0 z-50">
       <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
@@ -166,7 +497,8 @@ function renderHeader() {
           ${navLinksHtml}
         </nav>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3">
+          ${themeToggleHtml}
           ${userActionHtml}
           <!-- Mobile Menu Button -->
           <button id="mobile-menu-btn" class="lg:hidden p-1.5 text-gray-600 hover:text-gray-900 focus:outline-none">
@@ -178,6 +510,14 @@ function renderHeader() {
       <!-- Mobile Dropdown -->
       <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-gray-200 px-4 py-3 space-y-1 shadow-md">
         ${mobileNavLinksHtml}
+        <div class="pt-3 mt-2 border-t border-gray-100 flex items-center justify-between px-1">
+          <span class="text-xs font-semibold text-gray-500">ธีมหน้าจอ</span>
+          <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+            <span class="theme-icon-moon material-symbols-outlined text-[16px] ${isDark ? 'hidden' : ''}">dark_mode</span>
+            <span class="theme-icon-sun material-symbols-outlined text-[16px] text-amber-500 ${isDark ? '' : 'hidden'}">light_mode</span>
+            <span id="mobile-theme-label">${isDark ? 'โหมดสว่าง' : 'โหมดมืด'}</span>
+          </button>
+        </div>
         ${mobileUserHtml}
       </div>
     </header>
