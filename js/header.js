@@ -122,6 +122,11 @@ function renderHeader() {
         font-feature-settings: 'liga' 1 !important;
       }
 
+      .material-symbols-outlined.hidden,
+      .hidden {
+        display: none !important;
+      }
+
       html, body {
         background-color: #ffffff;
         font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
