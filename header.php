@@ -100,8 +100,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
             <div class="flex items-center gap-2 sm:gap-3">
                 <button type="button" onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center cursor-pointer shadow-2xs group border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="สลับโหมดมืด / สว่าง (Dark / Light Mode)" aria-label="Toggle Dark Mode">
-                    <span class="theme-icon-moon material-symbols-outlined text-[20px] sm:text-[22px]">dark_mode</span>
-                    <span class="theme-icon-sun material-symbols-outlined text-[20px] sm:text-[22px] text-amber-300 hidden">light_mode</span>
+                    <span class="theme-icon-moon material-symbols-outlined text-[20px] sm:text-[22px] hidden">dark_mode</span>
+                    <span class="theme-icon-sun material-symbols-outlined text-[20px] sm:text-[22px] text-amber-500">light_mode</span>
                 </button>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <span class="text-[13px] font-medium hidden md:inline">สวัสดี, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -125,8 +125,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
         const moon = document.querySelector('.theme-icon-moon');
         const sun = document.querySelector('.theme-icon-sun');
         if (moon && sun) {
-            if (isDark) { moon.classList.add('hidden'); sun.classList.remove('hidden'); }
-            else { moon.classList.remove('hidden'); sun.classList.add('hidden'); }
+            if (isDark) { moon.classList.remove('hidden'); sun.classList.add('hidden'); }
+            else { moon.classList.add('hidden'); sun.classList.remove('hidden'); }
         }
     }
     document.addEventListener('DOMContentLoaded', () => {

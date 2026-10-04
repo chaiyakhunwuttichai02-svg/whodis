@@ -68,11 +68,13 @@ function updateThemeIcons(isDark) {
     const sun = btn.querySelector('.theme-icon-sun');
     if (moon && sun) {
       if (isDark) {
-        moon.classList.add('hidden');
-        sun.classList.remove('hidden');
-      } else {
+        // จอดำ: แสดงรูปพระจันทร์
         moon.classList.remove('hidden');
         sun.classList.add('hidden');
+      } else {
+        // จอขาว: แสดงรูปพระอาทิตย์
+        moon.classList.add('hidden');
+        sun.classList.remove('hidden');
       }
     }
   });
@@ -82,15 +84,15 @@ function updateThemeIcons(isDark) {
   const mobileLabel = document.getElementById('mobile-theme-label');
   if (mobileMoon && mobileSun) {
     if (isDark) {
-      mobileMoon.classList.add('hidden');
-      mobileSun.classList.remove('hidden');
-    } else {
       mobileMoon.classList.remove('hidden');
       mobileSun.classList.add('hidden');
+    } else {
+      mobileMoon.classList.add('hidden');
+      mobileSun.classList.remove('hidden');
     }
   }
   if (mobileLabel) {
-    mobileLabel.textContent = isDark ? 'โหมดสว่าง' : 'โหมดมืด';
+    mobileLabel.textContent = isDark ? 'โหมดมืด' : 'โหมดสว่าง';
   }
 }
 
@@ -280,8 +282,30 @@ function renderHeader() {
       html.dark .border-slate-100,
       html.dark .border-slate-200,
       html.dark .border-slate-300,
-      html.dark footer {
+      /* Dark Mode Footer */
+      html.dark footer,
+      html.dark footer.bg-white,
+      html.dark body > footer {
+        background-color: #0b1120 !important;
         border-color: #334155 !important;
+        color: #94a3b8 !important;
+      }
+      html.dark footer * {
+        border-color: #334155 !important;
+      }
+      html.dark footer p,
+      html.dark footer .text-muted-text {
+        color: #94a3b8 !important;
+      }
+      html.dark footer span.text-\[\#012b65\],
+      html.dark footer .whodis-brand-title {
+        color: #60a5fa !important;
+      }
+      html.dark footer a {
+        color: #94a3b8 !important;
+      }
+      html.dark footer a:hover {
+        color: #60a5fa !important;
       }
 
       /* Dark Mode Typography */
@@ -506,6 +530,10 @@ function renderHeader() {
     { name: 'แนวทางเมื่อถูกฉ้อโกง', url: 'emergency.html', isPublic: false }
   ];
 
+  if (isAdmin) {
+    navItems.push({ name: '⚙️ หลังบ้าน', url: 'admin_reports.html', isPublic: false });
+  }
+
   const navLinksHtml = navItems.map(item => {
     const cleanItem = item.url.replace(/\.html$/, '').replace(/\.php$/, '').toLowerCase();
     const isActive = (cleanCurrent === cleanItem) || (cleanCurrent === 'index' && cleanItem === 'index');
@@ -538,19 +566,9 @@ function renderHeader() {
   let mobileUserHtml = '';
 
   if (user) {
-    const adminBadge = isAdmin 
-      ? `<a href="admin_reports.html" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-semibold shadow-2xs transition-all hover:scale-105 shrink-0" title="เข้าสู่ระบบจัดการหลังบ้าน (เฉพาะแอดมิน)">
-           <span>⚙️ หลังบ้าน</span>
-         </a>`
-      : '';
-
     userActionHtml = `
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
-          <span class="max-w-[120px] truncate">👤 ${escapeHtml(user.username)}</span>
-          ${isAdmin ? '<span class="text-[11px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold shrink-0">(แอดมิน)</span>' : ''}
-        </div>
-        ${adminBadge}
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="text-[13px] font-medium hidden md:inline text-gray-700 dark:text-slate-300">สวัสดี, ${escapeHtml(user.username)}</span>
         <button onclick="Auth.logout()" class="p-1.5 text-muted-text hover:text-danger rounded-full hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center transition-colors" title="ออกจากระบบ">
           <span class="material-symbols-outlined text-[20px]">logout</span>
         </button>
@@ -558,20 +576,11 @@ function renderHeader() {
     `;
 
     mobileUserHtml = `
-      <div class="pt-4 mt-2 border-t border-gray-100 dark:border-slate-800 space-y-2">
-        <div class="flex items-center justify-between px-1">
-          <span class="text-sm font-semibold text-gray-800 dark:text-slate-200">
-            👤 ${escapeHtml(user.username)} ${isAdmin ? '<span class="text-xs text-amber-600 dark:text-amber-400 font-bold">(แอดมิน)</span>' : ''}
-          </span>
-          <button onclick="Auth.logout()" class="text-xs text-danger font-semibold flex items-center gap-1 hover:underline">
-            <span class="material-symbols-outlined text-[16px]">logout</span> ออกจากระบบ
-          </button>
-        </div>
-        ${isAdmin ? `
-          <a href="admin_reports.html" class="block w-full text-center py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-xs transition-colors shadow-2xs">
-            ⚙️ จัดการระบบหลังบ้าน
-          </a>
-        ` : ''}
+      <div class="pt-4 mt-2 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between px-1">
+        <span class="text-sm font-medium text-gray-800 dark:text-slate-200">👤 สวัสดี, ${escapeHtml(user.username)}</span>
+        <button onclick="Auth.logout()" class="text-xs text-danger font-semibold flex items-center gap-1 hover:underline">
+          <span class="material-symbols-outlined text-[16px]">logout</span> ออกจากระบบ
+        </button>
       </div>
     `;
   } else if (cleanCurrent === 'login') {
@@ -595,8 +604,8 @@ function renderHeader() {
   const isDark = document.documentElement.classList.contains('dark');
   const themeToggleHtml = `
     <button type="button" id="theme-toggle-btn" onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center cursor-pointer shadow-2xs group shrink-0" title="สลับโหมดมืด / สว่าง (Dark / Light Mode)" aria-label="Toggle Dark Mode">
-      <span class="theme-icon-moon material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-12 ${isDark ? 'hidden' : ''}">dark_mode</span>
-      <span class="theme-icon-sun material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-45 ${isDark ? '' : 'hidden'}">light_mode</span>
+      <span class="theme-icon-moon material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-12 ${isDark ? '' : 'hidden'}">dark_mode</span>
+      <span class="theme-icon-sun material-symbols-outlined text-[20px] sm:text-[22px] transition-all duration-300 group-hover:rotate-45 ${isDark ? 'hidden' : ''}">light_mode</span>
     </button>
   `;
 
@@ -626,14 +635,14 @@ function renderHeader() {
       </div>
 
       <!-- Mobile Dropdown (หน้าจอมือถือ) -->
-      <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 py-3 space-y-1 shadow-md">
+      <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 px-4 py-3 space-y-1 shadow-md">
         ${mobileNavLinksHtml}
-        <div class="pt-3 mt-2 border-t border-gray-100 flex items-center justify-between px-1">
-          <span class="text-xs font-semibold text-gray-500">ธีมหน้าจอ</span>
-          <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-            <span class="theme-icon-moon material-symbols-outlined text-[16px] ${isDark ? 'hidden' : ''}">dark_mode</span>
-            <span class="theme-icon-sun material-symbols-outlined text-[16px] text-amber-500 ${isDark ? '' : 'hidden'}">light_mode</span>
-            <span id="mobile-theme-label">${isDark ? 'โหมดสว่าง' : 'โหมดมืด'}</span>
+        <div class="pt-3 mt-2 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between px-1">
+          <span class="text-xs font-semibold text-gray-500 dark:text-slate-400">ธีมหน้าจอ</span>
+          <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
+            <span class="theme-icon-moon material-symbols-outlined text-[16px] ${isDark ? '' : 'hidden'}">dark_mode</span>
+            <span class="theme-icon-sun material-symbols-outlined text-[16px] text-amber-500 ${isDark ? 'hidden' : ''}">light_mode</span>
+            <span id="mobile-theme-label">${isDark ? 'โหมดมืด' : 'โหมดสว่าง'}</span>
           </button>
         </div>
         ${mobileUserHtml}
