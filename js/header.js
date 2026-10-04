@@ -110,7 +110,6 @@ function renderHeader() {
         font-family: 'Material Symbols Outlined' !important;
         font-weight: normal !important;
         font-style: normal !important;
-        display: inline-block !important;
         line-height: 1 !important;
         text-transform: none !important;
         letter-spacing: normal !important;
@@ -121,10 +120,8 @@ function renderHeader() {
         text-rendering: optimizeLegibility !important;
         font-feature-settings: 'liga' 1 !important;
       }
-
-      .material-symbols-outlined.hidden,
-      .hidden {
-        display: none !important;
+      .material-symbols-outlined:not(.hidden) {
+        display: inline-block;
       }
 
       html, body {
